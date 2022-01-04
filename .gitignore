@@ -357,3 +357,4 @@ Tests/*.ll
 Tests/*.exe
 asylumlangsyntax
 Grammar/.antlr
+imgui.ini
