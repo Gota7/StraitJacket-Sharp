@@ -21,6 +21,10 @@ namespace AsylumUI.UI {
             R.InitWindow(BaseWidth, BaseHeight, "Asylum UI");
             Controller.Load(BaseWidth, BaseHeight);
             Camera.zoom = 1f;
+            Block.BlockType = BlockType.ConnectsBottom;
+            Block.ConnectedFoot = new Block();
+            Block.ConnectedFoot.BlockType = BlockType.ConnectsBoth;
+            //Block.ConnectedFoot.Color = new Color(255, 0, 0, 150);
         }
 
         // Run the window.
