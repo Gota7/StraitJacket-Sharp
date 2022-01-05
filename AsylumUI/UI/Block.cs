@@ -27,6 +27,7 @@ namespace AsylumUI.UI {
         public float Y = 50;
         float Width = 100;
         float Height = 35;
+        float[] InsideHeights;
         float HeadOffX = 10;
         float HeadOffY = 0;
         float FootOffX = 10;
@@ -41,8 +42,10 @@ namespace AsylumUI.UI {
         // Init a block.
         public void Init() {
             ConnectedInsides = new Block[NumInsideConnections];
+            InsideHeights = new float[NumInsideConnections];
             for (int i = 0; i < NumInsideConnections; i++) {
                 ConnectedInsides[i] = null;
+                InsideHeights[i] = 10;
             }
         }
 
