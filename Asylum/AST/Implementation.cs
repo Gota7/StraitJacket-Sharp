@@ -10,20 +10,20 @@ namespace Asylum.AST {
 
         public AsylumVisitResult VisitImplementation_definition([NotNull] AsylumParser.Implementation_definitionContext context)
         {
-            throw new System.NotImplementedException();
-            /*var ret = new Implementation();
-            ret.Type = CTX.CurrentScope.ResolveType(context.variable_or_function().Accept(this).VariableOrFunction);
+            // TODO: VARIABLE OR FUNCTION SHOULD BE VARTYPE!!!
+            VarType implements = null;
             if (context.variable_type() != null) {
-                ret.InterfaceToImplement = context.variable_type().Accept(this).VariableType;
+                implements = context.variable_type().Accept(this).VariableType;
             }
-            CTX.Implementation = ret;
-            EnterScope(Mangler.MangleType(ret.Type));
+            Builder.BeginImplementation(
+                new VarTypeCustom(context.variable_or_function().Accept(this).VariableOrFunction),
+                implements
+            );
             foreach (var e in context.implementation_entry()) {
                 e.Accept(this);
             }
-            ExitScope();
-            CTX.Implementation = null;
-            return new AsylumVisitResult() { Implementation = ret };*/
+            Builder.EndImplementation();
+            return null;
         }
 
         public AsylumVisitResult VisitImplementationEntryCast([NotNull] AsylumParser.ImplementationEntryCastContext context)

@@ -1,15 +1,37 @@
 using System.Collections.Generic;
 using System.Linq;
-using StraitJacket.Constructs;
+using StraitJacketLib.Constructs;
 
-namespace StraitJacket.Builder {
+namespace StraitJacketLib.Builder {
 
     // Asylum program builder.
     public partial class ProgramBuilder {
+        Scope OldScope;
         Implementation CurrImplementation = null;
 
         // Begin an implementation block.
         public void BeginImplementation(VarType type, VarType implements = null) {
+            if (CurrImplementation != null) throw new System.Exception("Already in an implementation!");
+
+            // Backup the current scope, and go to the root scope to add the implementation.
+            OldScope = CurrScope;
+            CurrScope = RootScope;
+            EnterScope(Mangler.MangleType(type));
+
+            // Setup new implementation.
+            CurrImplementation = new Implementation();
+            CurrImplementation.Type = type;
+            CurrImplementation.InterfaceToImplement = implements;
+
+        }
+
+        // End an implementation block.
+        public void EndImplementation() {
+
+            // Fix the scope.
+            ExitScope();
+            CurrScope = OldScope;
+            CurrImplementation = null;
 
         }
 
@@ -48,11 +70,6 @@ namespace StraitJacket.Builder {
 
         // Define an operator. TODO!!!
         public void BeginImplOperator() {
-
-        }
-
-        // End an implementation block.
-        public void EndImplementation() {
 
         }
 

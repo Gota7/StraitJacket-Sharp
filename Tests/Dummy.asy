@@ -8,6 +8,12 @@ struct TestStruct {
     pub s8 b;
 }
 
+impl TestStruct {
+    pub fn TestFunc() {
+        println("Hello World!");
+    }
+}
+
 TestStruct test;
 test.other.a = 5;
 test.a = 3;
