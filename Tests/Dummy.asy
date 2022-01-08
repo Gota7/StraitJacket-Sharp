@@ -9,11 +9,11 @@ struct TestStruct {
 }
 
 impl TestStruct {
-    pub fn TestFunc() {
+    pub fn TestFunc(This tmp) {
         printf("%d\n", this.other.a);
     }
 }
 
 TestStruct test;
 test.other.a = 7;
-test.TestFunc();
+test.TestFunc(test);

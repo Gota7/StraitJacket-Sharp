@@ -101,8 +101,7 @@ namespace StraitJacketLib.Constructs {
         protected override string Mangled() => Mangler.MangleScope(Scope) + Name.Length + Name + "E";
 
         public override bool Equals(object obj) {
-            // TODO!!!
-            throw new System.NotImplementedException();
+            return obj == this;
         }
 
         public override int GetHashCode() {
