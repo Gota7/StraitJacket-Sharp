@@ -10,13 +10,10 @@ struct TestStruct {
 
 impl TestStruct {
     pub fn TestFunc() {
-        println("Hello World!");
+        printf("%d\n", this.other.a);
     }
 }
 
 TestStruct test;
+test.other.a = 7;
 test.TestFunc();
-test.other.a = 5;
-test.a = 3;
-test.b = 7;
-printf("%d\n", (int)test.other.a);

@@ -58,6 +58,10 @@ namespace StraitJacketLib.Constructs {
                     break;
                 case Operator.Member:
                     var eee = Inputs[0].ReturnType();
+                    if (Inputs[0].ReturnType().Type == VarTypeEnum.Pointer) { // `->` does not exist in Asylum, so convert ptr.member to (*ptr).member. This will work efficiently for non-const expressions only!
+                        Inputs[0] = new ExpressionOperator(new List<Expression>() { Inputs[0] }, Operator.Dereference);
+                        Inputs[0].ResolveTypes();
+                    }
                     if (Inputs[0].ReturnType().Type != VarTypeEnum.Tuple) {
                         throw new System.Exception("Can't take the member of an expression that doesn't result in a tuple or struct!");
                     }
