@@ -37,7 +37,22 @@ namespace StraitJacketLib.Constructs {
                     return e.Var.Type;
                 }
             }
+            var func = GetImplFunction(varName);
+            if (func != null) return func.Type;
             throw new Exception("Member " + varName + " is not contained in this struct!");
+        }
+
+        public Function GetImplFunction(string name) {
+            Scope root = Scope;
+            while (root.Parent != null) {
+                root = root.Parent;
+            }
+            string mangled = Mangler.MangleType(this);
+            if (root.Children.ContainsKey(mangled)) {
+                Scope typeScope = root.Children[mangled];
+                return typeScope.ResolveFunction(new VariableOrFunction() { Scope = typeScope, Path = name });
+            }
+            return null;
         }
 
         // Calculate an Idx to a name. TODO: BASE TYPES!!!

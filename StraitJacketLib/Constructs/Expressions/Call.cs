@@ -30,6 +30,22 @@ namespace StraitJacketLib.Constructs {
             ToCall.ResolveTypes();
             if (ToCall as ExpressionVariable != null) {
                 FunctionToCall = (ToCall as ExpressionVariable).GetResolved as Function;
+            } else if (ToCall as ExpressionOperator != null) {
+                var callOp = ToCall as ExpressionOperator;
+                if (callOp.Operator == Operator.Member) {
+                    VarTypeStruct structType = (callOp.Inputs[0].ReturnType() as VarTypeStruct);
+                    string toCall = (callOp.Inputs[1] as ExpressionConstStringPtr).Str;
+                    FunctionToCall = structType.GetImplFunction(toCall);    // Get the true function to call.
+                    if (FunctionToCall.ThisCall) {
+                        Parameters.Expressions.Insert(
+                            0,
+                            new ExpressionOperator(new List<Expression>() { callOp.Inputs[0] }, Operator.AddressOf)
+                        ); // This call has first parameter as "this".
+                        Parameters.ResolveTypes();
+                    }
+                } else {
+                    throw new System.NotImplementedException();
+                }
             } else {
                 throw new System.NotImplementedException();
             }

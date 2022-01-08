@@ -39,6 +39,7 @@ namespace StraitJacketLib.Builder {
         public void BeginImplFunction(string name, VarType returnType, List<VarParameter> parameters) {
             parameters.Insert(0, new VarParameter() { Value = Variable(new VarTypePointer(ThisType()), "this") }); // Add this parameter.
             BeginFunction(name, returnType, parameters);
+            if (!CurrFunction.Static) CurrFunction.ThisCall = true;
         }
 
         // Define a constructor.

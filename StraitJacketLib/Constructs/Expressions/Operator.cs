@@ -10,6 +10,7 @@ namespace StraitJacketLib.Constructs {
         public Operator Operator;
         VarType InputTypes = null;
         VarType RetType = null;
+        bool IsImplFunction = false;
 
         public ExpressionOperator(List<Expression> inputs, Operator op) {
             Inputs = inputs;
@@ -62,6 +63,7 @@ namespace StraitJacketLib.Constructs {
                     }
                     if (Inputs[1] as ExpressionConstStringPtr == null) throw new System.Exception("Can only take the member of using a constant string pointer!");
                     RetType = (Inputs[0].ReturnType() as VarTypeStruct).GetMemberType((Inputs[1] as ExpressionConstStringPtr).Str);
+                    IsImplFunction = RetType.Type == VarTypeEnum.PrimitiveFunction;
                     break;
                 default:
                     throw new System.NotImplementedException("Operator return type not implemented!");
@@ -138,6 +140,22 @@ namespace StraitJacketLib.Constructs {
                 case Operator.Member:
                     v1 = Inputs[0].Compile(mod, builder, param).Val;
                     string member = (Inputs[1] as ExpressionConstStringPtr).Str;
+                    if (IsImplFunction) {
+                        var func = (Inputs[0].ReturnType() as VarTypeStruct).GetImplFunction(member);
+                        LLVMValueRef funcToCall = null;
+                        Function currFunc = Scope.PeekCurrentFunction;
+                        if (func.Extern || func.ModulePath.Equals(currFunc.ModulePath)) {
+                            funcToCall = func.LLVMVal;
+                        } else {
+                            if (!func.ModulePath.Equals(currFunc.ModulePath) && !func.Inline) {
+                                if (!func.ExternedLLVMVals.ContainsKey(currFunc.ModulePath)) {
+                                    func.ExternedLLVMVals.Add(currFunc.ModulePath, mod.AddFunction(func.ToString(), func.GetFuncTypeLLVM()));
+                                }
+                                funcToCall = func.ExternedLLVMVals[currFunc.ModulePath];
+                            }
+                        }
+                        return new ReturnValue(funcToCall);
+                    }
                     return new ReturnValue(builder.BuildStructGEP(
                         v1,
                         (Inputs[0].ReturnType() as VarTypeStruct).CalcIdx(member),

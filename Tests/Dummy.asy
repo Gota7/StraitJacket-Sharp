@@ -15,6 +15,7 @@ impl TestStruct {
 }
 
 TestStruct test;
+test.TestFunc();
 test.other.a = 5;
 test.a = 3;
 test.b = 7;
