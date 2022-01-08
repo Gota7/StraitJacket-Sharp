@@ -83,6 +83,8 @@ namespace StraitJacketLib.Constructs {
             return LLVMTypeRef.CreateStruct(members.ToArray(), false);
         }
 
+        protected override string Mangled() => Mangler.MangleScope(Scope) + Name.Length + Name + "E";
+
         public override bool Equals(object obj) {
             // TODO!!!
             throw new System.NotImplementedException();

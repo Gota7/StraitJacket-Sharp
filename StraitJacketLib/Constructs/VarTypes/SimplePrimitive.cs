@@ -70,6 +70,45 @@ namespace StraitJacketLib.Constructs {
             }
         }
 
+        protected override string Mangled() {
+            switch (Primitive) {
+                case SimplePrimitives.ConstString:
+                    return "s";
+                case SimplePrimitives.Bool:
+                    return "b";
+                case SimplePrimitives.Half:
+                    return "h";
+                case SimplePrimitives.Float:
+                    return "f";
+                case SimplePrimitives.Double:
+                    return "d";
+                case SimplePrimitives.Extended:
+                    return "e";
+                case SimplePrimitives.Decimal:
+                    return "c";
+                case SimplePrimitives.VariableLength:
+                    return "l";
+                case SimplePrimitives.Object:
+                    return "o";
+                case SimplePrimitives.Void:
+                    return "v";
+                case SimplePrimitives.Char:
+                    return "r";
+                case SimplePrimitives.WideChar:
+                    return "w";
+                case SimplePrimitives.UnsignedAny:
+                    return "U";
+                case SimplePrimitives.SignedAny:
+                    return "I";
+                case SimplePrimitives.FloatingAny:
+                    return "F";
+                case SimplePrimitives.FixedAny:
+                    return "X";
+                default:
+                    throw new System.NotImplementedException("???????????");   
+            }
+        }
+
         public override bool Equals(object obj) {
             if (obj is VarTypeCustom) return Equals((obj as VarTypeCustom).Resolved);
             if (obj is VarTypeSimplePrimitive) {

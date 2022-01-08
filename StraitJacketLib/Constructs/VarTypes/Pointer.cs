@@ -16,6 +16,8 @@ namespace StraitJacketLib.Constructs {
             return LLVMTypeRef.CreatePointer(PointedTo.GetLLVMType(), 0);
         }
 
+        protected override string Mangled() => "p" + Mangler.MangleType(PointedTo);
+
         public override bool Equals(object obj) {
             if (obj is VarTypeCustom) return Equals((obj as VarTypeCustom).Resolved);
             if (obj is VarTypePointer) {

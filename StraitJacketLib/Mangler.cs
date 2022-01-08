@@ -2,7 +2,7 @@ using StraitJacketLib.Constructs;
 
 namespace StraitJacketLib {
 
-    // For mangling names. GOTO FROM PAST: I think we need to nuke this and start over... Compression has to be added too.
+    // For mangling names. TODO: SOME FORM OF COMPRESSION!
     public static class Mangler {
 
         public static string ManglePrefix() {
@@ -106,7 +106,7 @@ namespace StraitJacketLib {
             return null;
         }*/
         public static string MangleType(VarType type) {
-            return null;
+            return type.GetMangled();
         }
 
         public static string MangleFunction(Function f) {

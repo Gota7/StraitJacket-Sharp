@@ -99,7 +99,12 @@ namespace Asylum.AST {
 
             // Get code.
             Builder.PushModifier(modifier);
-            Builder.BeginFunction(context.IDENTIFIER().GetText(), returnType, parameters);
+            if (ImplFunc) {
+                Builder.BeginImplFunction(context.IDENTIFIER().GetText(), returnType, parameters);
+                ImplFunc = false;
+            } else {
+                Builder.BeginFunction(context.IDENTIFIER().GetText(), returnType, parameters);
+            }
             Builder.PopModifier();
             if (context.expression() != null) {
                 if (returnType.Equals(new VarTypeSimplePrimitive(SimplePrimitives.Void))) { // Hack for accidentally returning a value instead of void which is illegal.

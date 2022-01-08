@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using LLVMSharp;
@@ -7,6 +8,7 @@ using StraitJacketLib.Constructs;
 namespace Asylum.AST {
 
     public partial class Visitor : IAsylumVisitor<AsylumVisitResult> {
+        bool ImplFunc = false;
 
         public AsylumVisitResult VisitImplementation_definition([NotNull] AsylumParser.Implementation_definitionContext context)
         {
@@ -44,10 +46,9 @@ namespace Asylum.AST {
 
         public AsylumVisitResult VisitImplementationEntryFunction([NotNull] AsylumParser.ImplementationEntryFunctionContext context)
         {
-            throw new System.NotImplementedException();
-            /*var ret = context.function_definition().Accept(this).Function;
-            CTX.Implementation.Functions.Add(ret.ToString(), ret);
-            return null;*/
+            ImplFunc = true;
+            context.function_definition().Accept(this);
+            return null;
         }
 
         public AsylumVisitResult VisitImplementationEntryOperator([NotNull] AsylumParser.ImplementationEntryOperatorContext context)

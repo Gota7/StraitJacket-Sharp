@@ -78,6 +78,9 @@ namespace StraitJacketLib.Constructs {
         // For each member to get the LLVM type.
         protected abstract LLVMTypeRef LLVMType();
 
+        // Get the mangled version.
+        protected abstract string Mangled();
+
         // Get the LLVM type.
         public LLVMTypeRef GetLLVMType() {
             if (TypeNotGotten) {
@@ -145,120 +148,16 @@ namespace StraitJacketLib.Constructs {
             }
         }
 
-        /*
-
-        // If type can be implicitly casted to another.
-        public bool CanImplicitlyCastTo(VarType other) {
-            return CanCastTo(other); // TODO!!!
+        // Get the mangled type.
+        public string GetMangled() {
+            string ret = "";
+            if (Constant) ret += "C";
+            if (Static) ret += "S";
+            if (Volatile) ret += "V";
+            if (Atomic) ret += "A";
+            if (Variadic) ret += "I";
+            return ret + Mangled();
         }
-
-        // If type can be casted to another. TODO!!!
-        public bool CanCastTo(VarType other) {
-
-            // Handle custom types.
-            if (Type == VarTypeEnum.Custom) {
-                return (this as VarTypeCustom).Resolved.CanCastTo(other);
-            } else if (other.Type == VarTypeEnum.Custom) {
-                return CanCastTo((other as VarTypeCustom).Resolved);
-            }
-
-            // Object can always do so.
-            if (Type == VarTypeEnum.PrimitiveSimple && (this as VarTypeSimplePrimitive).Primitive == SimplePrimitives.Object) return true;
-
-            // Simple primitive.
-            if (other.Type == VarTypeEnum.PrimitiveSimple) {
-
-                // Get primitive type, can always convert to an object.
-                var otherPrim = (other as VarTypeSimplePrimitive).Primitive;
-                if (otherPrim == SimplePrimitives.Object) return true;
-
-                // Simple primitive.
-                if (Type == VarTypeEnum.PrimitiveSimple) {
-
-                    // Get primitive, can always convert from object.
-                    var prim = (this as VarTypeSimplePrimitive).Primitive;
-
-                }
-                
-                // Not simple primitive.
-                else {
-
-                }
-
-            }
-
-            // Integer primitive.
-            if (other.Type == VarTypeEnum.PrimitiveInteger) {
-                if (Type == VarTypeEnum.PrimitiveInteger || Type == VarTypeEnum.PrimitiveFixed) {
-                    return true;
-                }
-            }
-
-            // Can't convert.
-            return false;
-            
-        }
-
-        // Cast to another type. TODO!!!
-        public ReturnValue CastTo(ReturnValue srcVal, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder) {
-
-            // Check if castable.
-            if (!CanCastTo(destType)) {
-                return null;
-            }
-
-            // Handle custom types.
-            if (Type == VarTypeEnum.Custom) {
-                return (this as VarTypeCustom).Resolved.CastTo(srcVal, destType, mod, builder);
-            } else if (destType.Type == VarTypeEnum.Custom) {
-                return CastTo(srcVal, (destType as VarTypeCustom).Resolved, mod, builder);
-            }
-
-            // Generic object conversion, nothing is necessary just "hope it works".
-            if (Type == VarTypeEnum.PrimitiveSimple && (this as VarTypeSimplePrimitive).Primitive == SimplePrimitives.Object) {
-                return srcVal;
-            }
-
-            // Check for compiler-given conversions (extensions/truncations). Check integers here.
-            if (Type == VarTypeEnum.PrimitiveInteger && destType.Type == VarTypeEnum.PrimitiveInteger) {
-                var src = this as VarTypeInteger;
-                var dest = destType as VarTypeInteger;
-                if (src.BitWidth < dest.BitWidth) {
-                    if (src.Signed) {
-                        return new ReturnValue(builder.BuildSExt(srcVal.Val, destType.GetLLVMType(), "SJ_CastInt_SExt"));
-                    } else {
-                        return new ReturnValue(builder.BuildZExt(srcVal.Val, destType.GetLLVMType(), "SJ_CastInt_ZExt"));
-                    }
-                } else if (src.BitWidth > dest.BitWidth) {
-                    return new ReturnValue(builder.BuildTrunc(srcVal.Val, dest.GetLLVMType(), "SJ_CastInt_Trunc"));
-                } else {
-                    return srcVal;
-                }
-            }
-
-            // TODO: FIXED POINT STUFF!!!
-            if (Type == VarTypeEnum.PrimitiveFixed && destType.Type == VarTypeEnum.PrimitiveFixed) {
-
-            }
-
-            // Floating-point conversions.
-            if (IsFloatingPoint() && destType.IsFloatingPoint()) {
-                var src = this as VarTypeSimplePrimitive;
-                var dest = destType as VarTypeSimplePrimitive;
-                if (src.Primitive < dest.Primitive) {
-                    return new ReturnValue(builder.BuildFPExt(srcVal.Val, dest.GetLLVMType(), "SJ_CastFP_Ext"));
-                } else if (src.Primitive > dest.Primitive) {
-                    return new ReturnValue(builder.BuildFPTrunc(srcVal.Val, dest.GetLLVMType(), "SJ_CastFP_Trunc"));
-                } else {
-                    return srcVal;
-                }
-            }
-
-            // Use user-implemented method (has to exist to get this far).
-            // TODO: Implement some kind of "implementation definition" that has a list of all the functions of a type.
-            return null;
-
-        } */
 
         public bool Equals(VarType x, VarType y) {
             if (x.Type != y.Type) return false;
