@@ -10,7 +10,7 @@ struct TestStruct {
 
 impl TestStruct {
     pub fn TestFunc(This tmp) {
-        printf("%d\n", this.other.a);
+        printf("%d\n", (int)this.other.a);
     }
 }
 

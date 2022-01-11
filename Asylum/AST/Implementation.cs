@@ -12,13 +12,14 @@ namespace Asylum.AST {
 
         public AsylumVisitResult VisitImplementation_definition([NotNull] AsylumParser.Implementation_definitionContext context)
         {
-            // TODO: VARIABLE OR FUNCTION SHOULD BE VARTYPE!!!
             VarType implements = null;
-            if (context.variable_type() != null) {
-                implements = context.variable_type().Accept(this).VariableType;
+            VarType baseType = context.variable_type()[0].Accept(this).VariableType;
+            if (context.variable_type().Length > 1) {
+                implements = baseType;
+                baseType = context.variable_type()[1].Accept(this).VariableType;
             }
             Builder.BeginImplementation(
-                new VarTypeCustom(context.variable_or_function().Accept(this).VariableOrFunction),
+                baseType,
                 implements
             );
             foreach (var e in context.implementation_entry()) {
