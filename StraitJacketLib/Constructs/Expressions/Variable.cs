@@ -9,6 +9,7 @@ namespace StraitJacketLib.Constructs {
         public VariableOrFunction ToResolve;
         List<Variable> PossibleReturns;
         Variable Resolved;
+        Expression ImplicitMemberThis = null;
 
         public ExpressionVariable(VariableOrFunction toResolve) {
             ToResolve = toResolve;
@@ -28,6 +29,15 @@ namespace StraitJacketLib.Constructs {
             }
             if (Resolved.Type == null || Resolved.Type.GetLLVMType().Kind == LLVMTypeKind.LLVMFunctionTypeKind) {
                 LValue = false;
+            }
+            if (Resolved.Name.StartsWith("this.")) { // this.member hack.
+                ImplicitMemberThis = new ExpressionOperator(new List<Expression>() {
+                    new ExpressionVariable(new VariableOrFunction() { Scope = Resolved.Scope, Path = "this" }),
+                    new ExpressionVariable(new VariableOrFunction() { Scope = Resolved.Scope, Path = Resolved.Name })
+                }, Operator.Member);
+                ImplicitMemberThis.ResolveVariables();
+                ImplicitMemberThis.ResolveTypes();
+                LValue = ImplicitMemberThis.LValue;
             }
         }
 
@@ -69,7 +79,11 @@ namespace StraitJacketLib.Constructs {
         }
 
         public override ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            return new ReturnValue(Resolved.LLVMValue);
+            if (ImplicitMemberThis != null) {
+                return ImplicitMemberThis.Compile(mod, builder, param);
+            } else {
+                return new ReturnValue(Resolved.LLVMValue);
+            } 
         }
 
         public override string ToString() {

@@ -188,6 +188,15 @@ namespace StraitJacketLib.Constructs {
             return ret;
         }
 
+        // Get the true type.
+        public VarType TrueType() {
+            var ret = this;
+            while (ret.Type == VarTypeEnum.Custom) {
+                ret = (ret as VarTypeCustom).Resolved;
+            }
+            return ret;
+        }
+
     }
 
     // Variable parameter.

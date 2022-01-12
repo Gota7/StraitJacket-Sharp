@@ -35,17 +35,31 @@ namespace StraitJacketLib.Builder {
 
         }
 
+        // Define struct members to be in the current scope.
+        private void DefineMembersInScope(List<VarParameter> existingParameters) {
+            if (CurrImplementation.Type.TrueType() as VarTypeStruct != null) {
+                var s = CurrImplementation.Type.TrueType() as VarTypeStruct;
+                foreach (var e in s.Entries) {
+                    if (existingParameters.Where(x => x.Value.Name.Equals(e.Var.Name)).Count() < 1) {
+                        Scope().AddVar(e.Var.Name, Variable(e.Var.Type, "this." + e.Var.Name)); // Implicit member of hack.
+                    }
+                }
+            }
+        }
+
         // Define a function.
         public void BeginImplFunction(string name, VarType returnType, List<VarParameter> parameters) {
             parameters.Insert(0, new VarParameter() { Value = Variable(new VarTypePointer(ThisType()), "this") }); // Add this parameter.
             BeginFunction(name, returnType, parameters);
             if (!CurrFunction.Static) CurrFunction.ThisCall = true;
+            DefineMembersInScope(parameters);
         }
 
         // Define a constructor.
         public void BeginImplConstructor(string name, List<VarParameter> parameters) {
             BeginFunction(name, ThisType(), parameters);
             VariableDefinition(null, Variable(ThisType(), "this")); // Define this.
+            DefineMembersInScope(parameters);
         }
 
         // End a constructor.

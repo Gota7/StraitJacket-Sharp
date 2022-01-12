@@ -17,23 +17,13 @@ namespace StraitJacketLib.Constructs {
 
         public FileContext GetFileContext() => FileContext;
 
-        public void ResolveVariables() {
-            throw new NotImplementedException();
-        }
+        public void ResolveVariables() {}
 
-        public void ResolveCalls() {
-            throw new NotImplementedException();
-        }
-
-        public void ResolveTypes() {
-            throw new NotImplementedException();
-        }
+        public void ResolveTypes() {}
 
         public void CompileDeclarations(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {}
 
-        public ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            throw new NotImplementedException();
-        }
+        public ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) { return null; }
 
     }
 

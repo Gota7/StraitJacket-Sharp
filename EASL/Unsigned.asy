@@ -18,6 +18,12 @@ impl unsigned {
     inline operator ^(This a, This b) -> This => (This)llvm("xor", a, b);
     inline operator ~(This v) -> This => (This)llvm("not", v);
     inline operator +(This v) -> This => value;
+    inline operator **(This a, This b) -> This {
+        This v = 1;
+        for (x in 0..b)
+            v *= a;
+        v
+    }
 
     // Value set operators.
     inline operator =(This v) { value = v.value; }
@@ -26,12 +32,7 @@ impl unsigned {
     inline operator *=(This v) { value = value * v; }
     inline operator /=(This v) { value = value / v; }
     inline operator %=(This v) { value = value % v; }
-    inline operator **=(This v) {
-        This bak = value;
-        value = 1;
-        for (x in 0..v)
-            value *= bak;
-    }
+    inline operator **=(This v) { value = value ** v; }
     inline operator &=(This v) { value = value & v; }
     inline operator |=(This v) { value = value | v; }
     inline operator ^=(This v) { value = value ^ v; }
@@ -43,6 +44,7 @@ impl unsigned {
     inline operator >(This a, This b) -> bool => (bool)llvm("icmp", "ugt", a, b);
     inline operator <=(This a, This b) -> bool => (bool)llvm("icmp", "ule", a, b);
     inline operator >=(This a, This b) -> bool => (bool)llvm("icmp", "uge", a, b);
+    inline operator <=>(This a, This b) -> s32 => (s32)llvm("sub", a, b);
 
     // Other operations.
     inline operator ++() { value += 1; }

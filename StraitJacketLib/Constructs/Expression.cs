@@ -171,13 +171,7 @@ namespace StraitJacketLib.Constructs {
         public void CompileDeclarations(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {}
 
         // Get the return type.
-        public VarType ReturnType() {
-            var ret = GetReturnType();
-            while (ret.Type == VarTypeEnum.Custom) {
-                ret = (ret as VarTypeCustom).Resolved;
-            }
-            return ret;
-        }
+        public VarType ReturnType() => GetReturnType().TrueType();
 
     }
 
