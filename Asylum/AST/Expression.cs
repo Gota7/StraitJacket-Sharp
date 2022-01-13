@@ -43,19 +43,22 @@ namespace Asylum.AST {
 
         public AsylumVisitResult VisitAssignment_operator([NotNull] AsylumParser.Assignment_operatorContext context)
         {
-            if (context.ASSIGN_OP_ADD_EQ() != null) return new AsylumVisitResult() { Operator = Operator.Add };
-            if (context.ASSIGN_OP_AND_EQ() != null) return new AsylumVisitResult() { Operator = Operator.BitAnd };
-            if (context.ASSIGN_OP_CHECK_NULL() != null) return new AsylumVisitResult() { Operator = Operator.Null };
-            if (context.ASSIGN_OP_DIV_EQ() != null) return new AsylumVisitResult() { Operator = Operator.Div };
-            if (context.ASSIGN_OP_EQ() != null) return new AsylumVisitResult() { Operator = Operator.AssignEq };
-            if (context.ASSIGN_OP_EXP_EQ() != null) return new AsylumVisitResult() { Operator = Operator.Exp };
-            if (context.ASSIGN_OP_LSHIFT_EQ() != null) return new AsylumVisitResult() { Operator = Operator.LShift };
-            if (context.ASSIGN_OP_MOD_EQ() != null) return new AsylumVisitResult() { Operator = Operator.Mod };
-            if (context.ASSIGN_OP_MUL_EQ() != null) return new AsylumVisitResult() { Operator = Operator.Mul };
-            if (context.ASSIGN_OP_OR_EQ() != null) return new AsylumVisitResult() { Operator = Operator.BitOr };
-            if (context.ASSIGN_OP_RSHIFT_EQ() != null) return new AsylumVisitResult() { Operator = Operator.RShift };
-            if (context.ASSIGN_OP_SUB_EQ() != null) return new AsylumVisitResult() { Operator = Operator.Sub };
-            if (context.ASSIGN_OP_XOR_EQ() != null) return new AsylumVisitResult() { Operator = Operator.BitXor };
+            if (context.ASSIGN_OP_ADD_EQ() != null) return new AsylumVisitResult() { Operator = Operator.Add, OperatorEqFlag = true };
+            if (context.ASSIGN_OP_AND_EQ() != null) return new AsylumVisitResult() { Operator = Operator.BitAnd, OperatorEqFlag = true };
+            if (context.ASSIGN_OP_BITAND_EQ() != null) return new AsylumVisitResult() { Operator = Operator.BitAnd, OperatorEqFlag = true };
+            if (context.ASSIGN_OP_BITFLIP_EQ() != null) return new AsylumVisitResult() { Operator = Operator.BitNot, OperatorEqFlag = true };
+            if (context.ASSIGN_OP_BITOR_EQ() != null) return new AsylumVisitResult() { Operator = Operator.BitOr, OperatorEqFlag = true };
+            if (context.ASSIGN_OP_CHECK_NULL() != null) return new AsylumVisitResult() { Operator = Operator.Null, OperatorEqFlag = true };
+            if (context.ASSIGN_OP_DIV_EQ() != null) return new AsylumVisitResult() { Operator = Operator.Div, OperatorEqFlag = true };
+            if (context.ASSIGN_OP_EQ() != null) return new AsylumVisitResult() { Operator = Operator.AssignEq, OperatorEqFlag = true };
+            if (context.ASSIGN_OP_EXP_EQ() != null) return new AsylumVisitResult() { Operator = Operator.Exp, OperatorEqFlag = true };
+            if (context.ASSIGN_OP_LSHIFT_EQ() != null) return new AsylumVisitResult() { Operator = Operator.LShift, OperatorEqFlag = true };
+            if (context.ASSIGN_OP_MOD_EQ() != null) return new AsylumVisitResult() { Operator = Operator.Mod, OperatorEqFlag = true };
+            if (context.ASSIGN_OP_MUL_EQ() != null) return new AsylumVisitResult() { Operator = Operator.Mul, OperatorEqFlag = true };
+            if (context.ASSIGN_OP_OR_EQ() != null) return new AsylumVisitResult() { Operator = Operator.BitOr, OperatorEqFlag = true};
+            if (context.ASSIGN_OP_RSHIFT_EQ() != null) return new AsylumVisitResult() { Operator = Operator.RShift, OperatorEqFlag = true };
+            if (context.ASSIGN_OP_SUB_EQ() != null) return new AsylumVisitResult() { Operator = Operator.Sub, OperatorEqFlag = true };
+            if (context.ASSIGN_OP_XOR_EQ() != null) return new AsylumVisitResult() { Operator = Operator.BitXor, OperatorEqFlag = true };
             throw new System.NotImplementedException();
         }
 

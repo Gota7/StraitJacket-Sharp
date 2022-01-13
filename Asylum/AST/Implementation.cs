@@ -39,10 +39,7 @@ namespace Asylum.AST {
 
         public AsylumVisitResult VisitImplementationEntryConstructor([NotNull] AsylumParser.ImplementationEntryConstructorContext context)
         {
-            throw new System.NotImplementedException();
-            /*var ret = context.constructor_definition().Accept(this).Function;
-            CTX.Implementation.Functions.Add(ret.ToString(), ret);
-            return null;*/
+            return context.constructor_definition().Accept(this);
         }
 
         public AsylumVisitResult VisitImplementationEntryFunction([NotNull] AsylumParser.ImplementationEntryFunctionContext context)
@@ -54,10 +51,7 @@ namespace Asylum.AST {
 
         public AsylumVisitResult VisitImplementationEntryOperator([NotNull] AsylumParser.ImplementationEntryOperatorContext context)
         {
-            throw new System.NotImplementedException();
-            /*var ret = context.operator_definition().Accept(this).Function;
-            CTX.Implementation.Operators.Add(ret.Operator, ret);
-            return null;*/
+            return context.operator_definition().Accept(this);
         }
 
     }

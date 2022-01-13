@@ -61,8 +61,8 @@ namespace StraitJacketLib.Builder {
         }
 
         // Define a constructor.
-        public void BeginImplConstructor(string name, List<VarParameter> parameters) {
-            BeginFunction(name, ThisType(), parameters);
+        public void BeginImplConstructor(List<VarParameter> parameters) {
+            BeginFunction("__ct", ThisType(), parameters);
             VariableDefinition(null, Variable(ThisType(), "this")); // Define this.
             DefineMembersInScope(parameters);
         }
@@ -89,8 +89,28 @@ namespace StraitJacketLib.Builder {
         }
 
         // Define an operator. TODO!!!
-        public void BeginImplOperator() {
-
+        public void BeginImplOperator(Operator op, bool assign, VarType returnType, List<VarParameter> parameters) {
+            if (assign) {
+                if (parameters.Count() != 1) {
+                    throw new System.Exception("Invalid number of parameters for overloading the assignment operator!");
+                }
+                BeginImplFunction("__opEq" + op.ToString(), returnType, parameters); // Assignments are not static.
+            }
+            /*switch (op) {
+                case Operator.Add:
+                    CheckLen(2);
+                    break;
+                default:
+                    throw new System.NotImplementedException("Operator overload for " + op + " not implemented!");
+            }*/ // TODO!!!
+            if (op == Operator.Inc || op == Operator.Dec) {
+                BeginImplFunction("__op" + op.ToString(), returnType, parameters); // Increment and decrement are not static.
+            } else {
+                BeginFunction("__op" + op.ToString(), returnType, parameters); // Rest are static.
+            }
+            void CheckLen(int len) {
+                if (parameters.Count() != len) throw new System.Exception("Wrong number of parameters for " + op + ". Expected " + len + ".");
+            }
         }
 
         // This type.

@@ -14,6 +14,7 @@ namespace Asylum.AST {
         public Implementation Implementation;
         public Modifier Modifier;
         public Operator Operator;
+        public bool OperatorEqFlag;
         public VarParameter Parameter;
         public List<VarParameter> Parameters;
         public Variable Variable;
