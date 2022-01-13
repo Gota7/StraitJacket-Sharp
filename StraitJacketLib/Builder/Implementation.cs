@@ -41,7 +41,12 @@ namespace StraitJacketLib.Builder {
                 var s = CurrImplementation.Type.TrueType() as VarTypeStruct;
                 foreach (var e in s.Entries) {
                     if (existingParameters.Where(x => x.Value.Name.Equals(e.Var.Name)).Count() < 1) {
-                        Scope().AddVar(e.Var.Name, Variable(e.Var.Type, "this." + e.Var.Name)); // Implicit member of hack.
+                        Scope().AddVar(e.Var.Name, new Variable() {
+                            Scope = Scope(),
+                            Type = e.Var.Type,
+                            Name = "this." + e.Var.Name,
+                            ScopeOverwriteable = true
+                        }); // Implicit member of hack.
                     }
                 }
             }

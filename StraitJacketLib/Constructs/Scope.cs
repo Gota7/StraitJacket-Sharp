@@ -30,7 +30,11 @@ namespace StraitJacketLib.Constructs {
 
         public void AddVar(string name, Variable v) {
             if (Variables.ContainsKey(name)) {
-                throw new System.Exception("DUPLICATE VARIABLE!!!");
+                if (Variables[name].ScopeOverwriteable) {
+                    Variables[name] = v;
+                } else {
+                    throw new System.Exception("DUPLICATE VARIABLE!!!");
+                }
             } else {
                 Variables.Add(name, v);
             }
