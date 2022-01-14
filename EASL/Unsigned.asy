@@ -18,24 +18,12 @@ impl unsigned {
     inline operator ^(This a, This b) -> This => (This)llvm("xor", a, b);
     inline operator ~(This v) -> This => (This)llvm("not", v);
     //inline operator +(This v) -> This => this;
-    inline operator **(This a, This b) -> This {
+    /*inline operator **(This a, This b) -> This {
         This v = (This)(object)1;
         for (This i = (This)(object)0; i < b; i++)
             v *= a;
         v
-    }
-
-    // Value set operators.
-    inline operator =(This v) { this = v.value; }
-    inline operator +=(This v) { this = this + v; }
-    inline operator -=(This v) { this = this - v; }
-    inline operator *=(This v) { this = this * v; }
-    inline operator /=(This v) { this = this / v; }
-    inline operator %=(This v) { this = this % v; }
-    inline operator **=(This v) { this = this ** v; }
-    inline operator &=(This v) { this = this & v; }
-    inline operator |=(This v) { this = this | v; }
-    inline operator ^=(This v) { this = this ^ v; }
+    }*/
 
     // Comparison operators. Even though NE, LE, and GE are not needed, it's more efficient to have them.
     inline operator ==(This a, This b) -> bool => (bool)llvm("icmp", "eq", a, b);
@@ -45,10 +33,6 @@ impl unsigned {
     inline operator <=(This a, This b) -> bool => (bool)llvm("icmp", "ule", a, b);
     inline operator >=(This a, This b) -> bool => (bool)llvm("icmp", "uge", a, b);
     inline operator <=>(This a, This b) -> s32 => (s32)llvm("sub", a, b);
-
-    // Other operations.
-    inline operator ++() { this += 1; }
-    inline operator --() { this -= 1; }
 
     // Conversion functions.
     //inline explicitcast(signed s) -> This => (This)(object)s;

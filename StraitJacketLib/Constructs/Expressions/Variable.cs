@@ -27,7 +27,7 @@ namespace StraitJacketLib.Constructs {
             } else {
                 throw new System.NotImplementedException();
             }
-            if (Resolved.Type == null || Resolved.Type.TrueType().Type != VarTypeEnum.PrimitiveFunction) {
+            if (Resolved.Type == null || Resolved.Type.TrueType().Type == VarTypeEnum.PrimitiveFunction) {
                 LValue = false;
             }
             if (Resolved.Name.StartsWith("this.")) { // this.member hack.
