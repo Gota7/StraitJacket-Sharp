@@ -18,6 +18,7 @@ namespace StraitJacketLib.Builder {
             ScopeNum = 0;
             CurrStatements = TopLevel;
             RootScope = Scope();
+            Constructs.Scope.Root = RootScope;
         }
 
         // Create a new builder.
@@ -27,6 +28,7 @@ namespace StraitJacketLib.Builder {
             ScopeNum = scopeNum;
             CurrStatements = TopLevel;
             RootScope = Scope();
+            Constructs.Scope.Root = RootScope;
         }
 
         // Compile the code.

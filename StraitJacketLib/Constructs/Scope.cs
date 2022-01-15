@@ -5,6 +5,7 @@ namespace StraitJacketLib.Constructs {
 
     // Scope of variables, types, and functions. TODO: ALLOW SPLITTING NAMES BY PERIOD!!!
     public class Scope {
+        public static Scope Root { get; internal set; } = null;
         public string Name;
         public Scope Parent;
         public Dictionary<string, Scope> Children = new Dictionary<string, Scope>();

@@ -130,6 +130,16 @@ namespace StraitJacketLib.Constructs {
 
         // Fetch an operator function.
         private Function FetchOperatorFunction() {
+            Scope root = Scope.Root;
+            switch (Operator) {
+                case Operator.Add:
+                case Operator.Sub:
+                case Operator.Mul:
+                case Operator.Div:
+                case Operator.Mod:
+                case Operator.Exp:
+                    break;
+            }
             return null;
         }
 

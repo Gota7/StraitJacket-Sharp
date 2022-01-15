@@ -43,10 +43,7 @@ namespace StraitJacketLib.Constructs {
         }
 
         public Function GetImplFunction(string name) {
-            Scope root = Scope;
-            while (root.Parent != null) {
-                root = root.Parent;
-            }
+            Scope root = Scope.Root;
             string mangled = Mangler.MangleType(this);
             if (root.Children.ContainsKey(mangled)) {
                 Scope typeScope = root.Children[mangled];
