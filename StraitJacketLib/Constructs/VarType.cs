@@ -148,6 +148,9 @@ namespace StraitJacketLib.Constructs {
             }
         }
 
+        // Default value.
+        public abstract Expression DefaultValue();
+
         // Get the mangled type.
         public string GetMangled() {
             string ret = "";

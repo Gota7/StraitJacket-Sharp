@@ -52,6 +52,10 @@ namespace StraitJacketLib.Constructs {
         public override string ToString() {
             return m_Resolved == null ? ToResolve.ToString() : Resolved.ToString();
         }
+
+        public override Expression DefaultValue() {
+            return Resolved.DefaultValue();
+        }
         
     }
 

@@ -22,7 +22,13 @@ namespace StraitJacketLib.Constructs {
                 foreach (var v in variables) {
                     GeneratedExpressions.Add(
                         new ExpressionStore(Definition, new ExpressionVariable(
-                                new VariableOrFunction() { Scope = v.Scope, Path = v.Name })));
+                            new VariableOrFunction() { Scope = v.Scope, Path = v.Name })));
+                }
+            } else {
+                foreach (var v in variables) {
+                    GeneratedExpressions.Add(
+                        new ExpressionStore(v.Type.DefaultValue(), new ExpressionVariable(
+                            new VariableOrFunction() { Scope = v.Scope, Path = v.Name })));
                 }
             }
 

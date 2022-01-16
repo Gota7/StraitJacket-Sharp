@@ -85,6 +85,10 @@ namespace StraitJacketLib.Constructs {
             return base.ToString() + (Signed ? "s" : "u") + BitWidth;
         }
 
+        public override Expression DefaultValue() {
+            return new ExpressionConstInt(Signed, 0);
+        }
+
     }
 
 }

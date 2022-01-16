@@ -65,6 +65,10 @@ namespace StraitJacketLib.Constructs {
             return ret + "]";
         }
 
+        public override Expression DefaultValue() {
+            throw new NotImplementedException();
+        }
+
     }
 
 }

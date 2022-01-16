@@ -46,6 +46,10 @@ namespace StraitJacketLib.Constructs {
             return base.ToString() + PointedTo.ToString() + "*";
         }
 
+        public override Expression DefaultValue() {
+            return new ExpressionConstInt(false, 0);
+        }
+
     }
 
 }

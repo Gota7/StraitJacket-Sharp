@@ -81,6 +81,14 @@ namespace StraitJacketLib.Constructs {
             return ret + ")";
         }
 
+        public override Expression DefaultValue() {
+            List<Expression> exps = new List<Expression>();
+            foreach (var m in Members) {
+                exps.Add(m.DefaultValue());
+            }
+            return new ExpressionComma(exps);
+        }
+
     }
 
 }
