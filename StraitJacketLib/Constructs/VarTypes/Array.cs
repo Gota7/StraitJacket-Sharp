@@ -66,7 +66,15 @@ namespace StraitJacketLib.Constructs {
         }
 
         public override Expression DefaultValue() {
-            throw new NotImplementedException();
+            bool allZeroes = true;
+            foreach (var l in Lengths) {
+                if (l != 0) allZeroes = false;
+            }
+            if (allZeroes) {
+                throw new System.NotImplementedException(); // NULL POINTER.
+            } else {
+                return new ExpressionConstArrayAllocate(EmbeddedType, Lengths);
+            }
         }
 
     }
