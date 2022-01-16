@@ -39,15 +39,10 @@ namespace StraitJacketLib.Constructs {
                 arrSize *= l;
             }
             ExpressionConstInt len = new ExpressionConstInt(false, arrSize);
-            var newArr = builder.BuildArrayAlloca(
+            return new ReturnValue(builder.BuildArrayAlloca(
                 EmbeddedType.GetLLVMType(),
                 len.Compile(mod, builder, param).Val,
                 "SJ_BuildArrayAlloca"
-            );
-            return new ReturnValue(builder.BuildPointerCast(
-                newArr,
-                GetReturnType().GetLLVMType(),
-                "SJ_CastArrayAlloca"
             ));
         }
 

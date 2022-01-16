@@ -102,6 +102,15 @@ namespace StraitJacketLib.Constructs {
                     RetType = (Inputs[0].ReturnType() as VarTypeStruct).GetMemberType((Inputs[1] as ExpressionConstStringPtr).Str);
                     IsImplFunction = RetType.Type == VarTypeEnum.PrimitiveFunction;
                     break;
+                case Operator.ArrayAccess:
+                    if (Inputs[0].ReturnType().Type != VarTypeEnum.Array) {
+                        throw new System.Exception("Can't index an item that is not an array!");
+                    }
+                    if (Inputs[1].ReturnType().Type != VarTypeEnum.PrimitiveInteger) {
+                        throw new System.Exception("Can't use a non-integer item to index an array!");
+                    }
+                    RetType = (Inputs[0].ReturnType() as VarTypeArray).EmbeddedType;
+                    break;
                 default:
                     throw new System.NotImplementedException("Operator return type not implemented!");
             }
@@ -228,6 +237,14 @@ namespace StraitJacketLib.Constructs {
                         (Inputs[0].ReturnType() as VarTypeStruct).CalcIdx(member),
                         "SJ_Member_" + member
                     ));
+                case Operator.ArrayAccess:
+                    v1 = Inputs[0].Compile(mod, builder, param).Val;
+                    v1 = builder.BuildLoad(v1, "SJ_LoadArr");
+                    v2 = Inputs[1].Compile(mod, builder, param).Val;
+                    if (Inputs[1].LValue) v2 = builder.BuildLoad(v1, "SJ_Load");
+                    return new ReturnValue(builder.BuildGEP(v1, new LLVMValueRef[] {
+                        v2
+                    }, "SJ_ArrayIndex"));
             }
             throw new System.NotImplementedException("Operator has not been implemented yet!");
         }

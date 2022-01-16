@@ -21,7 +21,7 @@ namespace StraitJacketLib.Constructs {
                 if (arrSize == 0 && l > 0) arrSize = 1;
                 arrSize *= l;
             }
-            return LLVMTypeRef.CreatePointer(LLVMTypeRef.CreateArray(EmbeddedType.GetLLVMType(), arrSize), 0); // Zero elements is sufficient as the true constant isn't known.
+            return LLVMTypeRef.CreatePointer(EmbeddedType.GetLLVMType(), 0); // An array is just a pointer to data.
         }
 
         public override bool Equals(object obj) {
