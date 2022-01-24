@@ -214,6 +214,18 @@ namespace Asylum.AST {
             return new AsylumVisitResult() { VariableType = ret };
         }
 
+        public AsylumVisitResult VisitVarTypeGenerics([NotNull] AsylumParser.VarTypeGenericsContext context)
+        {
+            List<VarType> typeImplements = new List<VarType>();
+            for (int i = 1; i < context.variable_type().Length; i++) {
+                typeImplements.Add(context.variable_type()[i].Accept(this).VariableType);
+            }
+            return new AsylumVisitResult() { VariableType = new VarTypeGenericInstance(
+                context.variable_type()[0].Accept(this).VariableType,
+                typeImplements
+            )};
+        }
+
     }
     
 }

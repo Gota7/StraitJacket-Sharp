@@ -271,11 +271,6 @@ namespace Asylum.AST {
             throw new System.NotImplementedException();
         }
 
-        public AsylumVisitResult VisitVarTypeGenerics([NotNull] AsylumParser.VarTypeGenericsContext context)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public AsylumVisitResult VisitVarTypeStatic([NotNull] AsylumParser.VarTypeStaticContext context)
         {
             throw new System.NotImplementedException();
