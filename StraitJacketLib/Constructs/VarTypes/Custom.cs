@@ -26,6 +26,8 @@ namespace StraitJacketLib.Constructs {
         protected override LLVMTypeRef LLVMType() {
             return Resolved.GetLLVMType();
         }
+        
+        protected override string Mangled() => Mangler.MangleType(Resolved);
 
         public override bool CanImplicitlyCastTo(VarType other) {
             return Resolved.CanImplicitlyCastTo(other);

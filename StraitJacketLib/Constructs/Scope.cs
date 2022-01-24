@@ -5,6 +5,7 @@ namespace StraitJacketLib.Constructs {
 
     // Scope of variables, types, and functions. TODO: ALLOW SPLITTING NAMES BY PERIOD!!!
     public class Scope {
+        public static Scope Root { get; internal set; } = null;
         public string Name;
         public Scope Parent;
         public Dictionary<string, Scope> Children = new Dictionary<string, Scope>();
@@ -30,7 +31,11 @@ namespace StraitJacketLib.Constructs {
 
         public void AddVar(string name, Variable v) {
             if (Variables.ContainsKey(name)) {
-                throw new System.Exception("DUPLICATE VARIABLE!!!");
+                if (Variables[name].ScopeOverwriteable) {
+                    Variables[name] = v;
+                } else {
+                    throw new System.Exception("DUPLICATE VARIABLE!!!");
+                }
             } else {
                 Variables.Add(name, v);
             }

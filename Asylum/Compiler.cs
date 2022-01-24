@@ -92,7 +92,7 @@ namespace Asylum {
             visitor.Builder.BeginFile("EASL");
             VisitFile(compilerRoot + "/EASL/Types.asy");
             VisitFile(compilerRoot + "/EASL/Console.asy");
-            //VisitFile(compilerRoot + "/EASL/Unsigned.asy", mode);
+            VisitFile(compilerRoot + "/EASL/Unsigned.asy");
             if (flags.UseSTDC) {
                 foreach (var f in Directory.EnumerateFiles(compilerRoot + "EASL/STD/C")) {
                     VisitFile(f);

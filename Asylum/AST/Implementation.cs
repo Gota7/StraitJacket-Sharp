@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using LLVMSharp;
@@ -7,23 +8,25 @@ using StraitJacketLib.Constructs;
 namespace Asylum.AST {
 
     public partial class Visitor : IAsylumVisitor<AsylumVisitResult> {
+        bool ImplFunc = false;
 
         public AsylumVisitResult VisitImplementation_definition([NotNull] AsylumParser.Implementation_definitionContext context)
         {
-            throw new System.NotImplementedException();
-            /*var ret = new Implementation();
-            ret.Type = CTX.CurrentScope.ResolveType(context.variable_or_function().Accept(this).VariableOrFunction);
-            if (context.variable_type() != null) {
-                ret.InterfaceToImplement = context.variable_type().Accept(this).VariableType;
+            VarType implements = null;
+            VarType baseType = context.variable_type()[0].Accept(this).VariableType;
+            if (context.variable_type().Length > 1) {
+                implements = baseType;
+                baseType = context.variable_type()[1].Accept(this).VariableType;
             }
-            CTX.Implementation = ret;
-            EnterScope(Mangler.MangleType(ret.Type));
+            Builder.BeginImplementation(
+                baseType,
+                implements
+            );
             foreach (var e in context.implementation_entry()) {
                 e.Accept(this);
             }
-            ExitScope();
-            CTX.Implementation = null;
-            return new AsylumVisitResult() { Implementation = ret };*/
+            Builder.EndImplementation();
+            return null;
         }
 
         public AsylumVisitResult VisitImplementationEntryCast([NotNull] AsylumParser.ImplementationEntryCastContext context)
@@ -36,26 +39,19 @@ namespace Asylum.AST {
 
         public AsylumVisitResult VisitImplementationEntryConstructor([NotNull] AsylumParser.ImplementationEntryConstructorContext context)
         {
-            throw new System.NotImplementedException();
-            /*var ret = context.constructor_definition().Accept(this).Function;
-            CTX.Implementation.Functions.Add(ret.ToString(), ret);
-            return null;*/
+            return context.constructor_definition().Accept(this);
         }
 
         public AsylumVisitResult VisitImplementationEntryFunction([NotNull] AsylumParser.ImplementationEntryFunctionContext context)
         {
-            throw new System.NotImplementedException();
-            /*var ret = context.function_definition().Accept(this).Function;
-            CTX.Implementation.Functions.Add(ret.ToString(), ret);
-            return null;*/
+            ImplFunc = true;
+            context.function_definition().Accept(this);
+            return null;
         }
 
         public AsylumVisitResult VisitImplementationEntryOperator([NotNull] AsylumParser.ImplementationEntryOperatorContext context)
         {
-            throw new System.NotImplementedException();
-            /*var ret = context.operator_definition().Accept(this).Function;
-            CTX.Implementation.Operators.Add(ret.Operator, ret);
-            return null;*/
+            return context.operator_definition().Accept(this);
         }
 
     }

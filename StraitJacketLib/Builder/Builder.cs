@@ -8,6 +8,7 @@ namespace StraitJacketLib.Builder {
     // Asylum program builder.
     public partial class ProgramBuilder {
         Dictionary<string, Constructs.AST> ASTs = new Dictionary<string, Constructs.AST>();
+        Scope RootScope;
         CodeStatements TopLevel = new CodeStatements();
         CodeStatements CurrStatements;
 
@@ -16,6 +17,8 @@ namespace StraitJacketLib.Builder {
             CurrScope = new Scope() { Name = "" };
             ScopeNum = 0;
             CurrStatements = TopLevel;
+            RootScope = Scope();
+            Constructs.Scope.Root = RootScope;
         }
 
         // Create a new builder.
@@ -24,6 +27,8 @@ namespace StraitJacketLib.Builder {
             CurrScope = easlScope;
             ScopeNum = scopeNum;
             CurrStatements = TopLevel;
+            RootScope = Scope();
+            Constructs.Scope.Root = RootScope;
         }
 
         // Compile the code.

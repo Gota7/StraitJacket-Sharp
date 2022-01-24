@@ -9,6 +9,7 @@ namespace StraitJacketLib.Constructs {
         public string Name;
         public Scope Scope;
         public VarType Type;
+        public bool ScopeOverwriteable;
         public LLVMValueRef LLVMValue;
     }
 

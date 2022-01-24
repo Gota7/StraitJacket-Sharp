@@ -33,6 +33,14 @@ namespace StraitJacketLib.Constructs {
             }
         }
 
+        protected override string Mangled() {
+            string tpl = "";
+            foreach (var m in Members) {
+                tpl += Mangler.MangleType(m);
+            }
+            return "T" + tpl;
+        }
+
         public override bool Equals(object obj) {
             if (obj is VarTypeCustom) return Equals((obj as VarTypeCustom).Resolved);
             if (obj is VarTypeTuple) {

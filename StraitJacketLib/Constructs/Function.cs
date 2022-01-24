@@ -29,6 +29,7 @@ namespace StraitJacketLib.Constructs {
         public bool Unsafe;
         public bool Extern;
         public bool Variadic;
+        public bool ThisCall;
         public Operator Operator;
         public List<Attribute> Attributes = new List<Attribute>();
         public List<VarParameter> Parameters;

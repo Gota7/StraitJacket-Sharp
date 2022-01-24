@@ -32,6 +32,15 @@ namespace StraitJacketLib.Constructs {
             return LLVMTypeRef.CreateFunction(ReturnType.GetLLVMType(), parameters.ToArray(), variadic);
         }
 
+        protected override string Mangled() {
+            string func = "";
+            func += Mangler.MangleType(ReturnType);
+            foreach (var m in Parameters) {
+                func += Mangler.MangleType(m);
+            }
+            return "n" + func;
+        }
+
         public override bool Equals(object obj) {
             if (obj is VarTypeCustom) return Equals((obj as VarTypeCustom).Resolved);
             if (obj is VarTypeFunction) {

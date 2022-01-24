@@ -99,7 +99,12 @@ namespace Asylum.AST {
 
             // Get code.
             Builder.PushModifier(modifier);
-            Builder.BeginFunction(context.IDENTIFIER().GetText(), returnType, parameters);
+            if (ImplFunc) {
+                Builder.BeginImplFunction(context.IDENTIFIER().GetText(), returnType, parameters);
+                ImplFunc = false;
+            } else {
+                Builder.BeginFunction(context.IDENTIFIER().GetText(), returnType, parameters);
+            }
             Builder.PopModifier();
             if (context.expression() != null) {
                 if (returnType.Equals(new VarTypeSimplePrimitive(SimplePrimitives.Void))) { // Hack for accidentally returning a value instead of void which is illegal.
@@ -122,15 +127,49 @@ namespace Asylum.AST {
         // TODO!!!
         public AsylumVisitResult VisitConstructor_definition([NotNull] AsylumParser.Constructor_definitionContext context)
         {
-            throw new System.NotImplementedException();
-
-            /*
             
-            // New function.
-            Function fn = new Function();
-            fn.Name = context.variable_type().GetText();
-            fn.Scope = CTX.CurrentScope;
-            fn.ModulePath = CTX.ModuleName;
+            // Get attributes. TODO!!!
+            foreach (var a in context.attribute()) {
+
+            }
+
+            // GET MODIFIERS TODO!!!
+            Modifier modifier = Modifier.None;
+            foreach (var p in context.function_property()) {
+                if (p.INLINE() != null) modifier |= Modifier.Inline;
+            }
+
+            // GENERICS TODO!!!
+
+            // Get parameters.
+            List<VarParameter> parameters;
+            if (context.variable_arguments() != null) {
+                parameters = context.variable_arguments().Accept(this).Parameters;
+            } else {
+                parameters = new List<VarParameter>();
+            }
+
+            // Get code.
+            Builder.PushModifier(modifier);
+            Builder.BeginImplConstructor(parameters);
+            Builder.PopModifier();
+            if (context.expression() != null) {
+                Builder.Code(new ReturnStatement(context.expression().Accept(this).Expression));
+            } else if (context.code_statement() != null) {
+                foreach (var c in context.code_statement()) {
+                    c.Accept(this); // Add code statements.
+                }
+            }
+
+            // Finish.
+            Builder.EndFunction();
+            return null;
+
+        }
+
+        // TODO!!!
+        public AsylumVisitResult VisitOperator_definition([NotNull] AsylumParser.Operator_definitionContext context)
+        {
 
             // Get attributes. TODO!!!
             foreach (var a in context.attribute()) {
@@ -138,111 +177,47 @@ namespace Asylum.AST {
             }
 
             // GET MODIFIERS TODO!!!
-            foreach (var p in context.function_property()) {
-                if (p.INLINE() != null) fn.Inline = true;
-            }
+            Modifier modifier = Modifier.None;
+            if (context.INLINE() != null) modifier |= Modifier.Inline;
 
             // GENERICS TODO!!!
 
             // Get parameters.
+            List<VarParameter> parameters;
             if (context.variable_arguments() != null) {
-                fn.Parameters = context.variable_arguments().Accept(this).Parameters;
-                if (fn.Parameters.Count() > 0 && fn.Parameters.Last().Value.Type.Variadic) { fn.Variadic = true; } // Variadic check.
+                parameters = context.variable_arguments().Accept(this).Parameters;
             } else {
-                fn.Parameters = new List<VarParameter>();
+                parameters = new List<VarParameter>();
             }
     
             // Get return type.
-            fn.ReturnType = context.variable_type().Accept(this).VariableType;
-
-            // Get code.
-            EnterScope("%FNCONST%_" + fn.ToString());
-            fn.Scope.AddFunction(fn.Name, fn.ToString(), fn);
-            if (context.expression() != null) {
-                fn.Definition = new CodeStatements() {
-                    Statements = new List<ICompileable>() {
-                        new ReturnStatement() {
-                            ReturnValue = context.expression().Accept(this).Expression
-                        }
-                    }
-                };
-            } else if (context.code_statement() != null) {
-                fn.Definition = new CodeStatements();
-                foreach (var c in context.code_statement()) {
-                    fn.Definition.Statements.Add(c.Accept(this).CodeStatement);
-                }
-            }
-
-            // Return function.
-            ExitScope();
-            return new AsylumVisitResult() { Function = fn };
-
-            */
-            
-        }
-
-        // TODO!!!
-        public AsylumVisitResult VisitOperator_definition([NotNull] AsylumParser.Operator_definitionContext context)
-        {
-            throw new System.NotImplementedException();
-
-            /*
-            
-            // New function.
-            Function fn = new Function();
-            fn.Name = context.variable_type().GetText();
-            fn.Scope = CTX.CurrentScope;
-            fn.ModulePath = CTX.ModuleName;
-
-            // Get attributes. TODO!!!
-            foreach (var a in context.attribute()) {
-
-            }
-
-            // Get parameters.
-            if (context.variable_arguments() != null) {
-                fn.Parameters = context.variable_arguments().Accept(this).Parameters;
-                if (fn.Parameters.Count() > 0 && fn.Parameters.Last().Value.Type.Variadic) { fn.Variadic = true; } // Variadic check.
+            VarType returnType;
+            if (context.variable_type() != null) {
+                returnType = context.variable_type().Accept(this).VariableType;
             } else {
-                fn.Parameters = new List<VarParameter>();
+                returnType = new VarTypeSimplePrimitive(SimplePrimitives.Void);
             }
-    
-            // Get return type.
-            fn.ReturnType = context.variable_type().Accept(this).VariableType;
-
-            // TODO: FIX OPERATOR!!!
-            fn.Operator = context.@operator().Accept(this).Operator;
-            if (fn.Parameters.Count() == 1) {
-                if (fn.Operator == Operator.Add) fn.Operator = Operator.Pos;
-                else if (fn.Operator == Operator.Sub) fn.Operator = Operator.Neg;
-                else if (fn.Operator == Operator.And) fn.Operator = Operator.Neg;
-            }
-
-            // Error check.
 
             // Get code.
-            EnterScope("%FNOPERATOR%_" + fn.ToString());
-            fn.Scope.AddFunction(fn.Name, fn.ToString(), fn);
+            Builder.PushModifier(modifier);
+            var opRes = context.@operator().Accept(this);
+            Builder.BeginImplOperator(opRes.Operator, opRes.OperatorEqFlag, returnType, parameters);
+            Builder.PopModifier();
             if (context.expression() != null) {
-                fn.Definition = new CodeStatements() {
-                    Statements = new List<ICompileable>() {
-                        new ReturnStatement() {
-                            ReturnValue = context.expression().Accept(this).Expression
-                        }
-                    }
-                };
+                if (returnType.Equals(new VarTypeSimplePrimitive(SimplePrimitives.Void))) { // Hack for accidentally returning a value instead of void which is illegal.
+                    Builder.Code(context.expression().Accept(this).Expression);
+                } else {
+                    Builder.Code(new ReturnStatement(context.expression().Accept(this).Expression));
+                }
             } else if (context.code_statement() != null) {
-                fn.Definition = new CodeStatements();
                 foreach (var c in context.code_statement()) {
-                    fn.Definition.Statements.Add(c.Accept(this).CodeStatement);
+                    c.Accept(this); // Add code statements.
                 }
             }
-            
-            // Return function.
-            ExitScope();
-            return new AsylumVisitResult() { Function = fn };
 
-            */
+            // Finish.
+            Builder.EndFunction();
+            return null;
 
         }
     

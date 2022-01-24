@@ -42,12 +42,7 @@ namespace Asylum.AST {
 
         public AsylumVisitResult VisitUniversalImplementation([NotNull] AsylumParser.UniversalImplementationContext context)
         {
-            throw new System.NotImplementedException();
-            /*
-            if (CTX.VisitMode != Compiler.VisitMode.GetCode) return null;
-            var ret = context.implementation_definition().Accept(this);
-            CTX.CurrentAST.Universals.Add(ret.Implementation);
-            return ret;*/
+            return context.implementation_definition().Accept(this);
         }
 
         public AsylumVisitResult VisitUniversalTopLevelCode([NotNull] AsylumParser.UniversalTopLevelCodeContext context)

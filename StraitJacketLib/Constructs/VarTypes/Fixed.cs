@@ -18,6 +18,8 @@ namespace StraitJacketLib.Constructs {
             return LLVMTypeRef.CreateInt(WholeWidth + FractionWidth);
         }
 
+        protected override string Mangled() => "x" + WholeWidth.ToString() + "X" + FractionWidth.ToString() + "E";
+
         public override bool Equals(object obj) {
             if (obj is VarTypeCustom) return Equals((obj as VarTypeCustom).Resolved);
             if (obj is VarTypeFixed) {

@@ -8,12 +8,16 @@ namespace StraitJacketLib.Constructs {
     public class ExpressionOperator : Expression {
         public List<Expression> Inputs = new List<Expression>();
         public Operator Operator;
+        public bool Assignment;
         VarType InputTypes = null;
         VarType RetType = null;
+        bool IsImplFunction = false;
+        Function FetchedOpFunction = null;
 
-        public ExpressionOperator(List<Expression> inputs, Operator op) {
+        public ExpressionOperator(List<Expression> inputs, Operator op, bool assign = false) {
             Inputs = inputs;
             Operator = op;
+            Assignment = assign;
 
             // Compiler hack, convert variable expression to constant string if needed.
             if (op == Operator.Member && Inputs[1] as ExpressionVariable != null) { 
@@ -29,10 +33,40 @@ namespace StraitJacketLib.Constructs {
         }
 
         public override void ResolveTypes() {
+            bool IsPrimitiveNumberSome(VarTypeEnum type) => type == VarTypeEnum.PrimitiveSimple || type == VarTypeEnum.PrimitiveInteger || type == VarTypeEnum.PrimitiveFixed;
+            bool IsPrimitiveNumber(VarType t) {
+                if (IsPrimitiveNumberSome(t.Type)) return true;
+                if (t.Type != VarTypeEnum.PrimitiveSimple) return false;
+                return false; // TODO: FLOATING POINT CHECK.
+            }
             foreach (var e in Inputs) {
                 e.ResolveTypes();
             }
+            if (Assignment) {
+                switch (Operator) {
+                    case Operator.AssignEq:
+                        LValue = false;
+                        GenerateCastsIfNeeded2();
+                        FetchedOpFunction = FetchOperatorFunction();
+                        RetType = FetchedOpFunction != null ? FetchedOpFunction.ReturnType : new VarTypeSimplePrimitive(SimplePrimitives.Void);
+                        return;
+                    default:
+                        throw new System.NotImplementedException("Operator return type not implemented!");
+                }
+            }
             switch (Operator) {
+                case Operator.Add:
+                case Operator.Sub:
+                case Operator.Mul:
+                case Operator.Div:
+                case Operator.Mod:
+                case Operator.Exp:
+                    LValue = false;
+                    if (IsPrimitiveNumber(Inputs[0].ReturnType()) && IsPrimitiveNumber(Inputs[1].ReturnType())) GenerateCastsIfNeeded2();
+                    FetchedOpFunction = FetchOperatorFunction();
+                    if (FetchedOpFunction == null) throw new System.Exception("Can't find operator overload " + Operator + " for given expression.");
+                    RetType = FetchedOpFunction.ReturnType;
+                    break;
                 case Operator.Eq:
                 case Operator.Neq:
                 case Operator.Lt:
@@ -57,11 +91,16 @@ namespace StraitJacketLib.Constructs {
                     break;
                 case Operator.Member:
                     var eee = Inputs[0].ReturnType();
+                    if (Inputs[0].ReturnType().Type == VarTypeEnum.Pointer) { // `->` does not exist in Asylum, so convert ptr.member to (*ptr).member. This will work efficiently for non-const expressions only!
+                        Inputs[0] = new ExpressionOperator(new List<Expression>() { Inputs[0] }, Operator.Dereference);
+                        Inputs[0].ResolveTypes();
+                    }
                     if (Inputs[0].ReturnType().Type != VarTypeEnum.Tuple) {
                         throw new System.Exception("Can't take the member of an expression that doesn't result in a tuple or struct!");
                     }
                     if (Inputs[1] as ExpressionConstStringPtr == null) throw new System.Exception("Can only take the member of using a constant string pointer!");
                     RetType = (Inputs[0].ReturnType() as VarTypeStruct).GetMemberType((Inputs[1] as ExpressionConstStringPtr).Str);
+                    IsImplFunction = RetType.Type == VarTypeEnum.PrimitiveFunction;
                     break;
                 default:
                     throw new System.NotImplementedException("Operator return type not implemented!");
@@ -89,6 +128,21 @@ namespace StraitJacketLib.Constructs {
             }
         }
 
+        // Fetch an operator function.
+        private Function FetchOperatorFunction() {
+            Scope root = Scope.Root;
+            switch (Operator) {
+                case Operator.Add:
+                case Operator.Sub:
+                case Operator.Mul:
+                case Operator.Div:
+                case Operator.Mod:
+                case Operator.Exp:
+                    break;
+            }
+            return null;
+        }
+
         public override bool IsPlural() {
             return false;
         }
@@ -107,6 +161,21 @@ namespace StraitJacketLib.Constructs {
 
         public override ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
             LLVMValueRef v1, v2;
+            Expression tmp;
+            if (Assignment) {
+                if (FetchedOpFunction == null) {
+                    switch (Operator) {
+                        case Operator.AssignEq:
+                            tmp = new ExpressionStore(Inputs[1], Inputs[0]);
+                            tmp.ResolveTypes();
+                            return tmp.Compile(mod, builder, param);
+                        default:
+                            throw new System.NotImplementedException();
+                    }
+                } else {
+                    throw new System.NotImplementedException();
+                }
+            }
             switch (Operator) {
                 case Operator.Lt:
                     v1 = Inputs[0].Compile(mod, builder, param).Val;
@@ -138,6 +207,22 @@ namespace StraitJacketLib.Constructs {
                 case Operator.Member:
                     v1 = Inputs[0].Compile(mod, builder, param).Val;
                     string member = (Inputs[1] as ExpressionConstStringPtr).Str;
+                    if (IsImplFunction) {
+                        var func = (Inputs[0].ReturnType() as VarTypeStruct).GetImplFunction(member);
+                        LLVMValueRef funcToCall = null;
+                        Function currFunc = Scope.PeekCurrentFunction;
+                        if (func.Extern || func.ModulePath.Equals(currFunc.ModulePath)) {
+                            funcToCall = func.LLVMVal;
+                        } else {
+                            if (!func.ModulePath.Equals(currFunc.ModulePath) && !func.Inline) {
+                                if (!func.ExternedLLVMVals.ContainsKey(currFunc.ModulePath)) {
+                                    func.ExternedLLVMVals.Add(currFunc.ModulePath, mod.AddFunction(func.ToString(), func.GetFuncTypeLLVM()));
+                                }
+                                funcToCall = func.ExternedLLVMVals[currFunc.ModulePath];
+                            }
+                        }
+                        return new ReturnValue(funcToCall);
+                    }
                     return new ReturnValue(builder.BuildStructGEP(
                         v1,
                         (Inputs[0].ReturnType() as VarTypeStruct).CalcIdx(member),

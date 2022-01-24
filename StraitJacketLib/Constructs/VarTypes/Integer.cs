@@ -18,6 +18,8 @@ namespace StraitJacketLib.Constructs {
             return LLVMTypeRef.CreateInt(BitWidth);
         }
 
+        protected override string Mangled() => (Signed ? "i" : "u") + BitWidth.ToString() + "E";
+
         public override bool CanImplicitlyCastTo(VarType other) {
             var otherInt = other as VarTypeInteger;
             if (otherInt != null) {
