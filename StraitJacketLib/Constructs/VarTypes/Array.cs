@@ -24,6 +24,8 @@ namespace StraitJacketLib.Constructs {
             return LLVMTypeRef.CreatePointer(EmbeddedType.GetLLVMType(), 0); // An array is just a pointer to data.
         }
 
+        protected override string Mangled() => throw new System.NotImplementedException();
+
         public override bool Equals(object obj) {
             if (obj is VarTypeCustom) return Equals((obj as VarTypeCustom).Resolved);
             if (obj is VarTypeArray) {
