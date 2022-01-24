@@ -13,6 +13,7 @@ namespace StraitJacketLib.Constructs {
         private Dictionary<string, Dictionary<string, Function>> Functions = new Dictionary<string, Dictionary<string, Function>>();
         private Dictionary<string, Variable> Variables = new Dictionary<string, Variable>();
         private Dictionary<string, VarType> Types = new Dictionary<string, VarType>();
+        private Dictionary<string, GenericTypeInfo> Generics = new Dictionary<string, GenericTypeInfo>();
         private static Stack<Function> CurrentFunction = new Stack<Function>();
         public static Function PeekCurrentFunction => CurrentFunction.Count == 0 ? null : CurrentFunction.Peek();
 
@@ -46,6 +47,14 @@ namespace StraitJacketLib.Constructs {
                 throw new System.Exception("DUPLICATE TYPE!!!");
             } else {
                 Types.Add(name, v);
+            }
+        }
+
+        public void AddGeneric(string name, GenericTypeInfo v) {
+            if (Generics.ContainsKey(name)) {
+                throw new System.Exception("DUPLICATE GENERIC!!!");
+            } else {
+                Generics.Add(name, v);
             }
         }
 
