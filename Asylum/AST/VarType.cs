@@ -160,7 +160,24 @@ namespace Asylum.AST {
             return new AsylumVisitResult() {
                 VariableType = new VarTypeSimplePrimitive(SimplePrimitives.Object)
             };
-        }     
+        }
+
+        public AsylumVisitResult VisitVarTypeArray([NotNull] AsylumParser.VarTypeArrayContext context)
+        {
+            List<uint> lens = new List<uint>();
+            int numItems = context.GetText().Split(',').Length;
+            for (int i = 0 ; i < numItems; i++) lens.Add(0);
+            if (context.INTEGER().Length != 0 && numItems != context.INTEGER().Length) throw new Exception("The size of a multi-dimensional array either has to be constant or nothing!");
+            for (int i = 0; i < context.INTEGER().Length; i++) {
+                lens[i] = (uint)GetInteger(context.INTEGER()[i]).ValueWhole;
+            }
+            return new AsylumVisitResult() {
+                VariableType = new VarTypeArray(
+                    context.variable_type().Accept(this).VariableType,
+                    lens
+                )
+            };
+        }
 
         public AsylumVisitResult VisitVarTypePointer([NotNull] AsylumParser.VarTypePointerContext context)
         {

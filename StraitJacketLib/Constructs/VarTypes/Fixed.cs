@@ -48,6 +48,10 @@ namespace StraitJacketLib.Constructs {
             return base.ToString() + "fix" + WholeWidth + "x" + FractionWidth;
         }
 
+        public override Expression DefaultValue() {
+            throw new NotImplementedException();
+        }
+
     }
 
 }
