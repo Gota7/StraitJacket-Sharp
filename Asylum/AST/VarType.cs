@@ -134,27 +134,6 @@ namespace Asylum.AST {
             };
         }
 
-        public AsylumVisitResult VisitPrimitiveSignedAny([NotNull] AsylumParser.PrimitiveSignedAnyContext context)
-        {
-            return new AsylumVisitResult() {
-                VariableType = new VarTypeSimplePrimitive(SimplePrimitives.SignedAny)
-            };
-        }
-
-        public AsylumVisitResult VisitPrimitiveUnsignedAny([NotNull] AsylumParser.PrimitiveUnsignedAnyContext context)
-        {
-            return new AsylumVisitResult() {
-                VariableType = new VarTypeSimplePrimitive(SimplePrimitives.UnsignedAny)
-            };
-        }
-
-        public AsylumVisitResult VisitPrimitiveFloatingAny([NotNull] AsylumParser.PrimitiveFloatingAnyContext context)
-        {
-            return new AsylumVisitResult() {
-                VariableType = new VarTypeSimplePrimitive(SimplePrimitives.FloatingAny)
-            };
-        }
-
         public AsylumVisitResult VisitPrimitiveObject([NotNull] AsylumParser.PrimitiveObjectContext context)
         {
             return new AsylumVisitResult() {

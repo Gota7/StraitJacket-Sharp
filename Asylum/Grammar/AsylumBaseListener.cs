@@ -188,6 +188,20 @@ public partial class AsylumBaseListener : IAsylumListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitUniversalTypedef([NotNull] AsylumParser.UniversalTypedefContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by the <c>UniversalConcept</c>
+	/// labeled alternative in <see cref="AsylumParser.universal_statement"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterUniversalConcept([NotNull] AsylumParser.UniversalConceptContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>UniversalConcept</c>
+	/// labeled alternative in <see cref="AsylumParser.universal_statement"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitUniversalConcept([NotNull] AsylumParser.UniversalConceptContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by the <c>UniversalTopLevelCode</c>
 	/// labeled alternative in <see cref="AsylumParser.universal_statement"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -547,6 +561,34 @@ public partial class AsylumBaseListener : IAsylumListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitPropertySetOnly([NotNull] AsylumParser.PropertySetOnlyContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>StructInitializerProperty</c>
+	/// labeled alternative in <see cref="AsylumParser.struct_initializer"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterStructInitializerProperty([NotNull] AsylumParser.StructInitializerPropertyContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>StructInitializerProperty</c>
+	/// labeled alternative in <see cref="AsylumParser.struct_initializer"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitStructInitializerProperty([NotNull] AsylumParser.StructInitializerPropertyContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>StructInitializerValue</c>
+	/// labeled alternative in <see cref="AsylumParser.struct_initializer"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterStructInitializerValue([NotNull] AsylumParser.StructInitializerValueContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>StructInitializerValue</c>
+	/// labeled alternative in <see cref="AsylumParser.struct_initializer"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitStructInitializerValue([NotNull] AsylumParser.StructInitializerValueContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="AsylumParser.code_body"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -1040,6 +1082,186 @@ public partial class AsylumBaseListener : IAsylumListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitType_implements([NotNull] AsylumParser.Type_implementsContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="AsylumParser.concept"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterConcept([NotNull] AsylumParser.ConceptContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="AsylumParser.concept"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitConcept([NotNull] AsylumParser.ConceptContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>ConceptDefinitionVisitOr</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterConceptDefinitionVisitOr([NotNull] AsylumParser.ConceptDefinitionVisitOrContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>ConceptDefinitionVisitOr</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitConceptDefinitionVisitOr([NotNull] AsylumParser.ConceptDefinitionVisitOrContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>ConceptDefinitionOr</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_or"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterConceptDefinitionOr([NotNull] AsylumParser.ConceptDefinitionOrContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>ConceptDefinitionOr</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_or"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitConceptDefinitionOr([NotNull] AsylumParser.ConceptDefinitionOrContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>ConceptDefinitionVisitAnd</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_or"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterConceptDefinitionVisitAnd([NotNull] AsylumParser.ConceptDefinitionVisitAndContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>ConceptDefinitionVisitAnd</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_or"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitConceptDefinitionVisitAnd([NotNull] AsylumParser.ConceptDefinitionVisitAndContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>ConceptDefinitionVisitFactor</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_and"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterConceptDefinitionVisitFactor([NotNull] AsylumParser.ConceptDefinitionVisitFactorContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>ConceptDefinitionVisitFactor</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_and"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitConceptDefinitionVisitFactor([NotNull] AsylumParser.ConceptDefinitionVisitFactorContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>ConceptDefinitionAnd</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_and"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterConceptDefinitionAnd([NotNull] AsylumParser.ConceptDefinitionAndContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>ConceptDefinitionAnd</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_and"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitConceptDefinitionAnd([NotNull] AsylumParser.ConceptDefinitionAndContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>ConceptDefinitionStructImplements</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_factor"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterConceptDefinitionStructImplements([NotNull] AsylumParser.ConceptDefinitionStructImplementsContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>ConceptDefinitionStructImplements</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_factor"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitConceptDefinitionStructImplements([NotNull] AsylumParser.ConceptDefinitionStructImplementsContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>ConceptDefinitionParenthesis</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_factor"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterConceptDefinitionParenthesis([NotNull] AsylumParser.ConceptDefinitionParenthesisContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>ConceptDefinitionParenthesis</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_factor"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitConceptDefinitionParenthesis([NotNull] AsylumParser.ConceptDefinitionParenthesisContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>ConceptDefinitionVarType</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_factor"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterConceptDefinitionVarType([NotNull] AsylumParser.ConceptDefinitionVarTypeContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>ConceptDefinitionVarType</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_factor"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitConceptDefinitionVarType([NotNull] AsylumParser.ConceptDefinitionVarTypeContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>ConceptDefinitionUnsigned</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_factor"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterConceptDefinitionUnsigned([NotNull] AsylumParser.ConceptDefinitionUnsignedContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>ConceptDefinitionUnsigned</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_factor"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitConceptDefinitionUnsigned([NotNull] AsylumParser.ConceptDefinitionUnsignedContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>ConceptDefinitionSigned</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_factor"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterConceptDefinitionSigned([NotNull] AsylumParser.ConceptDefinitionSignedContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>ConceptDefinitionSigned</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_factor"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitConceptDefinitionSigned([NotNull] AsylumParser.ConceptDefinitionSignedContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>ConceptDefinitionFloating</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_factor"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterConceptDefinitionFloating([NotNull] AsylumParser.ConceptDefinitionFloatingContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>ConceptDefinitionFloating</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_factor"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitConceptDefinitionFloating([NotNull] AsylumParser.ConceptDefinitionFloatingContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>ConceptDefinitionFixed</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_factor"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterConceptDefinitionFixed([NotNull] AsylumParser.ConceptDefinitionFixedContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>ConceptDefinitionFixed</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_factor"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitConceptDefinitionFixed([NotNull] AsylumParser.ConceptDefinitionFixedContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="AsylumParser.generic_definition"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -1052,6 +1274,34 @@ public partial class AsylumBaseListener : IAsylumListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitGeneric_definition([NotNull] AsylumParser.Generic_definitionContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by the <c>GenericDefinitionItemConcept</c>
+	/// labeled alternative in <see cref="AsylumParser.generic_definition_item"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterGenericDefinitionItemConcept([NotNull] AsylumParser.GenericDefinitionItemConceptContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>GenericDefinitionItemConcept</c>
+	/// labeled alternative in <see cref="AsylumParser.generic_definition_item"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitGenericDefinitionItemConcept([NotNull] AsylumParser.GenericDefinitionItemConceptContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>GenericDefinitionItemSpecifier</c>
+	/// labeled alternative in <see cref="AsylumParser.generic_definition_item"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterGenericDefinitionItemSpecifier([NotNull] AsylumParser.GenericDefinitionItemSpecifierContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>GenericDefinitionItemSpecifier</c>
+	/// labeled alternative in <see cref="AsylumParser.generic_definition_item"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitGenericDefinitionItemSpecifier([NotNull] AsylumParser.GenericDefinitionItemSpecifierContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="AsylumParser.generic_specifier"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -1063,6 +1313,34 @@ public partial class AsylumBaseListener : IAsylumListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitGeneric_specifier([NotNull] AsylumParser.Generic_specifierContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>GenericSpecifierVarType</c>
+	/// labeled alternative in <see cref="AsylumParser.generic_specifier_item"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterGenericSpecifierVarType([NotNull] AsylumParser.GenericSpecifierVarTypeContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>GenericSpecifierVarType</c>
+	/// labeled alternative in <see cref="AsylumParser.generic_specifier_item"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitGenericSpecifierVarType([NotNull] AsylumParser.GenericSpecifierVarTypeContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>GenericSpecifierExpression</c>
+	/// labeled alternative in <see cref="AsylumParser.generic_specifier_item"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterGenericSpecifierExpression([NotNull] AsylumParser.GenericSpecifierExpressionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>GenericSpecifierExpression</c>
+	/// labeled alternative in <see cref="AsylumParser.generic_specifier_item"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitGenericSpecifierExpression([NotNull] AsylumParser.GenericSpecifierExpressionContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>ExprVisitComma</c>
 	/// labeled alternative in <see cref="AsylumParser.expression"/>.
@@ -1778,6 +2056,20 @@ public partial class AsylumBaseListener : IAsylumListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitExprDefinedConstant([NotNull] AsylumParser.ExprDefinedConstantContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by the <c>ExprCode</c>
+	/// labeled alternative in <see cref="AsylumParser.expr_primary"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterExprCode([NotNull] AsylumParser.ExprCodeContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>ExprCode</c>
+	/// labeled alternative in <see cref="AsylumParser.expr_primary"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitExprCode([NotNull] AsylumParser.ExprCodeContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by the <c>ExprDefaultOf</c>
 	/// labeled alternative in <see cref="AsylumParser.expr_primary"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -1819,6 +2111,20 @@ public partial class AsylumBaseListener : IAsylumListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitExprMemberAccess([NotNull] AsylumParser.ExprMemberAccessContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>ExprLengthof</c>
+	/// labeled alternative in <see cref="AsylumParser.expr_primary"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterExprLengthof([NotNull] AsylumParser.ExprLengthofContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>ExprLengthof</c>
+	/// labeled alternative in <see cref="AsylumParser.expr_primary"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitExprLengthof([NotNull] AsylumParser.ExprLengthofContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>ExprIncrement</c>
 	/// labeled alternative in <see cref="AsylumParser.expr_primary"/>.
@@ -1875,6 +2181,20 @@ public partial class AsylumBaseListener : IAsylumListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitExprArrayAccess([NotNull] AsylumParser.ExprArrayAccessContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>ExprStructInit</c>
+	/// labeled alternative in <see cref="AsylumParser.expr_primary"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterExprStructInit([NotNull] AsylumParser.ExprStructInitContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>ExprStructInit</c>
+	/// labeled alternative in <see cref="AsylumParser.expr_primary"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitExprStructInit([NotNull] AsylumParser.ExprStructInitContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>ExprFunctionCall</c>
 	/// labeled alternative in <see cref="AsylumParser.expr_primary"/>.
@@ -2015,6 +2335,34 @@ public partial class AsylumBaseListener : IAsylumListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitExprInteger([NotNull] AsylumParser.ExprIntegerContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>ExprFloating</c>
+	/// labeled alternative in <see cref="AsylumParser.expr_end"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterExprFloating([NotNull] AsylumParser.ExprFloatingContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>ExprFloating</c>
+	/// labeled alternative in <see cref="AsylumParser.expr_end"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitExprFloating([NotNull] AsylumParser.ExprFloatingContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>ExprFixed</c>
+	/// labeled alternative in <see cref="AsylumParser.expr_end"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterExprFixed([NotNull] AsylumParser.ExprFixedContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>ExprFixed</c>
+	/// labeled alternative in <see cref="AsylumParser.expr_end"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitExprFixed([NotNull] AsylumParser.ExprFixedContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>ExprString</c>
 	/// labeled alternative in <see cref="AsylumParser.expr_end"/>.
@@ -2625,62 +2973,6 @@ public partial class AsylumBaseListener : IAsylumListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitPrimitiveAutoVariable([NotNull] AsylumParser.PrimitiveAutoVariableContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>PrimitiveUnsignedAny</c>
-	/// labeled alternative in <see cref="AsylumParser.primitives"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterPrimitiveUnsignedAny([NotNull] AsylumParser.PrimitiveUnsignedAnyContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>PrimitiveUnsignedAny</c>
-	/// labeled alternative in <see cref="AsylumParser.primitives"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitPrimitiveUnsignedAny([NotNull] AsylumParser.PrimitiveUnsignedAnyContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>PrimitiveSignedAny</c>
-	/// labeled alternative in <see cref="AsylumParser.primitives"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterPrimitiveSignedAny([NotNull] AsylumParser.PrimitiveSignedAnyContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>PrimitiveSignedAny</c>
-	/// labeled alternative in <see cref="AsylumParser.primitives"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitPrimitiveSignedAny([NotNull] AsylumParser.PrimitiveSignedAnyContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>PrimitiveFloatingAny</c>
-	/// labeled alternative in <see cref="AsylumParser.primitives"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterPrimitiveFloatingAny([NotNull] AsylumParser.PrimitiveFloatingAnyContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>PrimitiveFloatingAny</c>
-	/// labeled alternative in <see cref="AsylumParser.primitives"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitPrimitiveFloatingAny([NotNull] AsylumParser.PrimitiveFloatingAnyContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>PrimitiveFixedAny</c>
-	/// labeled alternative in <see cref="AsylumParser.primitives"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterPrimitiveFixedAny([NotNull] AsylumParser.PrimitiveFixedAnyContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>PrimitiveFixedAny</c>
-	/// labeled alternative in <see cref="AsylumParser.primitives"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitPrimitiveFixedAny([NotNull] AsylumParser.PrimitiveFixedAnyContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>ConstantTrue</c>
 	/// labeled alternative in <see cref="AsylumParser.defined_constants"/>.

@@ -108,6 +108,13 @@ public interface IAsylumVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitUniversalTypedef([NotNull] AsylumParser.UniversalTypedefContext context);
 	/// <summary>
+	/// Visit a parse tree produced by the <c>UniversalConcept</c>
+	/// labeled alternative in <see cref="AsylumParser.universal_statement"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitUniversalConcept([NotNull] AsylumParser.UniversalConceptContext context);
+	/// <summary>
 	/// Visit a parse tree produced by the <c>UniversalTopLevelCode</c>
 	/// labeled alternative in <see cref="AsylumParser.universal_statement"/>.
 	/// </summary>
@@ -287,6 +294,20 @@ public interface IAsylumVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitPropertySetOnly([NotNull] AsylumParser.PropertySetOnlyContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>StructInitializerProperty</c>
+	/// labeled alternative in <see cref="AsylumParser.struct_initializer"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitStructInitializerProperty([NotNull] AsylumParser.StructInitializerPropertyContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>StructInitializerValue</c>
+	/// labeled alternative in <see cref="AsylumParser.struct_initializer"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitStructInitializerValue([NotNull] AsylumParser.StructInitializerValueContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="AsylumParser.code_body"/>.
 	/// </summary>
@@ -534,17 +555,135 @@ public interface IAsylumVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitType_implements([NotNull] AsylumParser.Type_implementsContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="AsylumParser.concept"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitConcept([NotNull] AsylumParser.ConceptContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>ConceptDefinitionVisitOr</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitConceptDefinitionVisitOr([NotNull] AsylumParser.ConceptDefinitionVisitOrContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>ConceptDefinitionOr</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_or"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitConceptDefinitionOr([NotNull] AsylumParser.ConceptDefinitionOrContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>ConceptDefinitionVisitAnd</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_or"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitConceptDefinitionVisitAnd([NotNull] AsylumParser.ConceptDefinitionVisitAndContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>ConceptDefinitionVisitFactor</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_and"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitConceptDefinitionVisitFactor([NotNull] AsylumParser.ConceptDefinitionVisitFactorContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>ConceptDefinitionAnd</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_and"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitConceptDefinitionAnd([NotNull] AsylumParser.ConceptDefinitionAndContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>ConceptDefinitionStructImplements</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_factor"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitConceptDefinitionStructImplements([NotNull] AsylumParser.ConceptDefinitionStructImplementsContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>ConceptDefinitionParenthesis</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_factor"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitConceptDefinitionParenthesis([NotNull] AsylumParser.ConceptDefinitionParenthesisContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>ConceptDefinitionVarType</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_factor"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitConceptDefinitionVarType([NotNull] AsylumParser.ConceptDefinitionVarTypeContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>ConceptDefinitionUnsigned</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_factor"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitConceptDefinitionUnsigned([NotNull] AsylumParser.ConceptDefinitionUnsignedContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>ConceptDefinitionSigned</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_factor"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitConceptDefinitionSigned([NotNull] AsylumParser.ConceptDefinitionSignedContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>ConceptDefinitionFloating</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_factor"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitConceptDefinitionFloating([NotNull] AsylumParser.ConceptDefinitionFloatingContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>ConceptDefinitionFixed</c>
+	/// labeled alternative in <see cref="AsylumParser.concept_definition_factor"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitConceptDefinitionFixed([NotNull] AsylumParser.ConceptDefinitionFixedContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="AsylumParser.generic_definition"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitGeneric_definition([NotNull] AsylumParser.Generic_definitionContext context);
 	/// <summary>
+	/// Visit a parse tree produced by the <c>GenericDefinitionItemConcept</c>
+	/// labeled alternative in <see cref="AsylumParser.generic_definition_item"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitGenericDefinitionItemConcept([NotNull] AsylumParser.GenericDefinitionItemConceptContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>GenericDefinitionItemSpecifier</c>
+	/// labeled alternative in <see cref="AsylumParser.generic_definition_item"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitGenericDefinitionItemSpecifier([NotNull] AsylumParser.GenericDefinitionItemSpecifierContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="AsylumParser.generic_specifier"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitGeneric_specifier([NotNull] AsylumParser.Generic_specifierContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>GenericSpecifierVarType</c>
+	/// labeled alternative in <see cref="AsylumParser.generic_specifier_item"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitGenericSpecifierVarType([NotNull] AsylumParser.GenericSpecifierVarTypeContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>GenericSpecifierExpression</c>
+	/// labeled alternative in <see cref="AsylumParser.generic_specifier_item"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitGenericSpecifierExpression([NotNull] AsylumParser.GenericSpecifierExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>ExprVisitComma</c>
 	/// labeled alternative in <see cref="AsylumParser.expression"/>.
@@ -903,6 +1042,13 @@ public interface IAsylumVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitExprDefinedConstant([NotNull] AsylumParser.ExprDefinedConstantContext context);
 	/// <summary>
+	/// Visit a parse tree produced by the <c>ExprCode</c>
+	/// labeled alternative in <see cref="AsylumParser.expr_primary"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExprCode([NotNull] AsylumParser.ExprCodeContext context);
+	/// <summary>
 	/// Visit a parse tree produced by the <c>ExprDefaultOf</c>
 	/// labeled alternative in <see cref="AsylumParser.expr_primary"/>.
 	/// </summary>
@@ -923,6 +1069,13 @@ public interface IAsylumVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitExprMemberAccess([NotNull] AsylumParser.ExprMemberAccessContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>ExprLengthof</c>
+	/// labeled alternative in <see cref="AsylumParser.expr_primary"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExprLengthof([NotNull] AsylumParser.ExprLengthofContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>ExprIncrement</c>
 	/// labeled alternative in <see cref="AsylumParser.expr_primary"/>.
@@ -951,6 +1104,13 @@ public interface IAsylumVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitExprArrayAccess([NotNull] AsylumParser.ExprArrayAccessContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>ExprStructInit</c>
+	/// labeled alternative in <see cref="AsylumParser.expr_primary"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExprStructInit([NotNull] AsylumParser.ExprStructInitContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>ExprFunctionCall</c>
 	/// labeled alternative in <see cref="AsylumParser.expr_primary"/>.
@@ -1021,6 +1181,20 @@ public interface IAsylumVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitExprInteger([NotNull] AsylumParser.ExprIntegerContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>ExprFloating</c>
+	/// labeled alternative in <see cref="AsylumParser.expr_end"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExprFloating([NotNull] AsylumParser.ExprFloatingContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>ExprFixed</c>
+	/// labeled alternative in <see cref="AsylumParser.expr_end"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExprFixed([NotNull] AsylumParser.ExprFixedContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>ExprString</c>
 	/// labeled alternative in <see cref="AsylumParser.expr_end"/>.
@@ -1326,34 +1500,6 @@ public interface IAsylumVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitPrimitiveAutoVariable([NotNull] AsylumParser.PrimitiveAutoVariableContext context);
-	/// <summary>
-	/// Visit a parse tree produced by the <c>PrimitiveUnsignedAny</c>
-	/// labeled alternative in <see cref="AsylumParser.primitives"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitPrimitiveUnsignedAny([NotNull] AsylumParser.PrimitiveUnsignedAnyContext context);
-	/// <summary>
-	/// Visit a parse tree produced by the <c>PrimitiveSignedAny</c>
-	/// labeled alternative in <see cref="AsylumParser.primitives"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitPrimitiveSignedAny([NotNull] AsylumParser.PrimitiveSignedAnyContext context);
-	/// <summary>
-	/// Visit a parse tree produced by the <c>PrimitiveFloatingAny</c>
-	/// labeled alternative in <see cref="AsylumParser.primitives"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitPrimitiveFloatingAny([NotNull] AsylumParser.PrimitiveFloatingAnyContext context);
-	/// <summary>
-	/// Visit a parse tree produced by the <c>PrimitiveFixedAny</c>
-	/// labeled alternative in <see cref="AsylumParser.primitives"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitPrimitiveFixedAny([NotNull] AsylumParser.PrimitiveFixedAnyContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>ConstantTrue</c>
 	/// labeled alternative in <see cref="AsylumParser.defined_constants"/>.

@@ -32,6 +32,10 @@ namespace StraitJacketLib.Constructs {
             return InstancedStruct.GetLLVMType();
         }
 
+        protected override string Mangled() {
+            return InstancedStruct.GetMangled();
+        }
+
         public override bool CanImplicitlyCastTo(VarType other) {
             return InstancedStruct.CanCastTo(other);
         }
@@ -59,6 +63,10 @@ namespace StraitJacketLib.Constructs {
                 if (t != TypeParameters.Last()) ret += ", ";
             }
             return ret + ">";
+        }
+
+        public override Expression DefaultValue() {
+            return InstancedStruct.DefaultValue();
         }
 
     }

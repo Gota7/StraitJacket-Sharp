@@ -18,11 +18,7 @@ namespace StraitJacketLib.Constructs {
         Object,
         Void,
         Char,
-        WideChar,
-        UnsignedAny,
-        SignedAny,
-        FloatingAny,
-        FixedAny
+        WideChar
     }
 
     // A simple primitive.
@@ -60,11 +56,6 @@ namespace StraitJacketLib.Constructs {
                     return LLVMTypeRef.Int8;
                 case SimplePrimitives.WideChar:
                     return LLVMTypeRef.Int16;
-                case SimplePrimitives.UnsignedAny:
-                case SimplePrimitives.SignedAny:
-                case SimplePrimitives.FloatingAny:
-                case SimplePrimitives.FixedAny:
-                    throw new Exception("Can't make instance of abstract type!");
                 default:
                     throw new Exception("?????????");
             }
@@ -96,14 +87,6 @@ namespace StraitJacketLib.Constructs {
                     return "r";
                 case SimplePrimitives.WideChar:
                     return "w";
-                case SimplePrimitives.UnsignedAny:
-                    return "U";
-                case SimplePrimitives.SignedAny:
-                    return "I";
-                case SimplePrimitives.FloatingAny:
-                    return "F";
-                case SimplePrimitives.FixedAny:
-                    return "X";
                 default:
                     throw new System.NotImplementedException("???????????");   
             }
@@ -171,18 +154,6 @@ namespace StraitJacketLib.Constructs {
                     break;
                 case SimplePrimitives.WideChar:
                     ret += "wchar";
-                    break;
-                case SimplePrimitives.UnsignedAny:
-                    ret += "unsigned";
-                    break;
-                case SimplePrimitives.SignedAny:
-                    ret += "signed";
-                    break;
-                case SimplePrimitives.FloatingAny:
-                    ret += "floating";
-                    break;
-                case SimplePrimitives.FixedAny:
-                    ret += "fixed";
                     break;
                 default:
                     throw new Exception("Can't get string for primitive type: " + Primitive.ToString());

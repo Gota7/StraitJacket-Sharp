@@ -10,8 +10,9 @@ namespace StraitJacketLib.Builder {
 
         // Make the current structure or function generic.
         public void BeginGenericScope(string genericName, params GenericTypeInfo[] types) {
-            EnterScope("_G" + t.ToString(), true);
-            NumGenericScopes++;
+            throw new System.NotImplementedException();
+            //EnterScope("_G" + t.ToString(), true);
+            //NumGenericScopes++;
         }
 
         // End generic scope.
