@@ -11,7 +11,7 @@ namespace StraitJacketLib.Builder {
         Scope RootScope;
         CodeStatements TopLevel = new CodeStatements();
         CodeStatements CurrStatements;
-
+        
         // Create a new builder, for compiling EASL or EASL is not used.
         public ProgramBuilder() {
             CurrScope = new Scope() { Name = "" };

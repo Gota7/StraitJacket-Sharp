@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using LLVMSharp.Interop;
 using StraitJacketLib.Constructs;
 
 namespace StraitJacketLib.Builder {
@@ -21,8 +23,39 @@ namespace StraitJacketLib.Builder {
 
         // Build a code statement.
         public void Code(ICompileable statement) {
-            if (CurrStatements == null) throw new System.Exception("Can not have top-level statements across multiple files!");
-            CurrStatements.Statements.Add(statement);
+            if (CurrStatements == null && !JITMode) throw new System.Exception("Can not have top-level statements across multiple files!");
+            if (JITMode) {
+                bool topLevel = CurrStatements == null || TopLevel == CurrStatements;
+                Expression expr = statement as Expression;
+                LLVMValueRef jitFunc = null;
+                if (topLevel) {
+                    jitFunc = JITMod.AddFunction("",
+                        LLVMTypeRef.CreateFunction(LLVMTypeRef.Void,
+                        new LLVMTypeRef[0])
+                    );
+                    var blk = LLVMBasicBlockRef.AppendInContext(JITMod.Context, jitFunc, "entry");
+                    JITBuilder.PositionAtEnd(blk);
+                    if (expr != null) {
+                        statement = new ExpressionCall( // For now hardcode only printing the result as an integer.
+                            new ExpressionVariable(VariableOrFunction("printf")),
+                            new ExpressionComma(new List<Expression>() {
+                                new ExpressionConstStringPtr("%d\n"),
+                                expr
+                            })
+                        );
+                    }
+                }
+                statement.ResolveVariables();
+                statement.ResolveTypes();
+                statement.Compile(JITMod, JITBuilder, null);
+                if (topLevel) {
+                    JITBuilder.BuildRetVoid();
+                    CodeStatements.BlockTerminated = false;
+                    CodeStatements.ReturnedValue = null; // Fix return statement hack.
+                    JITExe.RunFunction(jitFunc, new LLVMGenericValueRef[0]);
+                }
+            }
+            if (CurrStatements != null) CurrStatements.Statements.Add(statement);
         }
 
         // Start an if statement.

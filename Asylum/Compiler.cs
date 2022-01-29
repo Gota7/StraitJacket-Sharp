@@ -126,6 +126,11 @@ namespace Asylum {
             // Make sure no error was encountered.
             if (!ErrorHandler.Valid) return;
 
+            visitor.Builder.BeginJITMode();
+            visitor.Builder.Code(new ExpressionConstInt(false, 7));
+            visitor.Builder.EndJITMode();
+            return;
+
             // Time to compile.
             var compiled = visitor.Builder.Compile();
             compiled["EASL"].WriteBitcodeToFile(rootFolder + "/obj/EASL.bc");
