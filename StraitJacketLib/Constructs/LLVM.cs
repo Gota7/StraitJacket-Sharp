@@ -95,6 +95,26 @@ namespace StraitJacketLib.Constructs {
                 case "not":
                     VerifyArgs(1);
                     return new ReturnValue(builder.BuildNot(v1));
+                case "fadd":
+                    VerifyArgs(2);
+                    return new ReturnValue(builder.BuildFAdd(v1, v2));
+                case "fsub":
+                    VerifyArgs(2);
+                    return new ReturnValue(builder.BuildFSub(v1, v2));
+                case "fmul":
+                    VerifyArgs(2);
+                    return new ReturnValue(builder.BuildFMul(v1, v2));
+                case "fdiv":
+                    VerifyArgs(2);
+                    return new ReturnValue(builder.BuildFDiv(v1, v2));
+                case "frem":
+                    VerifyArgs(2);
+                    return new ReturnValue(builder.BuildFRem(v1, v2));
+                case "fneg":
+                    VerifyArgs(1);
+                    return new ReturnValue(builder.BuildFNeg(v1));
+                default:
+                    throw new System.NotImplementedException();
             }
             void VerifyArgs(int num) {
                 if (num != args.Count - 1) {

@@ -642,6 +642,7 @@ namespace Asylum.AST {
             Number ret = new Number();
             ret.Type = NumberType.Decimal;
             if (str.StartsWith("0x") || str.StartsWith("0b")) throw new System.NotImplementedException();
+            if (str.EndsWith("f")) str = str.Substring(0, str.Length - 1);
             ret.ValueDecimal = Convert.ToDouble(str);
             return ret;
         }

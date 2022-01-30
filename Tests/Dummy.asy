@@ -1,2 +1,2 @@
-float h = 7.7;
+float h = (float)llvm("fmul", 7.7f, 3f);
 printf("%f\n", (double)h);
