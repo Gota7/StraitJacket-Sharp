@@ -1,29 +1,42 @@
 using System;
+using System.Collections.Generic;
 using LLVMSharp.Interop;
 
 namespace StraitJacketLib.Constructs {
 
-    // A signed or unsigned integer.
-    public class VarTypeInteger : VarType {
-        public bool Signed;
+    // A floating point value.
+    public class VarTypeFloating : VarType {
         public uint BitWidth;
-        
-        public VarTypeInteger(bool signed, uint bitWidth) {
-            Type = VarTypeEnum.PrimitiveInteger;
-            Signed = signed;
+        public readonly List<uint> SupportedWidths = new List<uint> { 16, 32, 64, 80, 128 };
+        public readonly Dictionary<uint, LLVMTypeRef> LLVMTypes = new Dictionary<uint, LLVMTypeRef>() {
+            { 16, LLVMTypeRef.Half },
+            { 32, LLVMTypeRef.Float },
+            { 64, LLVMTypeRef.Double },
+            { 80, LLVMTypeRef.X86FP80 },
+            { 128, LLVMTypeRef.FP128 }
+        };
+        public readonly Dictionary<uint, string> MangledWidths = new Dictionary<uint, string>() {
+            { 16, "h" },
+            { 32, "f" },
+            { 64, "d" },
+            { 80, "e" },
+            { 128, "c" }
+        };
+
+        public VarTypeFloating(uint bitWidth) {
+            Type = VarTypeEnum.PrimitiveFloating;
+            if (!SupportedWidths.Contains(bitWidth)) throw new Exception("Unsupported floating point bit-width!");
             BitWidth = bitWidth;
         }
 
-        protected override LLVMTypeRef LLVMType() {
-            return LLVMTypeRef.CreateInt(BitWidth);
-        }
+        protected override LLVMTypeRef LLVMType() => LLVMTypes[BitWidth];
 
-        protected override string Mangled() => (Signed ? "i" : "u") + BitWidth.ToString() + "E";
+        protected override string Mangled() => MangledWidths[BitWidth];
 
         public override bool CanImplicitlyCastTo(VarType other) {
-            var otherInt = other as VarTypeInteger;
-            if (otherInt != null) {
-                return otherInt.BitWidth > BitWidth;
+            var fp = other as VarTypeFloating;
+            if (fp != null) {
+                return fp.BitWidth > BitWidth;
             } else {
                 return base.CanImplicitlyCastTo(other);
             }
@@ -38,17 +51,13 @@ namespace StraitJacketLib.Constructs {
         }
 
         public override ReturnValue CastTo(ReturnValue srcVal, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder) {
-            if (destType.Type == VarTypeEnum.PrimitiveInteger) {
+            if (destType.Type == VarTypeEnum.PrimitiveFloating) {
                 var src = this;
-                var dest = destType as VarTypeInteger;
+                var dest = destType as VarTypeFloating;
                 if (src.BitWidth < dest.BitWidth) {
-                    if (src.Signed) {
-                        return new ReturnValue(builder.BuildSExt(srcVal.Val, destType.GetLLVMType(), "SJ_CastInt_SExt"));
-                    } else {
-                        return new ReturnValue(builder.BuildZExt(srcVal.Val, destType.GetLLVMType(), "SJ_CastInt_ZExt"));
-                    }
+                    return new ReturnValue(builder.BuildFPExt(srcVal.Val, dest.GetLLVMType(), "SJ_CastFloat_Ext"));
                 } else if (src.BitWidth > dest.BitWidth) {
-                    return new ReturnValue(builder.BuildTrunc(srcVal.Val, dest.GetLLVMType(), "SJ_CastInt_Trunc"));
+                    return new ReturnValue(builder.BuildFPTrunc(srcVal.Val, dest.GetLLVMType(), "SJ_CastFloat_Trunc"));
                 } else {
                     return srcVal;
                 }
@@ -58,17 +67,17 @@ namespace StraitJacketLib.Constructs {
 
         public override bool Equals(object obj) {
             if (obj is VarTypeCustom) return Equals((obj as VarTypeCustom).Resolved);
-            if (obj is VarTypeInteger) {
-                var i = obj as VarTypeInteger;
+            if (obj is VarTypeFloating) {
+                var i = obj as VarTypeFloating;
                 if (i.Constant != Constant) return false;
                 if (i.Atomic != Atomic) return false;
                 if (i.Volatile != Volatile) return false;
                 if (i.Variadic != Variadic) return false;
-                return i.BitWidth == BitWidth && i.Signed == Signed;
+                return i.BitWidth == BitWidth;
             }
             return false;
         }
-        
+
         public override int GetHashCode() {
             HashCode hash = new HashCode();
             hash.Add(Type);
@@ -77,16 +86,15 @@ namespace StraitJacketLib.Constructs {
             hash.Add(Atomic);
             hash.Add(Variadic);
             hash.Add(BitWidth);
-            hash.Add(Signed);
             return hash.ToHashCode();
         }
 
         public override string ToString() {
-            return base.ToString() + (Signed ? "s" : "u") + BitWidth;
+            return base.ToString() + "f" + BitWidth;
         }
 
         public override Expression DefaultValue() {
-            return new ExpressionConstInt(Signed, 0);
+            return new ExpressionConstFloat(BitWidth, 0);
         }
 
     }

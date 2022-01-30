@@ -530,6 +530,18 @@ namespace Asylum.AST {
             return new AsylumVisitResult() { Expression = ret };
         }
 
+        public AsylumVisitResult VisitExprFloating([NotNull] AsylumParser.ExprFloatingContext context)
+        {
+            Number n = GetFloat(context.FLOATINGVAL());
+            Expression ret = new ExpressionConstFloat(32, n.ValueDecimal);
+            return new AsylumVisitResult() { Expression = ret };
+        }
+
+        public AsylumVisitResult VisitExprFixed([NotNull] AsylumParser.ExprFixedContext context)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public AsylumVisitResult VisitExprString([NotNull] AsylumParser.ExprStringContext context)
         {
             Expression ret = new ExpressionConstStringPtr(GetString(context.STRING()));
@@ -622,6 +634,15 @@ namespace Asylum.AST {
                 ret.ForceSigned = false;
             }
             ret.ValueWhole = (long)valU;
+            return ret;
+        }
+
+        public Number GetFloat(ITerminalNode num) {
+            string str = num.GetText();
+            Number ret = new Number();
+            ret.Type = NumberType.Decimal;
+            if (str.StartsWith("0x") || str.StartsWith("0b")) throw new System.NotImplementedException();
+            ret.ValueDecimal = Convert.ToDouble(str);
             return ret;
         }
 

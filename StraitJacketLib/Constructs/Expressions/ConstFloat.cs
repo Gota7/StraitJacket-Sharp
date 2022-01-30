@@ -4,19 +4,25 @@ using LLVMSharp.Interop;
 
 namespace StraitJacketLib.Constructs {
 
-    // Constant floating point. TODO - ALLOW FOR OTHER THAN DOUBLE!
+    // Constant floating point.
     public class ExpressionConstFloat : Expression {
         public Number Val;
+        public uint BitWidth;
 
-        public ExpressionConstFloat(double val) {
+        public ExpressionConstFloat(uint bitWidth, double val) {
             Val = new Number() {
                 Type = NumberType.Decimal,
                 ValueDecimal = val
             };
+            BitWidth = bitWidth;
+        }
+
+        public override void ResolveTypes() {
+            LValue = false;
         }
 
         public override VarType GetReturnType() {
-            return new VarTypeSimplePrimitive(SimplePrimitives.Double);
+            return new VarTypeFloating(BitWidth);
         }
         
         public override bool IsPlural() {
@@ -32,7 +38,7 @@ namespace StraitJacketLib.Constructs {
         }
 
         public override ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            return new ReturnValue(LLVMValueRef.CreateConstReal(LLVMTypeRef.Double, Val.ValueDecimal));
+            return new ReturnValue(LLVMValueRef.CreateConstReal(GetReturnType().GetLLVMType(), Val.ValueDecimal));
         }
 
         public override string ToString() {

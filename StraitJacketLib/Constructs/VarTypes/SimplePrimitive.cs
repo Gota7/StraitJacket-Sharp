@@ -9,11 +9,6 @@ namespace StraitJacketLib.Constructs {
     public enum SimplePrimitives {
         ConstString,
         Bool,
-        Half,
-        Float,
-        Double,
-        Extended,
-        Decimal,
         VariableLength,
         Object,
         Void,
@@ -36,16 +31,6 @@ namespace StraitJacketLib.Constructs {
                     return LLVMTypeRef.CreatePointer(LLVMTypeRef.Int8, 0);
                 case SimplePrimitives.Bool:
                     return LLVMTypeRef.Int1;
-                case SimplePrimitives.Half:
-                    return LLVMTypeRef.Half;
-                case SimplePrimitives.Float:
-                    return LLVMTypeRef.Float;
-                case SimplePrimitives.Double:
-                    return LLVMTypeRef.Double;
-                case SimplePrimitives.Extended:
-                    return LLVMTypeRef.X86FP80;
-                case SimplePrimitives.Decimal:
-                    return LLVMTypeRef.FP128;
                 case SimplePrimitives.VariableLength:
                     throw new Exception("TODO!!!");
                 case SimplePrimitives.Object:
@@ -67,16 +52,6 @@ namespace StraitJacketLib.Constructs {
                     return "s";
                 case SimplePrimitives.Bool:
                     return "b";
-                case SimplePrimitives.Half:
-                    return "h";
-                case SimplePrimitives.Float:
-                    return "f";
-                case SimplePrimitives.Double:
-                    return "d";
-                case SimplePrimitives.Extended:
-                    return "e";
-                case SimplePrimitives.Decimal:
-                    return "c";
                 case SimplePrimitives.VariableLength:
                     return "l";
                 case SimplePrimitives.Object:
@@ -124,21 +99,6 @@ namespace StraitJacketLib.Constructs {
                     break;
                 case SimplePrimitives.Bool:
                     ret += "bool";
-                    break;
-                case SimplePrimitives.Half:
-                    ret += "f16";
-                    break;
-                case SimplePrimitives.Float:
-                    ret += "f32";
-                    break;
-                case SimplePrimitives.Double:
-                    ret += "f64";
-                    break;
-                case SimplePrimitives.Extended:
-                    ret += "f80";
-                    break;
-                case SimplePrimitives.Decimal:
-                    ret += "f128";
                     break;
                 case SimplePrimitives.VariableLength:
                     ret += "varlen";

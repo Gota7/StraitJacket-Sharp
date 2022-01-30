@@ -51,6 +51,7 @@ namespace StraitJacketLib.Constructs {
     public enum VarTypeEnum {
         PrimitiveSimple,
         PrimitiveInteger,
+        PrimitiveFloating,
         PrimitiveFixed,
         PrimitiveFunction,
         Tuple,
@@ -92,17 +93,12 @@ namespace StraitJacketLib.Constructs {
 
         // If the type is floating point.
         public bool IsFloatingPoint() {
-            var val = this as VarTypeSimplePrimitive;
-            if (val != null) {
-                SimplePrimitives prim = val.Primitive;
-                return prim == SimplePrimitives.Half || prim == SimplePrimitives.Float || prim == SimplePrimitives.Double || prim == SimplePrimitives.Extended || prim == SimplePrimitives.Decimal;
-            }
-            return false;
+            return Type == VarTypeEnum.PrimitiveFloating;
         }
 
         // If the type is fixed.
         public bool IsFixed() {
-            return this as VarTypeFixed != null;
+            return Type == VarTypeEnum.PrimitiveFixed;
         }
 
         // If the type is unsigned.

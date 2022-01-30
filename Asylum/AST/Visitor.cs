@@ -126,17 +126,7 @@ namespace Asylum.AST {
             throw new System.NotImplementedException();
         }
 
-        public AsylumVisitResult VisitPrimitiveDecimal([NotNull] AsylumParser.PrimitiveDecimalContext context)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public AsylumVisitResult VisitPrimitiveEvent([NotNull] AsylumParser.PrimitiveEventContext context)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public AsylumVisitResult VisitPrimitiveExtended([NotNull] AsylumParser.PrimitiveExtendedContext context)
         {
             throw new System.NotImplementedException();
         }
@@ -417,16 +407,6 @@ namespace Asylum.AST {
         }
 
         public AsylumVisitResult VisitExprStructInit([NotNull] AsylumParser.ExprStructInitContext context)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public AsylumVisitResult VisitExprFloating([NotNull] AsylumParser.ExprFloatingContext context)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public AsylumVisitResult VisitExprFixed([NotNull] AsylumParser.ExprFixedContext context)
         {
             throw new System.NotImplementedException();
         }

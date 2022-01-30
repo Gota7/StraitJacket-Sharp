@@ -116,21 +116,35 @@ namespace Asylum.AST {
         public AsylumVisitResult VisitPrimitiveHalf([NotNull] AsylumParser.PrimitiveHalfContext context)
         {
             return new AsylumVisitResult() {
-                VariableType = new VarTypeSimplePrimitive(SimplePrimitives.Half)
+                VariableType = new VarTypeFloating(16)
             };
         }
 
         public AsylumVisitResult VisitPrimitiveFloat([NotNull] AsylumParser.PrimitiveFloatContext context)
         {
             return new AsylumVisitResult() {
-                VariableType = new VarTypeSimplePrimitive(SimplePrimitives.Float)
+                VariableType = new VarTypeFloating(32)
             };
         }
 
         public AsylumVisitResult VisitPrimitiveDouble([NotNull] AsylumParser.PrimitiveDoubleContext context)
         {
             return new AsylumVisitResult() {
-                VariableType = new VarTypeSimplePrimitive(SimplePrimitives.Double)
+                VariableType = new VarTypeFloating(64)
+            };
+        }
+
+        public AsylumVisitResult VisitPrimitiveExtended([NotNull] AsylumParser.PrimitiveExtendedContext context)
+        {
+           return new AsylumVisitResult() {
+                VariableType = new VarTypeFloating(80)
+            };
+        }
+
+        public AsylumVisitResult VisitPrimitiveDecimal([NotNull] AsylumParser.PrimitiveDecimalContext context)
+        {
+            return new AsylumVisitResult() {
+                VariableType = new VarTypeFloating(128)
             };
         }
 

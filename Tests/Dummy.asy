@@ -1,1 +1,2 @@
-printf("%d\n", (int)7);
+float h = 7.7;
+printf("%f\n", (double)h);
