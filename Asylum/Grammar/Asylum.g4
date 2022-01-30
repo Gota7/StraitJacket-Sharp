@@ -27,14 +27,14 @@ universal_statement
 	|	struct_definition				#UniversalStruct
 	|	interface_definition			#UniversalInterface
 	|	implementation_definition		#UniversalImplementation
-	|	typedef_definition				#UniversalTypedef
 	|	concept							#UniversalConcept
 	|	code_statement					#UniversalTopLevelCode
 	;
 
 // Using statement.
 using_statement
-	:	USING STATIC? IDENTIFIER ('.' IDENTIFIER)* ('.*')? ';'
+	:	USING STATIC? IDENTIFIER ('.' IDENTIFIER)* ('.*')? ';'	#UsingScope
+	|	USING IDENTIFIER '=' variable_type ';' 					#UsingShortcut
 	;
 
 // Namespace statement.
@@ -124,11 +124,6 @@ implementation_entry
 // Cast definition.
 cast_definition
 	:	attribute* INLINE? (IMPLICITCAST | EXPLICITCAST) '(' variable_parameter ')' OP_RET variable_type ('{' code_statement* '}' | OP_LAMBDA expression ';')
-	;
-
-// Typedef definition.
-typedef_definition
-	:	TYPEDEF variable_type IDENTIFIER ';'
 	;
 
 // Struct entry.
@@ -658,7 +653,6 @@ STACKALLOC:		'stackalloc';
 STATIC:			'static';
 STRUCT:			'struct';
 SWITCH:			'switch';
-TYPEDEF:		'typedef';
 TYPEOF:			'typeof';
 UNSAFE:			'unsafe';
 UNION:			'union';

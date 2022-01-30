@@ -149,18 +149,6 @@ public interface IAsylumListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitUniversalImplementation([NotNull] AsylumParser.UniversalImplementationContext context);
 	/// <summary>
-	/// Enter a parse tree produced by the <c>UniversalTypedef</c>
-	/// labeled alternative in <see cref="AsylumParser.universal_statement"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterUniversalTypedef([NotNull] AsylumParser.UniversalTypedefContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>UniversalTypedef</c>
-	/// labeled alternative in <see cref="AsylumParser.universal_statement"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitUniversalTypedef([NotNull] AsylumParser.UniversalTypedefContext context);
-	/// <summary>
 	/// Enter a parse tree produced by the <c>UniversalConcept</c>
 	/// labeled alternative in <see cref="AsylumParser.universal_statement"/>.
 	/// </summary>
@@ -185,15 +173,29 @@ public interface IAsylumListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitUniversalTopLevelCode([NotNull] AsylumParser.UniversalTopLevelCodeContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="AsylumParser.using_statement"/>.
+	/// Enter a parse tree produced by the <c>UsingScope</c>
+	/// labeled alternative in <see cref="AsylumParser.using_statement"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterUsing_statement([NotNull] AsylumParser.Using_statementContext context);
+	void EnterUsingScope([NotNull] AsylumParser.UsingScopeContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="AsylumParser.using_statement"/>.
+	/// Exit a parse tree produced by the <c>UsingScope</c>
+	/// labeled alternative in <see cref="AsylumParser.using_statement"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitUsing_statement([NotNull] AsylumParser.Using_statementContext context);
+	void ExitUsingScope([NotNull] AsylumParser.UsingScopeContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>UsingShortcut</c>
+	/// labeled alternative in <see cref="AsylumParser.using_statement"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterUsingShortcut([NotNull] AsylumParser.UsingShortcutContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>UsingShortcut</c>
+	/// labeled alternative in <see cref="AsylumParser.using_statement"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitUsingShortcut([NotNull] AsylumParser.UsingShortcutContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="AsylumParser.namespace_statement"/>.
 	/// </summary>
@@ -418,16 +420,6 @@ public interface IAsylumListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitCast_definition([NotNull] AsylumParser.Cast_definitionContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="AsylumParser.typedef_definition"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterTypedef_definition([NotNull] AsylumParser.Typedef_definitionContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="AsylumParser.typedef_definition"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitTypedef_definition([NotNull] AsylumParser.Typedef_definitionContext context);
 	/// <summary>
 	/// Enter a parse tree produced by the <c>StructData</c>
 	/// labeled alternative in <see cref="AsylumParser.struct_entry"/>.

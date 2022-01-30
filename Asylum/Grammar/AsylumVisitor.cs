@@ -101,13 +101,6 @@ public interface IAsylumVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitUniversalImplementation([NotNull] AsylumParser.UniversalImplementationContext context);
 	/// <summary>
-	/// Visit a parse tree produced by the <c>UniversalTypedef</c>
-	/// labeled alternative in <see cref="AsylumParser.universal_statement"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitUniversalTypedef([NotNull] AsylumParser.UniversalTypedefContext context);
-	/// <summary>
 	/// Visit a parse tree produced by the <c>UniversalConcept</c>
 	/// labeled alternative in <see cref="AsylumParser.universal_statement"/>.
 	/// </summary>
@@ -122,11 +115,19 @@ public interface IAsylumVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitUniversalTopLevelCode([NotNull] AsylumParser.UniversalTopLevelCodeContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="AsylumParser.using_statement"/>.
+	/// Visit a parse tree produced by the <c>UsingScope</c>
+	/// labeled alternative in <see cref="AsylumParser.using_statement"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitUsing_statement([NotNull] AsylumParser.Using_statementContext context);
+	Result VisitUsingScope([NotNull] AsylumParser.UsingScopeContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>UsingShortcut</c>
+	/// labeled alternative in <see cref="AsylumParser.using_statement"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitUsingShortcut([NotNull] AsylumParser.UsingShortcutContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="AsylumParser.namespace_statement"/>.
 	/// </summary>
@@ -260,12 +261,6 @@ public interface IAsylumVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitCast_definition([NotNull] AsylumParser.Cast_definitionContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="AsylumParser.typedef_definition"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitTypedef_definition([NotNull] AsylumParser.Typedef_definitionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>StructData</c>
 	/// labeled alternative in <see cref="AsylumParser.struct_entry"/>.

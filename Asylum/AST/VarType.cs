@@ -9,7 +9,7 @@ namespace Asylum.AST {
 
     public partial class Visitor : IAsylumVisitor<AsylumVisitResult> {
 
-        public AsylumVisitResult VisitTypedef_definition([NotNull] AsylumParser.Typedef_definitionContext context)
+        public AsylumVisitResult VisitUsingShortcut([NotNull] AsylumParser.UsingShortcutContext context)
         {
             Builder.Typedef(context.variable_type().Accept(this).VariableType, context.IDENTIFIER().GetText());
             return null;

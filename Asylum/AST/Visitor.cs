@@ -241,11 +241,6 @@ namespace Asylum.AST {
             throw new System.NotImplementedException();
         }
 
-        public AsylumVisitResult VisitUniversalUsing([NotNull] AsylumParser.UniversalUsingContext context)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public AsylumVisitResult VisitUsing_statement([NotNull] AsylumParser.Using_statementContext context)
         {
             throw new System.NotImplementedException();
@@ -432,6 +427,11 @@ namespace Asylum.AST {
         }
 
         public AsylumVisitResult VisitExprFixed([NotNull] AsylumParser.ExprFixedContext context)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public AsylumVisitResult VisitUsingScope([NotNull] AsylumParser.UsingScopeContext context)
         {
             throw new System.NotImplementedException();
         }
