@@ -20,16 +20,16 @@ namespace StraitJacketLib.Builder {
             LLVM.InitializeNativeTarget();
             LLVM.InitializeNativeAsmPrinter();
             LLVM.InitializeNativeAsmParser();
-            JITInit = true;
-            JITMod = LLVMModuleRef.CreateWithName("JIT");
             //JITMod.DataLayout = JITExe.TargetMachine.CreateTargetDataLayout().ToString();
-            JITBuilder = LLVMBuilderRef.Create(JITMod.Context);
+            Mods = Compile(); // Must compile first in order to use in JIT!
+            JITInit = true;
         }
 
         // Begin JIT Mode.
         public void BeginJITMode() {
             if (!JITInit) InitJIT();
-            Mods = Compile(); // Must compile first in order to use in JIT!
+            JITMod = LLVMModuleRef.CreateWithName("JIT");
+            JITBuilder = LLVMBuilderRef.Create(JITMod.Context);
             LLVMPassManagerRef p = JITMod.CreateFunctionPassManager();
             JITExe = JITMod.CreateExecutionEngine();
             JITMode = true;

@@ -7,6 +7,7 @@ using Asylum.AST;
 using StraitJacketLib;
 using StraitJacketLib.Builder;
 using StraitJacketLib.Constructs;
+using System.Text;
 
 /*
 
@@ -85,8 +86,8 @@ namespace Asylum {
             files.Add(filePath);
         }
 
-        // Go through the compilation process.
-        public void Compile(AsylumCompilationFlags flags) {
+        // Prepare for compiling EASL.
+        private void PrepareCompileEASL(AsylumCompilationFlags flags) {
 
             // Compile EASL.
             visitor.Builder.BeginFile("EASL");
@@ -111,9 +112,38 @@ namespace Asylum {
                     VisitFile(f);
                 }
             }
+            visitor.Builder.EndFile();
+
+        }
+
+        // Start JIT mode.
+        public void StartJIT(AsylumCompilationFlags flags) {
+            PrepareCompileEASL(flags);
+            visitor.Builder.BeginJITMode();
+            Console.WriteLine("====================================================");
+            Console.WriteLine("|            Asylum Language JIT Compiler          |");
+            Console.WriteLine("====================================================");
+            using (Stream input = new MemoryStream()) {
+                Console.Write("> ");
+                string txt = Console.ReadLine();
+                while (!txt.Equals("exit")) {
+                    input.SetLength(0);
+                    input.Position = 0;
+                    input.Write(Encoding.UTF8.GetBytes(txt), 0, txt.Length);
+                    input.Position = 0;
+                    VisitFile(input);
+                    Console.Write("> ");
+                    txt = Console.ReadLine();
+                }
+            }
+            visitor.Builder.EndJITMode();
+        }
+
+        // Go through the compilation process.
+        public void Compile(AsylumCompilationFlags flags) {
 
             // Build each file.
-            visitor.Builder.EndFile();
+            PrepareCompileEASL(flags);
             foreach (var s in files) {
 
                 // Visiting.
@@ -125,11 +155,6 @@ namespace Asylum {
 
             // Make sure no error was encountered.
             if (!ErrorHandler.Valid) return;
-
-            visitor.Builder.BeginJITMode();
-            visitor.Builder.Code(new ExpressionConstInt(false, 7));
-            visitor.Builder.EndJITMode();
-            return;
 
             // Time to compile.
             var compiled = visitor.Builder.Compile();

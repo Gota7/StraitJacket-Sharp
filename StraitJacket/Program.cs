@@ -21,7 +21,8 @@ namespace StraitJacket {
             AsylumCompiler c = new AsylumCompiler();
             c.SetRootFolder(flags.RootDir);
             AddFilesToCompile(c, args);
-            c.Compile(flags);
+            //c.Compile(flags);
+            c.StartJIT(flags);
 
         }
 

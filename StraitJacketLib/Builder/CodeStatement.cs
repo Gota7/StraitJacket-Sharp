@@ -22,6 +22,7 @@ namespace StraitJacketLib.Builder {
         IfStatementContext CurrIf;
 
         // Build a code statement.
+        static int gergregerg;
         public void Code(ICompileable statement) {
             if (CurrStatements == null && !JITMode) throw new System.Exception("Can not have top-level statements across multiple files!");
             if (JITMode) {
@@ -35,7 +36,9 @@ namespace StraitJacketLib.Builder {
                     );
                     var blk = LLVMBasicBlockRef.AppendInContext(JITMod.Context, jitFunc, "entry");
                     JITBuilder.PositionAtEnd(blk);
-                    if (expr != null) {
+                    statement.ResolveVariables();
+                    statement.ResolveTypes();
+                    if (expr != null && !expr.ReturnType().Equals(new VarTypeSimplePrimitive(SimplePrimitives.Void))) {
                         statement = new ExpressionCall( // For now hardcode only printing the result as an integer.
                             new ExpressionVariable(VariableOrFunction("printf")),
                             new ExpressionComma(new List<Expression>() {
@@ -43,16 +46,18 @@ namespace StraitJacketLib.Builder {
                                 expr
                             })
                         );
+                        statement.ResolveVariables();
+                        statement.ResolveTypes();
                     }
                 }
-                statement.ResolveVariables();
-                statement.ResolveTypes();
                 statement.Compile(JITMod, JITBuilder, null);
                 if (topLevel) {
                     JITBuilder.BuildRetVoid();
+                    //jitFunc.VerifyFunction(LLVMVerifierFailureAction.LLVMPrintMessageAction);
                     CodeStatements.BlockTerminated = false;
                     CodeStatements.ReturnedValue = null; // Fix return statement hack.
                     JITExe.RunFunction(jitFunc, new LLVMGenericValueRef[0]);
+                    BeginJITMode(); // LLVM is stupid and I can't run multiple functions for some reason?
                 }
             }
             if (CurrStatements != null) CurrStatements.Statements.Add(statement);
