@@ -35,9 +35,9 @@ namespace StraitJacketLib.Constructs {
             LoopStack.Pop();
         }
 
-        public void CompileDeclarations(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            Body.CompileDeclarations(mod, builder, param);
-            if (ContinueCode != null) ContinueCode.CompileDeclarations(mod, builder, param);
+        public void CompileDeclarations(LLVMModuleRef mod, LLVMBuilderRef builder, object param, bool jit) {
+            Body.CompileDeclarations(mod, builder, param, jit);
+            if (ContinueCode != null) ContinueCode.CompileDeclarations(mod, builder, param, jit);
         }
 
         // Compile the loop.

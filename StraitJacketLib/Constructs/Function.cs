@@ -65,7 +65,7 @@ namespace StraitJacketLib.Constructs {
             return new VarTypeFunction(ReturnType, Parameters.Select(x => x.Value.Type).ToList()).GetLLVMType();
         }
 
-        public void CompileDeclarations(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {}
+        public void CompileDeclarations(LLVMModuleRef mod, LLVMBuilderRef builder, object param, bool jit) {}
 
         // TODO: NAME MANGLING AND MORE!!! Ok, so the problem is you need to extern any functions that are not in this module...
         public ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
@@ -104,7 +104,7 @@ namespace StraitJacketLib.Constructs {
                 }
 
                 // Compile the function, and add a return statement if necessary.
-                Definition.CompileDeclarations(mod, builder, param);
+                Definition.CompileDeclarations(mod, builder, param, false);
                 Definition.Compile(mod, builder, param);
                 if (!CodeStatements.BlockTerminated && ReturnType.Equals(new VarTypeSimplePrimitive(SimplePrimitives.Void))) {
                     builder.BuildRetVoid();

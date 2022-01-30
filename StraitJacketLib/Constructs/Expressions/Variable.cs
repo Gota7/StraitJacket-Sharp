@@ -79,6 +79,12 @@ namespace StraitJacketLib.Constructs {
         }
 
         public override ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
+            if (Resolved.JITHack) {
+                var newVal = mod.AddGlobal(Resolved.Type.GetLLVMType(), "_SJ_JIT_" + Resolved.Name);
+                if (newVal.Name.Equals("_SJ_JIT_" + Resolved.Name)) { 
+                    Resolved.LLVMValue = newVal; // Only declare global once.
+                }
+            }
             if (ImplicitMemberThis != null) {
                 return ImplicitMemberThis.Compile(mod, builder, param);
             } else {

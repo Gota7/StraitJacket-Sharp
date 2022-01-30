@@ -21,7 +21,7 @@ namespace StraitJacketLib.Constructs {
             if (ReturnValue != null) ReturnValue.ResolveTypes();
         }
 
-        public void CompileDeclarations(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {}
+        public void CompileDeclarations(LLVMModuleRef mod, LLVMBuilderRef builder, object param, bool jit) {}
 
         public ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
 

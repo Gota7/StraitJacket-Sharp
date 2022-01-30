@@ -49,9 +49,15 @@ namespace StraitJacketLib.Constructs {
             }
         }
 
-        public void CompileDeclarations(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
+        public void CompileDeclarations(LLVMModuleRef mod, LLVMBuilderRef builder, object param, bool jit) {
             foreach (var v in Variables) {
-                v.LLVMValue = builder.BuildAlloca(v.Type.GetLLVMType(), "SJ_Define_" + v.Name);
+                if (jit) {
+                    v.LLVMValue = mod.AddGlobal(v.Type.GetLLVMType(), "_SJ_JIT_" + v.Name); // JIT variables can't be in functions.
+                    v.LLVMValue.Initializer = v.Type.DefaultValue().Compile(mod, builder, param).Val;
+                    v.JITHack = true;
+                } else {
+                    v.LLVMValue = builder.BuildAlloca(v.Type.GetLLVMType(), "SJ_Define_" + v.Name);
+                }
             }
         }
 

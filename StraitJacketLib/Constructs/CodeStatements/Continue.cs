@@ -25,7 +25,7 @@ namespace StraitJacketLib.Constructs {
             }
         }
 
-        public void CompileDeclarations(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {}
+        public void CompileDeclarations(LLVMModuleRef mod, LLVMBuilderRef builder, object param, bool jit) {}
 
         // Compile the break.
         public ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) { 

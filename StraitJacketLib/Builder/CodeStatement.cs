@@ -50,14 +50,17 @@ namespace StraitJacketLib.Builder {
                         statement.ResolveTypes();
                     }
                 }
+                statement.CompileDeclarations(JITMod, JITBuilder, null, true);
                 statement.Compile(JITMod, JITBuilder, null);
                 if (topLevel) {
                     JITBuilder.BuildRetVoid();
                     //jitFunc.VerifyFunction(LLVMVerifierFailureAction.LLVMPrintMessageAction);
+                    //JITMod.Verify(LLVMVerifierFailureAction.LLVMPrintMessageAction);
+                    //Console.WriteLine(JITMod);
                     CodeStatements.BlockTerminated = false;
                     CodeStatements.ReturnedValue = null; // Fix return statement hack.
                     JITExe.RunFunction(jitFunc, new LLVMGenericValueRef[0]);
-                    BeginJITMode(); // LLVM is stupid and I can't run multiple functions for some reason?
+                    //BeginJITMode(); // LLVM is stupid and I can't run multiple functions for some reason?
                 }
             }
             if (CurrStatements != null) CurrStatements.Statements.Add(statement);

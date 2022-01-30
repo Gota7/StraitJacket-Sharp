@@ -57,7 +57,7 @@ namespace StraitJacketLib.Constructs {
         void ResolveTypes();
 
         // Compile declarations.
-        void CompileDeclarations(LLVMModuleRef mod, LLVMBuilderRef builder, object param);
+        void CompileDeclarations(LLVMModuleRef mod, LLVMBuilderRef builder, object param, bool jit = false);
 
         // Compile the item.
         ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param);

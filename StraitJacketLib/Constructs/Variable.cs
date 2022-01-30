@@ -11,6 +11,7 @@ namespace StraitJacketLib.Constructs {
         public VarType Type;
         public bool ScopeOverwriteable;
         public LLVMValueRef LLVMValue;
+        public bool JITHack; // Import global for each JIT module.
     }
 
 }
