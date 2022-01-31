@@ -20,6 +20,64 @@ namespace StraitJacketLib.Constructs {
 
         protected override string Mangled() => "x" + WholeWidth.ToString() + "X" + FractionWidth.ToString() + "E";
 
+        public override bool CanImplicitlyCastTo(VarType other) {
+            var f = other as VarTypeFixed;
+            if (f != null) {
+                return f.WholeWidth >= WholeWidth && f.FractionWidth >= FractionWidth;
+            } else {
+                return base.CanImplicitlyCastTo(other);
+            }
+        }
+
+        public override bool CanCastTo(VarType other) {
+            if (other.IsFixed() || other.IsFloatingPoint() || other.IsUnsigned() || other.IsSigned()) {
+                return true;
+            } else {
+                return base.CanCastTo(other);
+            }
+        }
+
+        public override ReturnValue CastTo(ReturnValue srcVal, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder) {
+            if (destType.Type == VarTypeEnum.PrimitiveFixed) {
+                var src = this;
+                var dest = destType as VarTypeFixed;
+                LLVMValueRef tmp = srcVal.Val;
+                if (dest.WholeWidth + dest.FractionWidth > src.WholeWidth + src.FractionWidth) {
+                    tmp = builder.BuildSExt(tmp, dest.GetLLVMType());
+                }
+                if (dest.FractionWidth > src.FractionWidth) {
+                    tmp = builder.BuildShl(tmp, new ExpressionConstInt(false, dest.FractionWidth - src.FractionWidth).Compile(mod, builder, null).Val);
+                } else if (dest.FractionWidth < src.FractionWidth) {
+                    tmp = builder.BuildLShr(tmp, new ExpressionConstInt(false, src.FractionWidth - dest.FractionWidth).Compile(mod, builder, null).Val);
+                    // TODO: ADD .5!!!
+                }
+                if (dest.WholeWidth + dest.FractionWidth < src.WholeWidth + src.FractionWidth) {
+                    tmp = builder.BuildTrunc(tmp, dest.GetLLVMType());
+                }
+                return new ReturnValue(tmp);
+            } else if (destType.Type == VarTypeEnum.PrimitiveFloating) {
+                var src = this;
+                var dest = destType as VarTypeFloating;
+                Expression tmpVal = new ExpressionConstInt(false, (long)(1 << (int)src.FractionWidth));
+                LLVMValueRef tmp = tmpVal.Compile(mod, builder, null).Val;
+                tmp = builder.BuildUIToFP(tmp, dest.GetLLVMType());
+                LLVMValueRef tmp2 = builder.BuildSIToFP(srcVal.Val, dest.GetLLVMType());
+                return new ReturnValue(builder.BuildFDiv(tmp2, tmp, "SJ_CastFixed_Float"));
+            } else if (destType.Type == VarTypeEnum.PrimitiveInteger) {
+                var src = this;
+                var dest = destType as VarTypeInteger;
+                LLVMValueRef tmp = builder.BuildLShr(srcVal.Val,
+                    new ExpressionConstInt(false, src.FractionWidth).Compile(mod, builder, null).Val
+                );
+                if (src.WholeWidth + src.FractionWidth > dest.BitWidth) {
+                    return new ReturnValue(builder.BuildTrunc(tmp, dest.GetLLVMType(), "SJ_CastFixed_Int"));
+                } else if (src.WholeWidth + src.FractionWidth < dest.BitWidth) {
+                    return new ReturnValue(builder.BuildSExt(tmp, dest.GetLLVMType(), "SJ_CastFixed_Int"));
+                }
+            }
+            return base.CastTo(srcVal, destType, mod, builder);
+        }
+
         public override bool Equals(object obj) {
             if (obj is VarTypeCustom) return Equals((obj as VarTypeCustom).Resolved);
             if (obj is VarTypeFixed) {
@@ -40,6 +98,7 @@ namespace StraitJacketLib.Constructs {
             hash.Add(Volatile);
             hash.Add(Atomic);
             hash.Add(Variadic);
+            hash.Add(WholeWidth);
             hash.Add(FractionWidth);
             return hash.ToHashCode();
         }

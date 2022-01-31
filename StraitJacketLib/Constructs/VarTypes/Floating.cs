@@ -36,7 +36,7 @@ namespace StraitJacketLib.Constructs {
         public override bool CanImplicitlyCastTo(VarType other) {
             var fp = other as VarTypeFloating;
             if (fp != null) {
-                return fp.BitWidth > BitWidth;
+                return fp.BitWidth >= BitWidth;
             } else {
                 return base.CanImplicitlyCastTo(other);
             }
@@ -61,6 +61,23 @@ namespace StraitJacketLib.Constructs {
                 } else {
                     return srcVal;
                 }
+            } else if (destType.Type == VarTypeEnum.PrimitiveInteger) {
+                var src = this;
+                var dest = destType as VarTypeInteger;
+                if (dest.Signed) {
+                    return new ReturnValue(builder.BuildFPToSI(srcVal.Val, dest.GetLLVMType(), "SJ_CastFloat_Int"));
+                } else {
+                    return new ReturnValue(builder.BuildFPToUI(srcVal.Val, dest.GetLLVMType(), "SJ_CastFloat_UInt"));
+                }
+            } else if (destType.Type == VarTypeEnum.PrimitiveFixed) {
+                var src = this;
+                var dest = destType as VarTypeFixed;
+                Expression tmpVal = new ExpressionConstInt(false, (long)(1 << (int)dest.FractionWidth));
+                LLVMValueRef tmp = tmpVal.Compile(mod, builder, null).Val;
+                tmp = builder.BuildUIToFP(tmp, src.GetLLVMType());
+                tmp = builder.BuildFMul(srcVal.Val, tmp);
+                tmp = builder.BuildFAdd(tmp, LLVMValueRef.CreateConstReal(src.GetLLVMType(), 0.5f));
+                return new ReturnValue(builder.BuildFPToSI(tmp, dest.GetLLVMType(), "SJ_CastFloat_Fixed"));
             }
             return base.CastTo(srcVal, destType, mod, builder);
         }

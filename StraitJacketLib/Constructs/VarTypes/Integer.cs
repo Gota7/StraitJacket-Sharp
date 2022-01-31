@@ -22,8 +22,13 @@ namespace StraitJacketLib.Constructs {
 
         public override bool CanImplicitlyCastTo(VarType other) {
             var otherInt = other as VarTypeInteger;
+            var otherFixed = other as VarTypeFixed;
             if (otherInt != null) {
-                return otherInt.BitWidth > BitWidth;
+                return otherInt.BitWidth > BitWidth || otherInt.BitWidth == BitWidth && otherInt.Signed == Signed;
+            } else if (other.Type == VarTypeEnum.PrimitiveFloating) {
+                return true;
+            } else if (other.Type == VarTypeEnum.PrimitiveFixed) {
+                return otherFixed.WholeWidth > BitWidth || otherFixed.WholeWidth == BitWidth && Signed;
             } else {
                 return base.CanImplicitlyCastTo(other);
             }
@@ -52,6 +57,30 @@ namespace StraitJacketLib.Constructs {
                 } else {
                     return srcVal;
                 }
+            } else if (destType.Type == VarTypeEnum.PrimitiveFloating) {
+                var src = this;
+                var dest = destType as VarTypeFloating;
+                if (src.Signed) {
+                    return new ReturnValue(builder.BuildSIToFP(srcVal.Val, destType.GetLLVMType(), "SJ_CastInt_Float"));
+                } else {
+                    return new ReturnValue(builder.BuildUIToFP(srcVal.Val, destType.GetLLVMType(), "SJ_CastUInt_Float"));
+                }
+            } else if (destType.Type == VarTypeEnum.PrimitiveFixed) {
+                var src = this;
+                var dest = destType as VarTypeFixed;
+                LLVMValueRef tmp = srcVal.Val;
+                if (dest.WholeWidth + dest.FractionWidth > BitWidth) {
+                    if (src.Signed) {
+                        tmp = builder.BuildSExt(tmp, dest.GetLLVMType());
+                    } else {
+                        tmp = builder.BuildZExt(tmp, dest.GetLLVMType());
+                    }
+                } else if (dest.WholeWidth + dest.FractionWidth < BitWidth) {
+                    tmp = builder.BuildTrunc(tmp, dest.GetLLVMType());
+                }
+                return new ReturnValue(builder.BuildShl(tmp,
+                    new ExpressionConstInt(false, dest.FractionWidth).Compile(mod, builder, null).Val, "SJ_CastInt_Fixed")
+                );
             }
             return base.CastTo(srcVal, destType, mod, builder);
         }
