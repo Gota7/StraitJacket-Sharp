@@ -539,7 +539,9 @@ namespace Asylum.AST {
 
         public AsylumVisitResult VisitExprFixed([NotNull] AsylumParser.ExprFixedContext context)
         {
-            throw new System.NotImplementedException();
+            Number n = GetFixed(context.FIXEDVAL());
+            Expression ret = new ExpressionConstFixed(n.ValueWhole, (int)n.ValueDecimal);
+            return new AsylumVisitResult() { Expression = ret };
         }
 
         public AsylumVisitResult VisitExprString([NotNull] AsylumParser.ExprStringContext context)
@@ -589,7 +591,6 @@ namespace Asylum.AST {
             return ret;
         }
 
-        // TODO: NEGATIVE UNSIGNED!
         public Number GetInteger(ITerminalNode num) {
             ulong valU = 0;
             long valS = 0;
@@ -641,9 +642,65 @@ namespace Asylum.AST {
             string str = num.GetText();
             Number ret = new Number();
             ret.Type = NumberType.Decimal;
-            if (str.StartsWith("0x") || str.StartsWith("0b")) throw new System.NotImplementedException();
             if (str.EndsWith("f")) str = str.Substring(0, str.Length - 1);
-            ret.ValueDecimal = Convert.ToDouble(str);
+            if (str.StartsWith("0x")) {
+                str = str.Substring(2);
+                string dec = null;
+                if (str.Contains('.')) {
+                    dec = str.Split('.')[1];
+                    str = str.Split('.')[0];
+                }
+                ret.ValueDecimal = (double)Convert.ToUInt64(str, 16);
+                if (dec != null) ret.ValueDecimal += (double)Convert.ToUInt64(dec, 16) / (0x1 << (dec.Length * 4));
+            } else if (str.StartsWith("0b")) {
+                str = str.Substring(2);
+                string dec = null;
+                if (str.Contains('.')) {
+                    dec = str.Split('.')[1];
+                    str = str.Split('.')[0];
+                }
+                ret.ValueDecimal = (double)Convert.ToUInt64(str, 2);
+                if (dec != null) ret.ValueDecimal += (double)Convert.ToUInt64(dec, 2) / (0x1 << dec.Length);
+            } else {
+                ret.ValueDecimal = Convert.ToDouble(str);
+            }
+            return ret;
+        }
+
+        public Number GetFixed(ITerminalNode num) {
+            string str = num.GetText();
+            Number ret = new Number();
+            ret.Type = NumberType.Fixed;
+            ret.ForceSigned = true;
+            if (str.EndsWith("x")) str = str.Substring(0, str.Length - 1);
+            if (str.StartsWith("0x")) {
+                str = str.Substring(2);
+                string dec = null;
+                if (str.Contains('.')) {
+                    dec = str.Split('.')[1];
+                    str = str.Split('.')[0];
+                }
+                ret.ValueWhole = (long)Convert.ToUInt64(str + dec, 16);
+                if (dec != null) ret.ValueDecimal = dec.Length * 4;
+            } else if (str.StartsWith("0b")) {
+                str = str.Substring(2);
+                string dec = null;
+                if (str.Contains('.')) {
+                    dec = str.Split('.')[1];
+                    str = str.Split('.')[0];
+                }
+                ret.ValueWhole = (long)Convert.ToUInt64(str + dec, 2);
+                if (dec != null) ret.ValueDecimal = dec.Length;
+            } else {
+                /*string dec = null;
+                if (str.Contains('.')) {
+                    dec = str.Split('.')[1];
+                    str = str.Split('.')[0];
+                }
+                ulong wholePart = ulong.Parse(str);
+                ulong decPart = dec != null ? ulong.Parse(dec) : 0;*/
+                throw new System.NotImplementedException();
+            }
             return ret;
         }
 

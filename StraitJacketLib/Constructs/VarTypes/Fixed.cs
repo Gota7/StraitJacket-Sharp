@@ -67,12 +67,14 @@ namespace StraitJacketLib.Constructs {
                 var src = this;
                 var dest = destType as VarTypeInteger;
                 LLVMValueRef tmp = builder.BuildLShr(srcVal.Val,
-                    new ExpressionConstInt(false, src.FractionWidth).Compile(mod, builder, null).Val
+                    LLVMValueRef.CreateConstInt(srcVal.Val.TypeOf, src.FractionWidth, false)
                 );
                 if (src.WholeWidth + src.FractionWidth > dest.BitWidth) {
                     return new ReturnValue(builder.BuildTrunc(tmp, dest.GetLLVMType(), "SJ_CastFixed_Int"));
                 } else if (src.WholeWidth + src.FractionWidth < dest.BitWidth) {
                     return new ReturnValue(builder.BuildSExt(tmp, dest.GetLLVMType(), "SJ_CastFixed_Int"));
+                } else {
+                    return new ReturnValue(tmp);
                 }
             }
             return base.CastTo(srcVal, destType, mod, builder);

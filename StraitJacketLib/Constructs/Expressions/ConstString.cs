@@ -9,6 +9,7 @@ namespace StraitJacketLib.Constructs {
         public string Str;
 
         public ExpressionConstStringPtr(string str) {
+            Type = ExpressionType.ConstString;
             Str = str;
         }
 

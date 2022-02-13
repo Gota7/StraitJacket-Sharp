@@ -12,6 +12,7 @@ namespace StraitJacketLib.Constructs {
         Expression TotalSize;
 
         public ExpressionArrayAllocate(VarType embeddedType, List<Expression> lengths) {
+            Type = ExpressionType.ArrayAllocate;
             EmbeddedType = embeddedType;
             Lengths = lengths;
             LValue = false;

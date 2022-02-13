@@ -9,6 +9,7 @@ namespace StraitJacketLib.Constructs {
         public Number Val;
 
         public ExpressionConstInt(bool forceSigned, long val) {
+            Type = ExpressionType.ConstInt;
             Val = new Number() {
                 Type = NumberType.Whole,
                 ForceSigned = forceSigned,

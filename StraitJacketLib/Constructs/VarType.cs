@@ -10,7 +10,8 @@ namespace StraitJacketLib.Constructs {
     // Number type.
     public enum NumberType {
         Whole,
-        Decimal
+        Decimal,
+        Fixed
     }
 
     // A number.
@@ -20,6 +21,7 @@ namespace StraitJacketLib.Constructs {
         public long ValueWhole;
         public double ValueDecimal;
         public uint MinBits => ForceSigned ? ((uint)Math.Log2(Math.Abs(ValueWhole)) + 2) : ((uint)Math.Log2((ulong)ValueWhole) + 1);
+        public uint MinWholeBits => (ValueDecimal < 0) ? ((uint)Math.Log2(Math.Abs((long)ValueDecimal)) + 2) : ((uint)Math.Log2((long)ValueDecimal) + 1);
     }
 
     // Primitives.
@@ -140,7 +142,7 @@ namespace StraitJacketLib.Constructs {
             if (destType.Equals(new VarTypeSimplePrimitive(SimplePrimitives.Object)) || Equals(new VarTypeSimplePrimitive(SimplePrimitives.Object))) {
                 return srcVal;
             } else {
-                return null;
+                throw new System.Exception("Bad Cast!!!");
             }
         }
 

@@ -30,14 +30,19 @@ namespace StraitJacketLib.Constructs {
 
     // Value types.
     public enum ExpressionType {
-        String,
-        Integer,
-        Variable,
-        UnknownFunctionCall,
+        ArrayAllocate,
+        Call,
         Cast,
-        EvaluatedFunctionCall,
-        Assignment,
-        Comma
+        Comma,
+        ConstArrayAllocate,
+        ConstFixed,
+        ConstFloat,
+        ConstInt,
+        ConstSimple,
+        ConstString,
+        Operator,
+        Store,
+        Variable
     }
 
     // Operator.

@@ -79,8 +79,8 @@ namespace StraitJacketLib.Constructs {
                     tmp = builder.BuildTrunc(tmp, dest.GetLLVMType());
                 }
                 return new ReturnValue(builder.BuildShl(tmp,
-                    new ExpressionConstInt(false, dest.FractionWidth).Compile(mod, builder, null).Val, "SJ_CastInt_Fixed")
-                );
+                    LLVMValueRef.CreateConstInt(tmp.TypeOf, dest.FractionWidth, false), "SJ_CastInt_Fixed"
+                ));
             }
             return base.CastTo(srcVal, destType, mod, builder);
         }

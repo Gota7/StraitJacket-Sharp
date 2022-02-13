@@ -148,6 +148,14 @@ namespace Asylum.AST {
             };
         }
 
+        public AsylumVisitResult VisitPrimitiveFixed([NotNull] AsylumParser.PrimitiveFixedContext context)
+        {
+            string[] split = context.FIXED().GetText().Replace("fix", "").Split('x');
+            return new AsylumVisitResult() {
+                VariableType = new VarTypeFixed(uint.Parse(split[0]), uint.Parse(split[1]))
+            };
+        }
+
         public AsylumVisitResult VisitPrimitiveObject([NotNull] AsylumParser.PrimitiveObjectContext context)
         {
             return new AsylumVisitResult() {

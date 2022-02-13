@@ -10,6 +10,7 @@ namespace StraitJacketLib.Constructs {
         public uint BitWidth;
 
         public ExpressionConstFloat(uint bitWidth, double val) {
+            Type = ExpressionType.ConstFloat;
             Val = new Number() {
                 Type = NumberType.Decimal,
                 ValueDecimal = val

@@ -10,6 +10,7 @@ namespace StraitJacketLib.Constructs {
         public Expression Dest;
 
         public ExpressionStore(Expression src, Expression dest) {
+            Type = ExpressionType.Store;
             Src = src;
             Dest = dest;
         }

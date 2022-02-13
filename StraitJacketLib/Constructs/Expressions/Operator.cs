@@ -15,6 +15,7 @@ namespace StraitJacketLib.Constructs {
         Function FetchedOpFunction = null;
 
         public ExpressionOperator(List<Expression> inputs, Operator op, bool assign = false) {
+            Type = ExpressionType.Operator;
             Inputs = inputs;
             Operator = op;
             Assignment = assign;

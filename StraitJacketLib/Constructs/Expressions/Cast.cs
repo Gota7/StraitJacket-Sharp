@@ -11,6 +11,7 @@ namespace StraitJacketLib.Constructs {
         VarType SrcType;
 
         public ExpressionCast(Expression toCast, VarType destType) {
+            Type = ExpressionType.Cast;
             ToCast = toCast;
             DestType = destType;
         }

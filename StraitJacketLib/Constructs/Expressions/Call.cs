@@ -13,6 +13,7 @@ namespace StraitJacketLib.Constructs {
         public bool DoAwait;
 
         public ExpressionCall(Expression toCall, ExpressionComma parameters, bool doAwait = false) {
+            Type = ExpressionType.Call;
             ToCall = toCall;
             Parameters = parameters;
             DoAwait = doAwait;

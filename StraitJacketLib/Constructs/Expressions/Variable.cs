@@ -12,6 +12,7 @@ namespace StraitJacketLib.Constructs {
         Expression ImplicitMemberThis = null;
 
         public ExpressionVariable(VariableOrFunction toResolve) {
+            Type = ExpressionType.Variable;
             ToResolve = toResolve;
         }
 
