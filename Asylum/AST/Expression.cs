@@ -557,8 +557,7 @@ namespace Asylum.AST {
             foreach (var e in context.expression()) {
                 parameters.Add(e.Accept(this).Expression);
             }
-            bool doAwait = context.AWAIT() != null;
-            Expression ret = new ExpressionCall(new ExpressionVariable(context.variable_or_function().Accept(this).VariableOrFunction), new ExpressionComma(parameters), doAwait);   
+            Expression ret = new ExpressionCall(new ExpressionVariable(context.variable_or_function().Accept(this).VariableOrFunction), new ExpressionComma(parameters));   
             return new AsylumVisitResult() { Expression = ret };
         }
 

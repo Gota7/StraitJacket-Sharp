@@ -20,8 +20,8 @@ namespace StraitJacketLib.Constructs {
             ToCast.ResolveVariables();
         }
 
-        public override void ResolveTypes() {
-            ToCast.ResolveTypes();
+        public override void ResolveTypes(VarType preferredReturnType, List<VarType> parameterTypes) {
+            ToCast.ResolveTypes(preferredReturnType, parameterTypes);
             LValue = false;
             SrcType = ToCast.ReturnType();
             if (!SrcType.CanCastTo(DestType)) {

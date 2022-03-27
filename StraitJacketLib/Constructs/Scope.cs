@@ -71,7 +71,7 @@ namespace StraitJacketLib.Constructs {
             }
         }
 
-        public Variable ResolveFunctionVariable(VariableOrFunction v, List<VarType> paramTypes, VarType expectedReturnType = null) {
+        public Function ResolveFunctionVariable(VariableOrFunction v, List<VarType> paramTypes, VarType expectedReturnType = null) {
 
             // LLVM call.
             if (v.Path.Equals("llvm")) {
@@ -82,23 +82,38 @@ namespace StraitJacketLib.Constructs {
             List<Function> funcs = new List<Function>();
             void AddFuncs(Scope s) {
                 if (s.Functions.ContainsKey(v.Path)) {
-                    funcs.AddRange(Functions[v.Path].Values);
+                    funcs.AddRange(s.Functions[v.Path].Values);
                 }
                 if (s.Parent != null) AddFuncs(s.Parent);
             }
             AddFuncs(this);
 
+            // Nothing found.
+            if (funcs.Count == 0) {
+                throw new System.Exception("Function overload not resolved!");
+            }
+
             // Prune ineligible members.
             for (int i = funcs.Count - 1; i >= 0; i--) {
-                if (funcs[i].Parameters.Count != paramTypes.Count) funcs.RemoveAt(i);
+                if (paramTypes.Count < funcs[i].MinParameters() || paramTypes.Count > funcs[i].MaxParameters()) {
+                    funcs.RemoveAt(i); // Wrong number of parameters passed.
+                    continue;
+                }
                 for (int j = 0; j < paramTypes.Count; j++) {
-                    if (!paramTypes[j].CanImplicitlyCastTo(funcs[i].Parameters[j].Value.Type)) funcs.RemoveAt(i);
+                    int funcParamIndex = j;
+                    if (funcParamIndex > funcs[i].Parameters.Count) funcParamIndex = funcs[i].Parameters.Count - 1;
+                    if (!paramTypes[j].CanImplicitlyCastTo(funcs[i].Parameters[funcParamIndex].Value.Type)) {
+                        funcs.RemoveAt(i);
+                        break;
+                    }
                 }
             }
 
             // Only 1 matches.
             if (funcs.Count == 1) {
                 return funcs[0];
+            } else if (funcs.Count == 0) {
+                throw new System.Exception("Function overload not resolved!");
             }
 
             // Get candidate functions from return type.
@@ -131,6 +146,8 @@ namespace StraitJacketLib.Constructs {
             // Only 1 matches.
             if (newFuncs.Count == 1) {
                 return newFuncs[0];
+            } else if (funcs.Count == 0) {
+                throw new System.Exception("Function overload not resolved!");
             }
 
             // Get candidate functions from parameter.

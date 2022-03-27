@@ -13,7 +13,7 @@ namespace StraitJacketLib.Constructs {
             Str = str;
         }
 
-        public override void ResolveTypes() {
+        public override void ResolveTypes(VarType preferredReturnType, List<VarType> parameterTypes) {
             LValue = false;
         }
 

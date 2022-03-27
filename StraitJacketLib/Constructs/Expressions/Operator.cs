@@ -33,7 +33,7 @@ namespace StraitJacketLib.Constructs {
             }
         }
 
-        public override void ResolveTypes() {
+        public override void ResolveTypes(VarType preferredReturnType, List<VarType> parameterTypes) {
             bool IsPrimitiveNumberSome(VarTypeEnum type) => type == VarTypeEnum.PrimitiveSimple || type == VarTypeEnum.PrimitiveInteger || type == VarTypeEnum.PrimitiveFixed;
             bool IsPrimitiveNumber(VarType t) {
                 if (IsPrimitiveNumberSome(t.Type)) return true;

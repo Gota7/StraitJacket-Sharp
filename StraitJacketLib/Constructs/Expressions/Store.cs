@@ -20,12 +20,12 @@ namespace StraitJacketLib.Constructs {
             Dest.ResolveVariables();
         }
 
-        public override void ResolveTypes() {
+        public override void ResolveTypes(VarType preferredReturnType, List<VarType> parameterTypes) {
 
             // Resolve types.
             LValue = false;
             Src.ResolveTypes();
-            Dest.ResolveTypes();
+            Dest.ResolveTypes(Src.ReturnType(), null);
 
             // Exact match.
             if (Src.ReturnType().Equals(Dest.ReturnType())) {

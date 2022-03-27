@@ -33,7 +33,6 @@ namespace StraitJacketLib.Constructs {
                 if (i.Constant != Constant) return false;
                 if (i.Atomic != Atomic) return false;
                 if (i.Volatile != Volatile) return false;
-                if (i.Variadic != Variadic) return false;
                 if (!i.EmbeddedType.Equals(EmbeddedType)) return false;
                 if (i.Lengths.Count != Lengths.Count) return false;
                 for (int j = 0; j < i.Lengths.Count; j++) {
@@ -50,7 +49,6 @@ namespace StraitJacketLib.Constructs {
             hash.Add(Constant);
             hash.Add(Volatile);
             hash.Add(Atomic);
-            hash.Add(Variadic);
             hash.Add(EmbeddedType.GetHashCode());
             hash.Add(Lengths.Count.GetHashCode());
             foreach (var l in Lengths) {

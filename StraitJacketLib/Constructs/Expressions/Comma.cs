@@ -31,10 +31,10 @@ namespace StraitJacketLib.Constructs {
         }
 
         // Resolve types for internal expressions, and figure out the return type.
-        public override void ResolveTypes() {
+        public override void ResolveTypes(VarType preferredReturnType, List<VarType> parameterTypes) {
             List<VarType> memberTypes = new List<VarType>();
             foreach (var e in Expressions) {
-                e.ResolveTypes();
+                e.ResolveTypes(preferredReturnType, parameterTypes);
                 memberTypes.Add(e.ReturnType());
             }
             RetType = new VarTypeTuple(memberTypes);

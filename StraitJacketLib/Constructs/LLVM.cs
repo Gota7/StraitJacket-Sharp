@@ -21,6 +21,13 @@ namespace StraitJacketLib.Constructs {
                 new VarParameter() { Value = new Variable() { Name = "instruction", Type = new VarTypeSimplePrimitive(SimplePrimitives.ConstString) { Constant = true } } },
                 new VarParameter() { Value = new Variable() { Name = "args", Type = new VarTypeSimplePrimitive(SimplePrimitives.Object) { Variadic = true } } }
             },
+            Type = new VarTypeFunction(
+                new VarTypeSimplePrimitive(SimplePrimitives.Object),
+                new List<VarType>() {
+                    new VarTypeSimplePrimitive(SimplePrimitives.ConstString) { Constant = true },
+                    new VarTypeSimplePrimitive(SimplePrimitives.Object) { Variadic = true }
+                }
+            ),
             ReturnType = new VarTypeSimplePrimitive(SimplePrimitives.Object)
         };
 

@@ -9,14 +9,11 @@ namespace StraitJacketLib.Constructs {
     public class ExpressionCall : Expression {
         public Expression ToCall;
         public ExpressionComma Parameters;
-        Function FunctionToCall;
-        public bool DoAwait;
 
-        public ExpressionCall(Expression toCall, ExpressionComma parameters, bool doAwait = false) {
+        public ExpressionCall(Expression toCall, ExpressionComma parameters) {
             Type = ExpressionType.Call;
             ToCall = toCall;
             Parameters = parameters;
-            DoAwait = doAwait;
         }
 
         public override void ResolveVariables() {
@@ -24,36 +21,25 @@ namespace StraitJacketLib.Constructs {
             Parameters.ResolveVariables();
         }
 
-        public override void ResolveTypes() {
-            // TODO: TOCALL MUST KNOW ABOUT PARAMETERS TO SELECT CORRECT FUNCTION!!!
+        public override void ResolveTypes(VarType preferredReturnType, List<VarType> parameterTypes) {
+
+            // Get parameter types.
             LValue = false;
             Parameters.ResolveTypes();
-            ToCall.ResolveTypes();
-            if (ToCall as ExpressionVariable != null) {
-                FunctionToCall = (ToCall as ExpressionVariable).GetResolved as Function;
-            } else if (ToCall as ExpressionOperator != null) {
-                var callOp = ToCall as ExpressionOperator;
-                if (callOp.Operator == Operator.Member) {
-                    VarTypeStruct structType = (callOp.Inputs[0].ReturnType() as VarTypeStruct);
-                    string toCall = (callOp.Inputs[1] as ExpressionConstStringPtr).Str;
-                    FunctionToCall = structType.GetImplFunction(toCall);    // Get the true function to call.
-                    if (FunctionToCall.ThisCall) {
-                        Parameters.Expressions.Insert(
-                            0,
-                            new ExpressionOperator(new List<Expression>() { callOp.Inputs[0] }, Operator.AddressOf)
-                        ); // This call has first parameter as "this".
-                        Parameters.ResolveTypes();
-                    }
-                } else {
-                    throw new System.NotImplementedException();
-                }
-            } else {
-                throw new System.NotImplementedException();
+            List<VarType> paramTypes = new List<VarType>();
+            foreach (var e in Parameters.Expressions) {
+                paramTypes.Add(e.ReturnType());
             }
+
+            // Resolve what is to be called.
+            ToCall.ResolveTypes(preferredReturnType, paramTypes);
+
+            // Check if function type is compatible.
+
         }
 
         public override VarType GetReturnType() {
-            return FunctionToCall.ReturnType;
+            return ToCall.ReturnType();
         }
 
         public override bool IsPlural() {
@@ -71,20 +57,29 @@ namespace StraitJacketLib.Constructs {
         // TODO: TUPLE PARAMETERS!!!
         public override ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
 
+            // Get function to call.
+            Function FunctionToCall = (ToCall.ReturnType() as VarTypeFunction).FoundFunc;
+
             // LLVM.
-            if (FunctionToCall.Equals(AsyLLVM.Function)) {
+            if (FunctionToCall != null && FunctionToCall.Equals(AsyLLVM.Function)) {
                 return AsyLLVM.CompileCall(mod, builder, Parameters.Expressions);
             }
 
             // Compile values.
             ReturnValue toCall = ToCall.Compile(mod, builder, param);
+            if (ToCall.LValue) toCall = new ReturnValue(builder.BuildLoad(toCall.Val));
 
             // Compile parameters.
             ReturnValue parameters = Parameters.Compile(mod, builder, param);
+            LLVMValueRef[] args = parameters.Rets.Select(x => x.Val).ToArray(); // TODO: TUPLE PARAMETERS!!!
+
+            // Function pointer.
+            if (FunctionToCall == null) {
+                return new ReturnValue(builder.BuildCall(toCall.Val, args));
+            }
 
             // Make sure function is compiled.
             if (!FunctionToCall.Compiled) FunctionToCall.Compile(mod, builder, param);
-            LLVMValueRef[] args = parameters.Rets.Select(x => x.Val).ToArray(); // TODO: TUPLE PARAMETERS!!!
 
             // Inline function.
             if (FunctionToCall.Inline) {

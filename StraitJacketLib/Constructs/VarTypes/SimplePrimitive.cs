@@ -74,7 +74,6 @@ namespace StraitJacketLib.Constructs {
                 if (i.Constant != Constant) return false;
                 if (i.Atomic != Atomic) return false;
                 if (i.Volatile != Volatile) return false;
-                if (i.Variadic != Variadic) return false;
                 return i.Primitive == Primitive;
             }
             return false;
@@ -86,7 +85,6 @@ namespace StraitJacketLib.Constructs {
             hash.Add(Constant);
             hash.Add(Volatile);
             hash.Add(Atomic);
-            hash.Add(Variadic);
             hash.Add(Primitive);
             return hash.ToHashCode();
         }
@@ -119,6 +117,13 @@ namespace StraitJacketLib.Constructs {
                     throw new Exception("Can't get string for primitive type: " + Primitive.ToString());
             }
             return ret;
+        }
+
+        public override bool CanImplicitlyCastTo(VarType other) {
+            if (Primitive == SimplePrimitives.ConstString && other.Equals(new VarTypePointer(new VarTypeSimplePrimitive(SimplePrimitives.Char)) { Constant = true })) {
+                return true;
+            }
+            return base.CanImplicitlyCastTo(other);
         }
 
         public override Expression DefaultValue() {

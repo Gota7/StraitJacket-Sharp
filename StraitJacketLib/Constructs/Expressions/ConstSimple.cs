@@ -15,7 +15,7 @@ namespace StraitJacketLib.Constructs {
             Val = val;
         }
 
-        public override void ResolveTypes() {
+        public override void ResolveTypes(VarType preferredReturnType, List<VarType> parameterTypes) {
             LValue = false;
         }
 

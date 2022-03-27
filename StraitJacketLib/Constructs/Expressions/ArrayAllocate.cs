@@ -22,8 +22,8 @@ namespace StraitJacketLib.Constructs {
             TotalSize.ResolveVariables(); // Lengths will have this called.
         }
 
-        public override void ResolveTypes() {
-            TotalSize.ResolveTypes();
+        public override void ResolveTypes(VarType preferredReturnType, List<VarType> parameterTypes) {
+            TotalSize.ResolveTypes(preferredReturnType, parameterTypes);
         }
 
         public override VarType GetReturnType() {
