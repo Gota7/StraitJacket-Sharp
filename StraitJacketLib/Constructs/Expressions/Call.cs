@@ -39,7 +39,7 @@ namespace StraitJacketLib.Constructs {
         }
 
         public override VarType GetReturnType() {
-            return ToCall.ReturnType();
+            return (ToCall.ReturnType() as VarTypeFunction).ReturnType.TrueType();
         }
 
         public override bool IsPlural() {
