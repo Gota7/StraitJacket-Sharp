@@ -3,7 +3,7 @@ using System.IO;
 using LLVMSharp;
 using Asylum;
 using Asylum.AST;
-using StraitJacketLib.Constructs;
+using WARD.Constructs;
 
 namespace StraitJacket {
     class Program {

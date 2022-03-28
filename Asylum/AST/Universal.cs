@@ -2,8 +2,8 @@ using System;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using LLVMSharp;
-using StraitJacketLib.Builder;
-using StraitJacketLib.Constructs;
+using WARD.Builder;
+using WARD.Constructs;
 
 namespace Asylum.AST {
 
