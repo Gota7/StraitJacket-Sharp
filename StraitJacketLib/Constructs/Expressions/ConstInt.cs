@@ -9,6 +9,7 @@ namespace StraitJacketLib.Constructs {
         public Number Val;
 
         public ExpressionConstInt(bool forceSigned, long val) {
+            Type = ExpressionType.ConstInt;
             Val = new Number() {
                 Type = NumberType.Whole,
                 ForceSigned = forceSigned,
@@ -16,7 +17,7 @@ namespace StraitJacketLib.Constructs {
             };
         }
 
-        public override void ResolveTypes() {
+        public override void ResolveTypes(VarType preferredReturnType, List<VarType> parameterTypes) {
             LValue = false;
         }
 

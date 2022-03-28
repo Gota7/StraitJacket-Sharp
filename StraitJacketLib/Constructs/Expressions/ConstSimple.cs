@@ -10,11 +10,12 @@ namespace StraitJacketLib.Constructs {
         public object Val;
 
         public ExpressionConstSimple(SimplePrimitives primitive, object val) {
+            Type = ExpressionType.ConstSimple;
             Primitive = primitive;
             Val = val;
         }
 
-        public override void ResolveTypes() {
+        public override void ResolveTypes(VarType preferredReturnType, List<VarType> parameterTypes) {
             LValue = false;
         }
 

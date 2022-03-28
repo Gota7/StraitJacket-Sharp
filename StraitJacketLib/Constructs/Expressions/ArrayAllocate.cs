@@ -12,6 +12,7 @@ namespace StraitJacketLib.Constructs {
         Expression TotalSize;
 
         public ExpressionArrayAllocate(VarType embeddedType, List<Expression> lengths) {
+            Type = ExpressionType.ArrayAllocate;
             EmbeddedType = embeddedType;
             Lengths = lengths;
             LValue = false;
@@ -21,8 +22,8 @@ namespace StraitJacketLib.Constructs {
             TotalSize.ResolveVariables(); // Lengths will have this called.
         }
 
-        public override void ResolveTypes() {
-            TotalSize.ResolveTypes();
+        public override void ResolveTypes(VarType preferredReturnType, List<VarType> parameterTypes) {
+            TotalSize.ResolveTypes(preferredReturnType, parameterTypes);
         }
 
         public override VarType GetReturnType() {

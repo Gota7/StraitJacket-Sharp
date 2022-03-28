@@ -71,6 +71,111 @@ namespace StraitJacketLib.Constructs {
             }
         }
 
+        public Function ResolveFunctionVariable(VariableOrFunction v, List<VarType> paramTypes, VarType expectedReturnType = null) {
+
+            // LLVM call.
+            if (v.Path.Equals("llvm")) {
+                return AsyLLVM.Function;
+            }
+
+            // Get possible functions.
+            List<Function> funcs = new List<Function>();
+            void AddFuncs(Scope s) {
+                if (s.Functions.ContainsKey(v.Path)) {
+                    funcs.AddRange(s.Functions[v.Path].Values);
+                }
+                if (s.Parent != null) AddFuncs(s.Parent);
+            }
+            AddFuncs(this);
+
+            // Nothing found.
+            if (funcs.Count == 0) {
+                throw new System.Exception("Function overload not resolved!");
+            }
+
+            // Prune ineligible members.
+            for (int i = funcs.Count - 1; i >= 0; i--) {
+                if (paramTypes.Count < funcs[i].MinParameters() || paramTypes.Count > funcs[i].MaxParameters()) {
+                    funcs.RemoveAt(i); // Wrong number of parameters passed.
+                    continue;
+                }
+                for (int j = 0; j < paramTypes.Count; j++) {
+                    int funcParamIndex = j;
+                    if (funcParamIndex > funcs[i].Parameters.Count) funcParamIndex = funcs[i].Parameters.Count - 1;
+                    if (!paramTypes[j].CanImplicitlyCastTo(funcs[i].Parameters[funcParamIndex].Value.Type)) {
+                        funcs.RemoveAt(i);
+                        break;
+                    }
+                }
+            }
+
+            // Only 1 matches.
+            if (funcs.Count == 1) {
+                return funcs[0];
+            } else if (funcs.Count == 0) {
+                throw new System.Exception("Function overload not resolved!");
+            }
+
+            // Get candidate functions from return type.
+            List<Function> newFuncs = new List<Function>();
+            if (expectedReturnType != null) {
+
+                // First round, test for exact match.
+                foreach (var o in funcs) {
+                    if (o.ReturnType.Equals(expectedReturnType)) {
+                        newFuncs.Add(o);
+                    }
+                }
+
+                // Second round, test for implicit casts.
+                if (newFuncs.Count == 0) {
+                    foreach (var o in funcs) {
+                        if (o.ReturnType.CanImplicitlyCastTo(expectedReturnType)) {
+                            newFuncs.Add(o);
+                        }
+                    }
+                }
+
+            }
+            else {
+                foreach (var o in funcs) {
+                    newFuncs.Add(o);
+                }
+            }
+
+            // Only 1 matches.
+            if (newFuncs.Count == 1) {
+                return newFuncs[0];
+            } else if (funcs.Count == 0) {
+                throw new System.Exception("Function overload not resolved!");
+            }
+
+            // Get candidate functions from parameter.
+            funcs = newFuncs;
+            newFuncs = new List<Function>();
+
+            // Check for exact matches.
+            foreach (var o in funcs) {
+                bool exactMatch = true;
+                for (int i = 0; i < paramTypes.Count; i++) {
+                    if (!paramTypes[i].Equals(o.Parameters[i].Value.Type)) {
+                        exactMatch = false;
+                        break;
+                    }
+                }
+                if (exactMatch) newFuncs.Add(o);
+            }
+
+            // We know that all the functions can already be implicitly casted to, so if this didn't work then game over.
+            if (newFuncs.Count == 1) {
+                return newFuncs[0];
+            }
+
+            // Nothing was found, or too many were found.
+            throw new System.Exception("Function overload not resolved!");
+
+        }
+
         public List<Variable> ResolveVariable(VariableOrFunction v) {
 
             // Check if it is a parameter.
@@ -108,22 +213,6 @@ namespace StraitJacketLib.Constructs {
             // Nothing found.
             throw new System.Exception("Variable not resolved!");
 
-            /*if (CurrentFunction.Count > 0) {
-                var fn = CurrentFunction.Peek();
-                for (int i = 0; i < fn.Parameters.Count; i++) {
-                    if (fn.Parameters[i].Value.Name.Equals(func.Path)) {
-                        return fn.Parameters[i].Value;
-                    }
-                }
-            }
-            if (Variables.ContainsKey(func.Path)) {
-                return Variables[func.Path];
-            } else if (Functions.ContainsKey(func.Path)) {
-                return Functions[func.Path].Values.ElementAt(0);
-            } else if (Parent != null) {
-                return Parent.ResolveVariable(func);
-            }*/
-            
         }
 
         public VarType ResolveType(VariableOrFunction type) {
@@ -132,7 +221,6 @@ namespace StraitJacketLib.Constructs {
             } else if (Parent != null) {
                 return Parent.ResolveType(type);
             } else {
-                if (type.Path.Equals("unsigned")) return new VarTypeSimplePrimitive(SimplePrimitives.UnsignedAny);
                 throw new System.Exception("Type not resolved!");
             }
         }

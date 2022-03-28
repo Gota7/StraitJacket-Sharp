@@ -25,7 +25,6 @@ namespace StraitJacketLib.Constructs {
                 if (i.Constant != Constant) return false;
                 if (i.Atomic != Atomic) return false;
                 if (i.Volatile != Volatile) return false;
-                if (i.Variadic != Variadic) return false;
                 return i.ReferencedTo.Equals(ReferencedTo);
             }
             return false;
@@ -37,7 +36,6 @@ namespace StraitJacketLib.Constructs {
             hash.Add(Constant);
             hash.Add(Volatile);
             hash.Add(Atomic);
-            hash.Add(Variadic);
             hash.Add(ReferencedTo.GetHashCode());
             return hash.ToHashCode();
         }

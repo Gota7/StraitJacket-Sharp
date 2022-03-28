@@ -21,6 +21,13 @@ namespace StraitJacketLib.Constructs {
                 new VarParameter() { Value = new Variable() { Name = "instruction", Type = new VarTypeSimplePrimitive(SimplePrimitives.ConstString) { Constant = true } } },
                 new VarParameter() { Value = new Variable() { Name = "args", Type = new VarTypeSimplePrimitive(SimplePrimitives.Object) { Variadic = true } } }
             },
+            Type = new VarTypeFunction(
+                new VarTypeSimplePrimitive(SimplePrimitives.Object),
+                new List<VarType>() {
+                    new VarTypeSimplePrimitive(SimplePrimitives.ConstString) { Constant = true },
+                    new VarTypeSimplePrimitive(SimplePrimitives.Object) { Variadic = true }
+                }
+            ),
             ReturnType = new VarTypeSimplePrimitive(SimplePrimitives.Object)
         };
 
@@ -95,6 +102,26 @@ namespace StraitJacketLib.Constructs {
                 case "not":
                     VerifyArgs(1);
                     return new ReturnValue(builder.BuildNot(v1));
+                case "fadd":
+                    VerifyArgs(2);
+                    return new ReturnValue(builder.BuildFAdd(v1, v2));
+                case "fsub":
+                    VerifyArgs(2);
+                    return new ReturnValue(builder.BuildFSub(v1, v2));
+                case "fmul":
+                    VerifyArgs(2);
+                    return new ReturnValue(builder.BuildFMul(v1, v2));
+                case "fdiv":
+                    VerifyArgs(2);
+                    return new ReturnValue(builder.BuildFDiv(v1, v2));
+                case "frem":
+                    VerifyArgs(2);
+                    return new ReturnValue(builder.BuildFRem(v1, v2));
+                case "fneg":
+                    VerifyArgs(1);
+                    return new ReturnValue(builder.BuildFNeg(v1));
+                default:
+                    throw new System.NotImplementedException();
             }
             void VerifyArgs(int num) {
                 if (num != args.Count - 1) {

@@ -530,6 +530,20 @@ namespace Asylum.AST {
             return new AsylumVisitResult() { Expression = ret };
         }
 
+        public AsylumVisitResult VisitExprFloating([NotNull] AsylumParser.ExprFloatingContext context)
+        {
+            Number n = GetFloat(context.FLOATINGVAL());
+            Expression ret = new ExpressionConstFloat(32, n.ValueDecimal);
+            return new AsylumVisitResult() { Expression = ret };
+        }
+
+        public AsylumVisitResult VisitExprFixed([NotNull] AsylumParser.ExprFixedContext context)
+        {
+            Number n = GetFixed(context.FIXEDVAL());
+            Expression ret = new ExpressionConstFixed(n.ValueWhole, (int)n.ValueDecimal);
+            return new AsylumVisitResult() { Expression = ret };
+        }
+
         public AsylumVisitResult VisitExprString([NotNull] AsylumParser.ExprStringContext context)
         {
             Expression ret = new ExpressionConstStringPtr(GetString(context.STRING()));
@@ -543,8 +557,7 @@ namespace Asylum.AST {
             foreach (var e in context.expression()) {
                 parameters.Add(e.Accept(this).Expression);
             }
-            bool doAwait = context.AWAIT() != null;
-            Expression ret = new ExpressionCall(new ExpressionVariable(context.variable_or_function().Accept(this).VariableOrFunction), new ExpressionComma(parameters), doAwait);   
+            Expression ret = new ExpressionCall(new ExpressionVariable(context.variable_or_function().Accept(this).VariableOrFunction), new ExpressionComma(parameters));   
             return new AsylumVisitResult() { Expression = ret };
         }
 
@@ -577,7 +590,6 @@ namespace Asylum.AST {
             return ret;
         }
 
-        // TODO: NEGATIVE UNSIGNED!
         public Number GetInteger(ITerminalNode num) {
             ulong valU = 0;
             long valS = 0;
@@ -622,6 +634,72 @@ namespace Asylum.AST {
                 ret.ForceSigned = false;
             }
             ret.ValueWhole = (long)valU;
+            return ret;
+        }
+
+        public Number GetFloat(ITerminalNode num) {
+            string str = num.GetText();
+            Number ret = new Number();
+            ret.Type = NumberType.Decimal;
+            if (str.EndsWith("f")) str = str.Substring(0, str.Length - 1);
+            if (str.StartsWith("0x")) {
+                str = str.Substring(2);
+                string dec = null;
+                if (str.Contains('.')) {
+                    dec = str.Split('.')[1];
+                    str = str.Split('.')[0];
+                }
+                ret.ValueDecimal = (double)Convert.ToUInt64(str, 16);
+                if (dec != null) ret.ValueDecimal += (double)Convert.ToUInt64(dec, 16) / (0x1 << (dec.Length * 4));
+            } else if (str.StartsWith("0b")) {
+                str = str.Substring(2);
+                string dec = null;
+                if (str.Contains('.')) {
+                    dec = str.Split('.')[1];
+                    str = str.Split('.')[0];
+                }
+                ret.ValueDecimal = (double)Convert.ToUInt64(str, 2);
+                if (dec != null) ret.ValueDecimal += (double)Convert.ToUInt64(dec, 2) / (0x1 << dec.Length);
+            } else {
+                ret.ValueDecimal = Convert.ToDouble(str);
+            }
+            return ret;
+        }
+
+        public Number GetFixed(ITerminalNode num) {
+            string str = num.GetText();
+            Number ret = new Number();
+            ret.Type = NumberType.Fixed;
+            ret.ForceSigned = true;
+            if (str.EndsWith("x")) str = str.Substring(0, str.Length - 1);
+            if (str.StartsWith("0x")) {
+                str = str.Substring(2);
+                string dec = null;
+                if (str.Contains('.')) {
+                    dec = str.Split('.')[1];
+                    str = str.Split('.')[0];
+                }
+                ret.ValueWhole = (long)Convert.ToUInt64(str + dec, 16);
+                if (dec != null) ret.ValueDecimal = dec.Length * 4;
+            } else if (str.StartsWith("0b")) {
+                str = str.Substring(2);
+                string dec = null;
+                if (str.Contains('.')) {
+                    dec = str.Split('.')[1];
+                    str = str.Split('.')[0];
+                }
+                ret.ValueWhole = (long)Convert.ToUInt64(str + dec, 2);
+                if (dec != null) ret.ValueDecimal = dec.Length;
+            } else {
+                /*string dec = null;
+                if (str.Contains('.')) {
+                    dec = str.Split('.')[1];
+                    str = str.Split('.')[0];
+                }
+                ulong wholePart = ulong.Parse(str);
+                ulong decPart = dec != null ? ulong.Parse(dec) : 0;*/
+                throw new System.NotImplementedException();
+            }
             return ret;
         }
 

@@ -9,9 +9,9 @@ namespace StraitJacketLib.Constructs {
         public VariableOrFunction ToResolve;
         List<Variable> PossibleReturns;
         Variable Resolved;
-        Expression ImplicitMemberThis = null;
 
         public ExpressionVariable(VariableOrFunction toResolve) {
+            Type = ExpressionType.Variable;
             ToResolve = toResolve;
         }
 
@@ -19,26 +19,50 @@ namespace StraitJacketLib.Constructs {
             PossibleReturns = ToResolve.ResolveVariable();
         }
 
-        public override void ResolveTypes() {
-            if (PossibleReturns.Count < 1) {
-                throw new System.Exception("???????");
-            } else if (PossibleReturns.Count == 1) {
-                Resolved = PossibleReturns[0];
+        public override void ResolveTypes(VarType preferredReturnType, List<VarType> parameterTypes) {
+
+            // So if the parameter types are not null, this means we are looking for a function pointer or a function to call.
+            if (parameterTypes != null) {
+
+                // Get the items that are variables and not functions.
+                List<Variable> possibleVars = new List<Variable>();
+                foreach (var v in PossibleReturns) {
+                    if (v as Function == null && v.Type.Type == VarTypeEnum.PrimitiveFunction) {
+                        VarTypeFunction funcType = v.Type as VarTypeFunction;
+                        if (funcType.CanBeConvertedFrom(parameterTypes, preferredReturnType)) possibleVars.Add(v);
+                    }
+                }
+
+                // Manage possible variables.
+                if (possibleVars.Count == 1) {
+                    Resolved = possibleVars[0];
+                    return;
+                } else if (possibleVars.Count > 1) {
+                    throw new System.Exception("Can't resolve variable!!!");
+                }
+            
+                // This is a function call, find the proper item.
+                LValue = false;
+                Resolved = ToResolve.ResolveFunctionVariable(parameterTypes, preferredReturnType);
+                (Resolved.Type as VarTypeFunction).FoundFunc = (Function)Resolved; // Hack for call expressions.
+                
             } else {
-                throw new System.NotImplementedException();
+
+                // The resolved variable should just be the only possible one.
+                if (PossibleReturns.Count == 1) {
+                    Resolved = PossibleReturns[0];
+                    return;
+                } else if (PossibleReturns.Count > 1) {
+                    throw new System.Exception("Can't resolve variable!!!");
+                }
+
             }
-            if (Resolved.Type == null || Resolved.Type.TrueType().Type == VarTypeEnum.PrimitiveFunction) {
+
+            // Unknown type, forbid loading.
+            if (Resolved.Type == null) {
                 LValue = false;
             }
-            if (Resolved.Name.StartsWith("this.")) { // this.member hack.
-                ImplicitMemberThis = new ExpressionOperator(new List<Expression>() {
-                    new ExpressionVariable(new VariableOrFunction() { Scope = Resolved.Scope, Path = "this" }),
-                    new ExpressionVariable(new VariableOrFunction() { Scope = Resolved.Scope, Path = Resolved.Name })
-                }, Operator.Member);
-                ImplicitMemberThis.ResolveVariables();
-                ImplicitMemberThis.ResolveTypes();
-                LValue = ImplicitMemberThis.LValue;
-            }
+
         }
 
         public Variable GetResolved => Resolved;
@@ -79,11 +103,7 @@ namespace StraitJacketLib.Constructs {
         }
 
         public override ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            if (ImplicitMemberThis != null) {
-                return ImplicitMemberThis.Compile(mod, builder, param);
-            } else {
-                return new ReturnValue(Resolved.LLVMValue);
-            } 
+            return new ReturnValue(Resolved.LLVMValue);
         }
 
         public override string ToString() {

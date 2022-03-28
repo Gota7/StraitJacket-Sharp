@@ -11,6 +11,7 @@ namespace StraitJacketLib.Constructs {
         public List<uint> Lengths;
 
         public ExpressionConstArrayAllocate(VarType embeddedType, List<uint> lengths) {
+            Type = ExpressionType.ConstArrayAllocate;
             EmbeddedType = embeddedType;
             Lengths = lengths;
             LValue = false;

@@ -66,13 +66,13 @@ extern fn scanf(const char* format, ... args) -> int;
 extern fn ungetc(int character, object* stream) -> int;
 
 // Set stream buffer.
-extern fn setvbuf(object* stream, byte* buffer, int mode, size_t size) -> int;
+extern fn setvbuf(object* stream, object* buffer, int mode, size_t size) -> int;
 
 // Read from a stream.
-extern fn fread(byte* ptr, size_t size, size_t count, object* stream) -> size_t;
+extern fn fread(object* ptr, size_t size, size_t count, object* stream) -> size_t;
 
 // Write to a stream.
-extern fn fwrite(byte* ptr, size_t size, size_t count, object* stream) -> size_t;
+extern fn fwrite(object* ptr, size_t size, size_t count, object* stream) -> size_t;
 
 // Seek to a certain position in the file.
 extern fn fseek(object* stream, long offset, int origin) -> int;
@@ -87,7 +87,7 @@ extern fn ferror(object* stream) -> int;
 extern fn clearerr(object* stream);
 
 // Check for end of file.
-extern fn feof( object* stream) -> int;
+extern fn feof(object* stream) -> int;
 
 // Print to standard error.
 extern fn perror(const char* str);

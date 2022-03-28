@@ -9,6 +9,7 @@ namespace StraitJacketLib.Constructs {
     public class VarTypeFunction : VarType {
         public VarType ReturnType;
         public List<VarType> Parameters;
+        public Function FoundFunc; // If the function is existing and found. Note that this only used for function calls and doesn't change equality.
 
         public VarTypeFunction(VarType retType, List<VarType> parameters) {
             Type = VarTypeEnum.PrimitiveFunction;
@@ -48,7 +49,6 @@ namespace StraitJacketLib.Constructs {
                 if (i.Constant != Constant) return false;
                 if (i.Atomic != Atomic) return false;
                 if (i.Volatile != Volatile) return false;
-                if (i.Variadic != Variadic) return false;
                 if (i.Parameters.Count != Parameters.Count) return false;
                 for (int j = 0; j < i.Parameters.Count; j++) {
                     if (!i.Parameters[j].Equals(Parameters[j])) return false;
@@ -64,7 +64,6 @@ namespace StraitJacketLib.Constructs {
             hash.Add(Constant);
             hash.Add(Volatile);
             hash.Add(Atomic);
-            hash.Add(Variadic);
             hash.Add(ReturnType.GetHashCode());
             hash.Add(Parameters.GetHashCode());
             return hash.ToHashCode();
@@ -80,6 +79,26 @@ namespace StraitJacketLib.Constructs {
 
         public override Expression DefaultValue() {
             throw new NotImplementedException();
+        }
+
+        // See if a function type can be made from another.
+        public bool CanBeConvertedFrom(List<VarType> paramTypes, VarType expectedReturnType = null) {
+
+            // Return type doesn't match.
+            if (expectedReturnType != null && !expectedReturnType.CanCastTo(ReturnType)) {
+                return false;
+            }
+
+            // Go through each parameter.
+            if (Parameters.Count - 1 > paramTypes.Count) return false; // Not enough parameters given.
+            if (Parameters.Count > 0 && !Parameters.Last().Variadic && Parameters.Count > paramTypes.Count) return false; // Not enough parameters given even when not variadic.
+            for (int i = 0; i < paramTypes.Count; i++) {
+                // TODO!!!!!!!!!
+            }
+
+            // Can convert.
+            return true;
+
         }
 
     }

@@ -122,6 +122,18 @@ namespace StraitJacketLib.Constructs {
 
         }
 
+        // Minimum number of parameters that have to be passed.
+        public int MinParameters() {
+            int num = Parameters.Count;
+            if (Variadic) num--; // Last variadic is optional.
+            return num;
+        }
+
+        // Maximum number of parameters that can be passed.
+        public int MaxParameters() {
+            return Variadic ? int.MaxValue : Parameters.Count;
+        }
+
         /*
         // If signatures are equal.
         public bool Equals(Function x, Function y)

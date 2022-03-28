@@ -27,13 +27,14 @@ universal_statement
 	|	struct_definition				#UniversalStruct
 	|	interface_definition			#UniversalInterface
 	|	implementation_definition		#UniversalImplementation
-	|	typedef_definition				#UniversalTypedef
+	|	concept							#UniversalConcept
 	|	code_statement					#UniversalTopLevelCode
 	;
 
 // Using statement.
 using_statement
-	:	USING STATIC? IDENTIFIER ('.' IDENTIFIER)* ('.*')? ';'
+	:	USING STATIC? IDENTIFIER ('.' IDENTIFIER)* ('.*')? ';'	#UsingScope
+	|	USING IDENTIFIER '=' variable_type ';' 					#UsingShortcut
 	;
 
 // Namespace statement.
@@ -125,11 +126,6 @@ cast_definition
 	:	attribute* INLINE? (IMPLICITCAST | EXPLICITCAST) '(' variable_parameter ')' OP_RET variable_type ('{' code_statement* '}' | OP_LAMBDA expression ';')
 	;
 
-// Typedef definition.
-typedef_definition
-	:	TYPEDEF variable_type IDENTIFIER ';'
-	;
-
 // Struct entry.
 struct_entry
 	:	access_modifier? variable_parameter (';' | struct_entry_property)	#StructData
@@ -140,6 +136,12 @@ struct_entry
 struct_entry_property
 	:	'{' (access_modifier? GET (';' | '{' code_statement* '}' | OP_LAMBDA expression ';'))? (access_modifier? SET (';' | '{' code_statement* '}' | OP_LAMBDA expression ';'))? '}'	#PropertyGetSet
 	|	OP_LAMBDA expression ';'																																						#PropertySetOnly
+	;
+
+// Struct initializer
+struct_initializer
+	:	IDENTIFIER ':' expression	#StructInitializerProperty
+	|	expression					#StructInitializerValue
 	;
 
 // Code body.
@@ -254,14 +256,59 @@ type_implements
 	:	':' variable_type (',' variable_type)*
 	;
 
+// Concept.
+concept
+	:	CONCEPT IDENTIFIER '=' concept_definition ';'
+	;
+
+// Concept definition.
+concept_definition
+	:	concept_definition_or									#ConceptDefinitionVisitOr
+	;
+
+// Concept definition or.
+concept_definition_or
+	:	concept_definition_or '|' concept_definition_and		#ConceptDefinitionOr
+	|	concept_definition_and									#ConceptDefinitionVisitAnd
+	;
+
+// Concept definition and.
+concept_definition_and
+	:	concept_definition_and ',' concept_definition_factor	#ConceptDefinitionAnd
+	|	concept_definition_factor								#ConceptDefinitionVisitFactor
+	;
+
+// Concent definition factor.
+concept_definition_factor
+	:	STRUCT ('<' concept_definition (',' concept_definition)* '>')? (':' concept_definition)?	#ConceptDefinitionStructImplements
+	|	'(' concept_definition ')'																	#ConceptDefinitionParenthesis
+	|	variable_type																				#ConceptDefinitionVarType
+	|	'unsigned'																					#ConceptDefinitionUnsigned
+	|	'signed'																					#ConceptDefinitionSigned
+	|	'floating'																					#ConceptDefinitionFloating
+	|	'fixed'																						#ConceptDefinitionFixed
+	;
+
 // Generic definition.
 generic_definition
-	:	'<' IDENTIFIER type_implements_extended? (',' IDENTIFIER type_implements_extended?)* '>'
+	:	'<' generic_definition_item (',' generic_definition_item)* '>'
+	;
+
+// Generic definition item.
+generic_definition_item
+	:	concept_definition '...'? IDENTIFIER	#GenericDefinitionItemConcept
+	|	generic_specifier_item					#GenericDefinitionItemSpecifier
 	;
 
 // Generic specifier.
 generic_specifier
-	:	'<' variable_type (',' variable_type)* '>'
+	:	'<' generic_specifier_item (',' generic_specifier_item)* '>'
+	;
+
+// Generic specifier item.
+generic_specifier_item
+	:	variable_type	#GenericSpecifierVarType
+	|	expression		#GenericSpecifierExpression
 	;
 
 // Expression. From lowest to highest precedence.
@@ -397,19 +444,22 @@ expr_unary
 
 // Primary expression.
 expr_primary
-	:	expr_parenthesis											#ExprVisitParenthesis
-	|	expr_primary '.' expr_parenthesis							#ExprMemberAccess
-	|	expr_primary generic_specifier? '(' expression? ')'			#ExprFunctionCall
-	|	expr_primary '[' expression ']'								#ExprArrayAccess
-	|	expr_primary OP_PLUS_PLUS									#ExprIncrement
-	|	expr_primary OP_MINUS_MINUS									#ExprDecrement
-	|	NEW expression												#ExprNew
-	|	TYPEOF '(' (variable_type | expression) ')'					#ExprTypeof
-	|	DEFAULT '(' (variable_type | expression) ')'				#ExprDefaultOf
-	|	DEFAULT														#ExprDefault
-	|	NAMEOF '(' expression ')'									#ExprNameof
-	|	SIZEOF '(' (variable_type | expression) ')'					#ExprSizeof
-	|	STACKALLOC expression										#ExprStackAlloc
+	:	expr_parenthesis																								#ExprVisitParenthesis
+	|	expr_primary '.' expr_parenthesis																				#ExprMemberAccess
+	|	expr_primary generic_specifier? '(' expression? ')'																#ExprFunctionCall
+	|	expr_primary generic_specifier? ('(' expression? ')')? '{' (struct_initializer (',' struct_initializer)*)? '}'	#ExprStructInit
+	|	expr_primary '[' expression ']'																					#ExprArrayAccess
+	|	expr_primary OP_PLUS_PLUS																						#ExprIncrement
+	|	expr_primary OP_MINUS_MINUS																						#ExprDecrement
+	|	NEW expression																									#ExprNew
+	|	TYPEOF '(' (variable_type | expression) ')'																		#ExprTypeof
+	|	DEFAULT '(' (variable_type | expression) ')'																	#ExprDefaultOf
+	|	DEFAULT																											#ExprDefault
+	|	NAMEOF '(' expression ')'																						#ExprNameof
+	|	SIZEOF '(' (variable_type | expression) ')'																		#ExprSizeof
+	|	LENGTHOF '(' (variable_type | expression) ')'																	#ExprLengthof
+	|	STACKALLOC expression																							#ExprStackAlloc
+	|	'{' code_statement* '}'																							#ExprCode
 	;
 
 // Parenthesis.
@@ -422,6 +472,8 @@ expr_parenthesis
 expr_end
 	:	IDENTIFIER	#ExprVariable
 	|	INTEGER		#ExprInteger
+	|	FLOATINGVAL	#ExprFloating
+	|	FIXEDVAL	#ExprFixed
 	|	STRING		#ExprString
 	;
 
@@ -503,10 +555,6 @@ primitives
 	|	'char'													#PrimitiveChar
 	|	'wchar' 												#PrimitiveWideChar
 	|	'var'													#PrimitiveAutoVariable
-	|	'unsigned'												#PrimitiveUnsignedAny
-	|	'signed'												#PrimitiveSignedAny
-	|	'floating'												#PrimitiveFloatingAny
-	|	'fixed'													#PrimitiveFixedAny
 	;
 
 // Defined constants.
@@ -567,6 +615,7 @@ ATOMIC:			'atomic';
 AWAIT:			'await';
 BREAK:			'break';
 CASE:			'case';
+CONCEPT:		'concept';
 CONST:			'const';
 CONTINUE:		'continue';
 DEFAULT:		'default';
@@ -587,6 +636,7 @@ INLINE:			'inline';
 INTERFACE:		'interface';
 INTERNAL:		'internal';
 IS:				'is';
+LENGTHOF:		'lengthof';
 LOOP:			'loop';
 NAMEOF:			'nameof';
 NAMESPACE:		'namespace';
@@ -603,7 +653,6 @@ STACKALLOC:		'stackalloc';
 STATIC:			'static';
 STRUCT:			'struct';
 SWITCH:			'switch';
-TYPEDEF:		'typedef';
 TYPEOF:			'typeof';
 UNSAFE:			'unsafe';
 UNION:			'union';
@@ -680,12 +729,29 @@ FIXED
 	:	'fix' DecDigit+ 'x' DecDigit+
 	;
 
-// Whole nubmer.
+// Whole number.
 INTEGER
-	:	'-'? DecDigit+
-	|	'-'? '0x' HexDigit+
-	|	'-'? '0b' BinDigit+
-	|	'-'? DecDigit IntegerTypeSuffix
+	:	DecDigit+ IntegerTypeSuffix?
+	|	'0x' HexDigit+ IntegerTypeSuffix?
+	|	'0b' BinDigit+ IntegerTypeSuffix?
+	;
+
+// Fractional number.
+FLOATINGVAL
+	:	DecDigit+ FloatingTypeSuffix
+	|	DecDigit+ '.' DecDigit+ FloatingTypeSuffix?
+	|	'.' DecDigit+ FloatingTypeSuffix?
+	|	'0x' HexDigit+ '.' HexDigit* FloatingTypeSuffix?
+	|	'0b' BinDigit+ '.' BinDigit* FloatingTypeSuffix?
+	;
+
+// Fixed number.
+FIXEDVAL
+	:	DecDigit+ FixedTypeSuffix
+	|	DecDigit+ '.' DecDigit+ FixedTypeSuffix
+	|	'.' DecDigit+ FixedTypeSuffix
+	|	'0x' HexDigit+ '.' HexDigit* FixedTypeSuffix
+	|	'0b' BinDigit+ '.' BinDigit* FixedTypeSuffix
 	;
 
 // Basic blocks.
@@ -708,6 +774,8 @@ fragment NewLineCharacter
 	;
 
 fragment IntegerTypeSuffix:         [uU] | [sS];
+fragment FloatingTypeSuffix:		[fF];
+fragment FixedTypeSuffix:			[xX];
 fragment HexDigit: 					[0-9] | [A-F] | [a-f];
 fragment BinDigit: 					[0-1];
 fragment DecDigit:					[0-9];

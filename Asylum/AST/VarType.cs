@@ -9,7 +9,7 @@ namespace Asylum.AST {
 
     public partial class Visitor : IAsylumVisitor<AsylumVisitResult> {
 
-        public AsylumVisitResult VisitTypedef_definition([NotNull] AsylumParser.Typedef_definitionContext context)
+        public AsylumVisitResult VisitUsingShortcut([NotNull] AsylumParser.UsingShortcutContext context)
         {
             Builder.Typedef(context.variable_type().Accept(this).VariableType, context.IDENTIFIER().GetText());
             return null;
@@ -116,42 +116,43 @@ namespace Asylum.AST {
         public AsylumVisitResult VisitPrimitiveHalf([NotNull] AsylumParser.PrimitiveHalfContext context)
         {
             return new AsylumVisitResult() {
-                VariableType = new VarTypeSimplePrimitive(SimplePrimitives.Half)
+                VariableType = new VarTypeFloating(16)
             };
         }
 
         public AsylumVisitResult VisitPrimitiveFloat([NotNull] AsylumParser.PrimitiveFloatContext context)
         {
             return new AsylumVisitResult() {
-                VariableType = new VarTypeSimplePrimitive(SimplePrimitives.Float)
+                VariableType = new VarTypeFloating(32)
             };
         }
 
         public AsylumVisitResult VisitPrimitiveDouble([NotNull] AsylumParser.PrimitiveDoubleContext context)
         {
             return new AsylumVisitResult() {
-                VariableType = new VarTypeSimplePrimitive(SimplePrimitives.Double)
+                VariableType = new VarTypeFloating(64)
             };
         }
 
-        public AsylumVisitResult VisitPrimitiveSignedAny([NotNull] AsylumParser.PrimitiveSignedAnyContext context)
+        public AsylumVisitResult VisitPrimitiveExtended([NotNull] AsylumParser.PrimitiveExtendedContext context)
         {
-            return new AsylumVisitResult() {
-                VariableType = new VarTypeSimplePrimitive(SimplePrimitives.SignedAny)
+           return new AsylumVisitResult() {
+                VariableType = new VarTypeFloating(80)
             };
         }
 
-        public AsylumVisitResult VisitPrimitiveUnsignedAny([NotNull] AsylumParser.PrimitiveUnsignedAnyContext context)
+        public AsylumVisitResult VisitPrimitiveDecimal([NotNull] AsylumParser.PrimitiveDecimalContext context)
         {
             return new AsylumVisitResult() {
-                VariableType = new VarTypeSimplePrimitive(SimplePrimitives.UnsignedAny)
+                VariableType = new VarTypeFloating(128)
             };
         }
 
-        public AsylumVisitResult VisitPrimitiveFloatingAny([NotNull] AsylumParser.PrimitiveFloatingAnyContext context)
+        public AsylumVisitResult VisitPrimitiveFixed([NotNull] AsylumParser.PrimitiveFixedContext context)
         {
+            string[] split = context.FIXED().GetText().Replace("fix", "").Split('x');
             return new AsylumVisitResult() {
-                VariableType = new VarTypeSimplePrimitive(SimplePrimitives.FloatingAny)
+                VariableType = new VarTypeFixed(uint.Parse(split[0]), uint.Parse(split[1]))
             };
         }
 

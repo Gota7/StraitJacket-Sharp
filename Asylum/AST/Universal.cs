@@ -30,9 +30,9 @@ namespace Asylum.AST {
             return ret;
         }
 
-        public AsylumVisitResult VisitUniversalTypedef([NotNull] AsylumParser.UniversalTypedefContext context)
+        public AsylumVisitResult VisitUniversalUsing([NotNull] AsylumParser.UniversalUsingContext context)
         {
-            return context.typedef_definition().Accept(this);
+            return context.using_statement().Accept(this);
         }
 
         public AsylumVisitResult VisitUniversalStruct([NotNull] AsylumParser.UniversalStructContext context)

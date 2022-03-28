@@ -9,10 +9,11 @@ namespace StraitJacketLib.Constructs {
         public string Str;
 
         public ExpressionConstStringPtr(string str) {
+            Type = ExpressionType.ConstString;
             Str = str;
         }
 
-        public override void ResolveTypes() {
+        public override void ResolveTypes(VarType preferredReturnType, List<VarType> parameterTypes) {
             LValue = false;
         }
 

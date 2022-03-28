@@ -9,20 +9,11 @@ namespace StraitJacketLib.Constructs {
     public enum SimplePrimitives {
         ConstString,
         Bool,
-        Half,
-        Float,
-        Double,
-        Extended,
-        Decimal,
         VariableLength,
         Object,
         Void,
         Char,
-        WideChar,
-        UnsignedAny,
-        SignedAny,
-        FloatingAny,
-        FixedAny
+        WideChar
     }
 
     // A simple primitive.
@@ -40,16 +31,6 @@ namespace StraitJacketLib.Constructs {
                     return LLVMTypeRef.CreatePointer(LLVMTypeRef.Int8, 0);
                 case SimplePrimitives.Bool:
                     return LLVMTypeRef.Int1;
-                case SimplePrimitives.Half:
-                    return LLVMTypeRef.Half;
-                case SimplePrimitives.Float:
-                    return LLVMTypeRef.Float;
-                case SimplePrimitives.Double:
-                    return LLVMTypeRef.Double;
-                case SimplePrimitives.Extended:
-                    return LLVMTypeRef.X86FP80;
-                case SimplePrimitives.Decimal:
-                    return LLVMTypeRef.FP128;
                 case SimplePrimitives.VariableLength:
                     throw new Exception("TODO!!!");
                 case SimplePrimitives.Object:
@@ -60,11 +41,6 @@ namespace StraitJacketLib.Constructs {
                     return LLVMTypeRef.Int8;
                 case SimplePrimitives.WideChar:
                     return LLVMTypeRef.Int16;
-                case SimplePrimitives.UnsignedAny:
-                case SimplePrimitives.SignedAny:
-                case SimplePrimitives.FloatingAny:
-                case SimplePrimitives.FixedAny:
-                    throw new Exception("Can't make instance of abstract type!");
                 default:
                     throw new Exception("?????????");
             }
@@ -76,16 +52,6 @@ namespace StraitJacketLib.Constructs {
                     return "s";
                 case SimplePrimitives.Bool:
                     return "b";
-                case SimplePrimitives.Half:
-                    return "h";
-                case SimplePrimitives.Float:
-                    return "f";
-                case SimplePrimitives.Double:
-                    return "d";
-                case SimplePrimitives.Extended:
-                    return "e";
-                case SimplePrimitives.Decimal:
-                    return "c";
                 case SimplePrimitives.VariableLength:
                     return "l";
                 case SimplePrimitives.Object:
@@ -96,14 +62,6 @@ namespace StraitJacketLib.Constructs {
                     return "r";
                 case SimplePrimitives.WideChar:
                     return "w";
-                case SimplePrimitives.UnsignedAny:
-                    return "U";
-                case SimplePrimitives.SignedAny:
-                    return "I";
-                case SimplePrimitives.FloatingAny:
-                    return "F";
-                case SimplePrimitives.FixedAny:
-                    return "X";
                 default:
                     throw new System.NotImplementedException("???????????");   
             }
@@ -116,7 +74,6 @@ namespace StraitJacketLib.Constructs {
                 if (i.Constant != Constant) return false;
                 if (i.Atomic != Atomic) return false;
                 if (i.Volatile != Volatile) return false;
-                if (i.Variadic != Variadic) return false;
                 return i.Primitive == Primitive;
             }
             return false;
@@ -128,7 +85,6 @@ namespace StraitJacketLib.Constructs {
             hash.Add(Constant);
             hash.Add(Volatile);
             hash.Add(Atomic);
-            hash.Add(Variadic);
             hash.Add(Primitive);
             return hash.ToHashCode();
         }
@@ -141,21 +97,6 @@ namespace StraitJacketLib.Constructs {
                     break;
                 case SimplePrimitives.Bool:
                     ret += "bool";
-                    break;
-                case SimplePrimitives.Half:
-                    ret += "f16";
-                    break;
-                case SimplePrimitives.Float:
-                    ret += "f32";
-                    break;
-                case SimplePrimitives.Double:
-                    ret += "f64";
-                    break;
-                case SimplePrimitives.Extended:
-                    ret += "f80";
-                    break;
-                case SimplePrimitives.Decimal:
-                    ret += "f128";
                     break;
                 case SimplePrimitives.VariableLength:
                     ret += "varlen";
@@ -172,22 +113,17 @@ namespace StraitJacketLib.Constructs {
                 case SimplePrimitives.WideChar:
                     ret += "wchar";
                     break;
-                case SimplePrimitives.UnsignedAny:
-                    ret += "unsigned";
-                    break;
-                case SimplePrimitives.SignedAny:
-                    ret += "signed";
-                    break;
-                case SimplePrimitives.FloatingAny:
-                    ret += "floating";
-                    break;
-                case SimplePrimitives.FixedAny:
-                    ret += "fixed";
-                    break;
                 default:
                     throw new Exception("Can't get string for primitive type: " + Primitive.ToString());
             }
             return ret;
+        }
+
+        public override bool CanImplicitlyCastTo(VarType other) {
+            if (Primitive == SimplePrimitives.ConstString && other.Equals(new VarTypePointer(new VarTypeSimplePrimitive(SimplePrimitives.Char)) { Constant = true })) {
+                return true;
+            }
+            return base.CanImplicitlyCastTo(other);
         }
 
         public override Expression DefaultValue() {

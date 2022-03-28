@@ -22,6 +22,10 @@ namespace StraitJacketLib.Constructs {
             return Scope.ResolveVariable(this);
         }
 
+        public Function ResolveFunctionVariable(List<VarType> paramTypes, VarType expectedReturnType = null) {
+            return Scope.ResolveFunctionVariable(this, paramTypes, expectedReturnType);
+        }
+
         public override string ToString() {
             return Path;
         }
@@ -30,14 +34,19 @@ namespace StraitJacketLib.Constructs {
 
     // Value types.
     public enum ExpressionType {
-        String,
-        Integer,
-        Variable,
-        UnknownFunctionCall,
+        ArrayAllocate,
+        Call,
         Cast,
-        EvaluatedFunctionCall,
-        Assignment,
-        Comma
+        Comma,
+        ConstArrayAllocate,
+        ConstFixed,
+        ConstFloat,
+        ConstInt,
+        ConstSimple,
+        ConstString,
+        Operator,
+        Store,
+        Variable
     }
 
     // Operator.
@@ -162,7 +171,7 @@ namespace StraitJacketLib.Constructs {
 
         // Vfunctions.
         public virtual void ResolveVariables() {} // Resolve variable and function call references to a list of possibilities.
-        public virtual void ResolveTypes() {} // Resolve types, type check, add casts, and solidify all function references.
+        public virtual void ResolveTypes(VarType preferredReturnType, List<VarType> parameterTypes) {} // Resolve types, type check, add casts, and solidify all function references. The parameters are so calls can have expressions resolve the correct function.
         public abstract VarType GetReturnType(); // Get the return type of an expression.
         public abstract bool IsPlural(); // If this expression type returns or stores multiple values.
         public abstract void StoreSingle(ReturnValue src, ReturnValue dest, VarType srcType, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder, object param); // Store a single value into the expression.
@@ -170,7 +179,10 @@ namespace StraitJacketLib.Constructs {
         public abstract ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param); // Compile the expression.
         public void CompileDeclarations(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {}
 
-        // Get the return type.
+        // Resolve types.
+        public void ResolveTypes() => ResolveTypes(null, null);
+
+        // Get the return type. Use this instead of GetReturnType.
         public VarType ReturnType() => GetReturnType().TrueType();
 
     }
