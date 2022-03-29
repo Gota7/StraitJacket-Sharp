@@ -6,7 +6,7 @@ namespace WARD {
     public static class Mangler {
 
         public static string ManglePrefix() {
-            return "_A";
+            return "_W";
         }
 
         public static string MangleScope(Scope s) {
