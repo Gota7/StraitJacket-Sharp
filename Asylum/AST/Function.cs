@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using StraitJacketLib.Constructs;
+using WARD.Constructs;
 
 // There is a lot that still needs to be done here, and __thiscall is not even implemented.
 namespace Asylum.AST {

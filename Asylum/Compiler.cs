@@ -4,9 +4,9 @@ using System.IO;
 using Antlr4.Runtime;
 using LLVMSharp.Interop;
 using Asylum.AST;
-using StraitJacketLib;
-using StraitJacketLib.Builder;
-using StraitJacketLib.Constructs;
+using WARD;
+using WARD.Builder;
+using WARD.Constructs;
 
 /*
 

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using StraitJacketLib.Constructs;
+using WARD.Constructs;
 
 namespace Asylum.AST {
 
     // For storing information about the result.
     public class AsylumVisitResult {
-        public StraitJacketLib.Constructs.AST AST;
+        public WARD.Constructs.AST AST;
         public Attribute Attribute;
         public ICompileable CodeStatement;
         public CodeStatements CodeStatements;
