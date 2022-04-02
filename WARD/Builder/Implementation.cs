@@ -108,9 +108,9 @@ namespace WARD.Builder {
             } else {
                 BeginFunction("__op" + op.ToString(), returnType, parameters); // Rest are static.
             }
-            void CheckLen(int len) {
+            /*void CheckLen(int len) {
                 if (parameters.Count() != len) throw new System.Exception("Wrong number of parameters for " + op + ". Expected " + len + ".");
-            }
+            }*/
         }
 
         // This type.

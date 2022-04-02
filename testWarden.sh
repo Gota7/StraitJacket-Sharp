@@ -1,0 +1,1 @@
+dotnet run --project Warden/Warden.csproj Tests/$1.c Tests/obj/$1.bc
