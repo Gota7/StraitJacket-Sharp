@@ -2,11 +2,11 @@ using LLVMSharp.Interop;
 
 namespace WARD.Constructs {
 
-    // Multiply numbers.
-    public class OperatorMul : OperatorMath {
+    // Modulo numbers.
+    public class OperatorMod : OperatorMath {
 
-        // Make a new multiplication operator.
-        public OperatorMul(Expression left, Expression right) : base(left, right, "Mul", false) {}
+        // Make a new modulo operator.
+        public OperatorMod(Expression left, Expression right) : base(left, right, "Mod", false) {}
 
         protected override ReturnValue CompileDefault(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
 
@@ -19,9 +19,13 @@ namespace WARD.Constructs {
             // Compile build.
             VarType retType = Args[0].ReturnType();
             if (retType.IsFloatingPoint()) {
-                return new ReturnValue(builder.BuildFMul(left, right));
+                return new ReturnValue(builder.BuildFRem(left, right));
             } else {
-                return new ReturnValue(builder.BuildMul(left, right));
+                if (retType.IsUnsigned()) {
+                    return new ReturnValue(builder.BuildURem(left, right));
+                } else {
+                    return new ReturnValue(builder.BuildSRem(left, right));
+                }
             }
 
         }

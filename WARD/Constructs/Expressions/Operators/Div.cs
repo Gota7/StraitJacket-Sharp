@@ -2,11 +2,11 @@ using LLVMSharp.Interop;
 
 namespace WARD.Constructs {
 
-    // Divide numbers or pointers.
+    // Divide numbers.
     public class OperatorDiv : OperatorMath {
 
         // Make a new division operator.
-        public OperatorDiv(Expression left, Expression right) : base(left, right, "Div", true) {}
+        public OperatorDiv(Expression left, Expression right) : base(left, right, "Div", false) {}
 
         protected override ReturnValue CompileDefault(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
 
@@ -21,8 +21,11 @@ namespace WARD.Constructs {
             if (retType.IsFloatingPoint()) {
                 return new ReturnValue(builder.BuildFDiv(left, right));
             } else {
-                throw new System.NotImplementedException();
-                //return new ReturnValue(builder.BuildDiv(left, right));
+                if (retType.IsUnsigned()) {
+                    return new ReturnValue(builder.BuildUDiv(left, right));
+                } else {
+                    return new ReturnValue(builder.BuildSDiv(left, right));
+                }
             }
 
         }
