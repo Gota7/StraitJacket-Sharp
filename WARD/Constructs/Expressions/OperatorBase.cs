@@ -1,19 +1,19 @@
 using System.Collections.Generic;
+using System.Linq;
 using LLVMSharp.Interop;
 
 namespace WARD.Constructs {
 
     // Operator that can take in a varying number of arguments. By default every operator is overloadable. If an operator function doesn't exist, then the default implementation is used.
-    public abstract class NewOperator : Expression {
-        public List<Expression> Args;
-        public Operator Op;
+    public abstract class OperatorBase : Expression {
+        public Expression[] Args;
+        public string Op;
 
         // Generic operator constructor.
-        public NewOperator(List<Expression> args, Operator op, bool lValue) {
+        public OperatorBase(string op, params Expression[] args) {
             Type = ExpressionType.Operator;
             Args = args;
             Op = op;
-            LValue = lValue;
         }
 
         public override void ResolveVariables() {
@@ -39,9 +39,21 @@ namespace WARD.Constructs {
             return null; // TODO!!!
         }
 
-        public abstract void ResolveTypesDefault(); // No overload found, so resolve types.
-        public abstract VarType GetReturnTypeDefault(); // No overload found, so get proper return type.
-        public abstract ReturnValue CompileDefault(LLVMModuleRef mod, LLVMBuilderRef builder, object param); // No overload found, so compile properly.
+        public override bool IsPlural() {
+            return false;
+        }
+
+        public override void StoreSingle(ReturnValue src, ReturnValue dest, VarType srcType, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
+            Args[0].StoreSingle(src, dest, srcType, destType, mod, builder, param);
+        }
+
+        public override void StorePlural(ReturnValue src, ReturnValue dest, VarType srcType, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
+            Args[0].StorePlural(src, dest, srcType, destType, mod, builder, param);
+        }
+
+        protected abstract void ResolveTypesDefault(); // No overload found, so resolve types.
+        protected abstract VarType GetReturnTypeDefault(); // No overload found, so get proper return type.
+        protected abstract ReturnValue CompileDefault(LLVMModuleRef mod, LLVMBuilderRef builder, object param); // No overload found, so compile properly.
 
     }
 

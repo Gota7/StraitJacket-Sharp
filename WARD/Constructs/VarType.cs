@@ -121,6 +121,11 @@ namespace WARD.Constructs {
             return false;
         }
 
+        // If the type is numeric.
+        public bool IsNumeric() {
+            return IsUnsigned() || IsSigned() || IsFixed() || IsFloatingPoint();
+        }
+
         // If type can be implicitly casted to another. TODO: CUSTOM CONVERSIONS!!!
         public virtual bool CanImplicitlyCastTo(VarType other) {
             if (other.Equals(this)) return true;

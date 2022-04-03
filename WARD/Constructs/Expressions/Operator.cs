@@ -24,7 +24,7 @@ namespace WARD.Constructs {
             if (op == Operator.Member && Inputs[1] as ExpressionVariable != null) { 
                 Inputs[1] = new ExpressionConstStringPtr((Inputs[1] as ExpressionVariable).ToResolve.Path);
             }
-            
+
         }
 
         public override void ResolveVariables() {
