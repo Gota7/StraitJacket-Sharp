@@ -3,7 +3,7 @@ using LLVMSharp.Interop;
 namespace WARD.Constructs {
 
     // Modulo numbers.
-    public class OperatorMod : OperatorMath {
+    public class OperatorMod : BinaryMath {
 
         // Make a new modulo operator.
         public OperatorMod(Expression left, Expression right) : base(left, right, "Mod", false) {}

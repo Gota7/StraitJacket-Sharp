@@ -3,7 +3,7 @@ using LLVMSharp.Interop;
 namespace WARD.Constructs {
 
     // Subtract numbers or pointers.
-    public class OperatorSub : OperatorMath {
+    public class OperatorSub : BinaryMath {
 
         // Make a new subtraction operator.
         public OperatorSub(Expression left, Expression right) : base(left, right, "Sub", true) {}

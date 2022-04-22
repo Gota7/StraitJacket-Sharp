@@ -1,13 +1,13 @@
 namespace WARD.Constructs {
 
-    // For math with integers or pointers.
-    public abstract class OperatorMath : OperatorBase {
+    // Binary math operator with integers or pointers.
+    public abstract class BinaryMath : OperatorBase {
         protected bool LeftNumeric;
         protected bool RightNumeric;
         private bool AllowPointers;
 
-        // Create a new addition operator expression.
-        public OperatorMath(Expression left, Expression right, string opName, bool allowPointers = false) : base(opName, left, right) {
+        // Create a new math operator expression.
+        public BinaryMath(Expression left, Expression right, string opName, bool allowPointers = false) : base(opName, left, right) {
             AllowPointers = allowPointers;
         }
 
@@ -26,7 +26,7 @@ namespace WARD.Constructs {
             if (rightType.IsNumeric()) {
                 RightNumeric = true;
             } else if (!AllowPointers) {
-                throw new System.Exception("Left argument of math operator must be a number type!");
+                throw new System.Exception("Right argument of math operator must be a number type!");
             } else if (rightType.Type != VarTypeEnum.Pointer) {
                 throw new System.Exception("Right argument of math operator must be a number type or pointer!");
             }
@@ -48,6 +48,7 @@ namespace WARD.Constructs {
             } else {
                 throw new System.Exception("Unable to coerce math operands!");
             }
+            LValue = false;
 
         }
 

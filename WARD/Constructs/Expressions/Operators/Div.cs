@@ -3,7 +3,7 @@ using LLVMSharp.Interop;
 namespace WARD.Constructs {
 
     // Divide numbers.
-    public class OperatorDiv : OperatorMath {
+    public class OperatorDiv : BinaryMath {
 
         // Make a new division operator.
         public OperatorDiv(Expression left, Expression right) : base(left, right, "Div", false) {}

@@ -3,7 +3,7 @@ using LLVMSharp.Interop;
 namespace WARD.Constructs {
 
     // Multiply numbers.
-    public class OperatorMul : OperatorMath {
+    public class OperatorMul : BinaryMath {
 
         // Make a new multiplication operator.
         public OperatorMul(Expression left, Expression right) : base(left, right, "Mul", false) {}

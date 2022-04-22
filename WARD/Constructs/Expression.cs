@@ -29,7 +29,7 @@ namespace WARD.Constructs {
         public override string ToString() {
             return Path;
         }
-        
+
     }
 
     // Value types.

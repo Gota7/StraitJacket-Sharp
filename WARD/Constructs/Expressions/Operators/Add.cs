@@ -3,7 +3,7 @@ using LLVMSharp.Interop;
 namespace WARD.Constructs {
 
     // Add numbers or pointers.
-    public class OperatorAdd : OperatorMath {
+    public class OperatorAdd : BinaryMath {
 
         // Make a new addition operator.
         public OperatorAdd(Expression left, Expression right) : base(left, right, "Add", true) {}
