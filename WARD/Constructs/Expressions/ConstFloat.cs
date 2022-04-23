@@ -39,7 +39,7 @@ namespace WARD.Constructs {
         }
 
         public override ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            return new ReturnValue(LLVMValueRef.CreateConstReal(GetReturnType().GetLLVMType(), Val.ValueDecimal));
+            return new ReturnValue(LLVMValueRef.CreateConstReal(ReturnType().GetLLVMType(), Val.ValueDecimal));
         }
 
         public override string ToString() {

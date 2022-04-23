@@ -41,7 +41,7 @@ namespace WARD.Constructs {
         }
 
         public override ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            return new ReturnValue(LLVMValueRef.CreateConstInt(GetReturnType().GetLLVMType(), (ulong)Val.ValueWhole, true));
+            return new ReturnValue(LLVMValueRef.CreateConstInt(ReturnType().GetLLVMType(), (ulong)Val.ValueWhole, true));
         }
 
         public override string ToString() {

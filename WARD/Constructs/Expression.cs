@@ -172,7 +172,7 @@ namespace WARD.Constructs {
         // Vfunctions.
         public virtual void ResolveVariables() {} // Resolve variable and function call references to a list of possibilities.
         public virtual void ResolveTypes(VarType preferredReturnType, List<VarType> parameterTypes) {} // Resolve types, type check, add casts, and solidify all function references. The parameters are so calls can have expressions resolve the correct function.
-        public abstract VarType GetReturnType(); // Get the return type of an expression.
+        public abstract VarType GetReturnType(); // Get the return type of an expression. YOU PROBABLY WANT RETURNTYPE INSTEAD!
         public abstract bool IsPlural(); // If this expression type returns or stores multiple values.
         public abstract void StoreSingle(ReturnValue src, ReturnValue dest, VarType srcType, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder, object param); // Store a single value into the expression.
         public abstract void StorePlural(ReturnValue src, ReturnValue dest, VarType srcType, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder, object param); // Store a plural value into the expression.

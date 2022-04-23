@@ -22,11 +22,9 @@ namespace WARD.Constructs {
                 return new ReturnValue(builder.BuildFSub(left, right));
             } else if (retType.Type == VarTypeEnum.Pointer) {
                 if (!LeftNumeric) {
-                    LLVMTypeRef origType = retType.GetLLVMType();
-                    return new ReturnValue(builder.BuildIntToPtr(builder.BuildSub(builder.BuildPtrToInt(left, right.TypeOf), right), origType));
+                    return new ReturnValue(builder.BuildGEP(left, new LLVMValueRef[] { builder.BuildNeg(right) }));
                 } else {
-                    LLVMTypeRef origType = Args[1].ReturnType().GetLLVMType();
-                    return new ReturnValue(builder.BuildIntToPtr(builder.BuildSub(builder.BuildPtrToInt(right, left.TypeOf), left), origType));
+                    return new ReturnValue(builder.BuildGEP(right, new LLVMValueRef[] { builder.BuildNeg(left) }));
                 }
             } else {
                 return new ReturnValue(builder.BuildSub(left, right));

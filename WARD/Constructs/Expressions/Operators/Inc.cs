@@ -5,7 +5,7 @@ namespace WARD.Constructs {
     // Increment numbers.
     public class OperatorInc : UnaryMath {
 
-        // Make a new increment operator.
+        // Make a new increment operator. TODO: POSTFIX RETURNS ORIGINAL ITEM, PREFIX RETURNS LVALUE REFERENCE TO VAR!!! DO LVALUE CHECKS!!
         public OperatorInc(Expression expr) : base(expr, "Inc", true) {}
 
         protected override ReturnValue CompileDefault(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
