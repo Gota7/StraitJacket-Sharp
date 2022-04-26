@@ -28,7 +28,7 @@ namespace WARD.Constructs {
         public void CompileDeclarations(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {}
 
         // Compile the break.
-        public ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) { 
+        public LLVMValueRef Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
 
             // Only compile if not dead.
             if (CodeStatements.BlockTerminated) return null;

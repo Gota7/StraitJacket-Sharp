@@ -41,7 +41,7 @@ namespace WARD.Constructs {
         }
 
         // Compile the conditional branch.
-        public ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
+        public LLVMValueRef Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
 
             // Only compile if not dead.
             if (CodeStatements.BlockTerminated) return null;
@@ -55,9 +55,9 @@ namespace WARD.Constructs {
             then = LLVMBasicBlockRef.AppendInContext(mod.Context, Scope.PeekCurrentFunction.LLVMVal, "SJ_IfThen");
             if (Else != null) other = LLVMBasicBlockRef.AppendInContext(mod.Context, Scope.PeekCurrentFunction.LLVMVal, "SJ_IfElse");
             cont = LLVMBasicBlockRef.AppendInContext(mod.Context, Scope.PeekCurrentFunction.LLVMVal, "SJ_IfCont");
-            
+
             // Compile condition.
-            LLVMValueRef conditionCheck = ConditionCheck.Compile(mod, builder, param).Val;
+            LLVMValueRef conditionCheck = ConditionCheck.Compile(mod, builder, param);
             builder.BuildCondBr(conditionCheck, then, other == null ? cont : other);
 
             // Compile then.
@@ -67,7 +67,7 @@ namespace WARD.Constructs {
             if (!CodeStatements.BlockTerminated) builder.BuildBr(cont);
 
             // Compile else.
-            if (other != null) { 
+            if (other != null) {
                 builder.PositionAtEnd(other);
                 CodeStatements.BlockTerminated = false;
                 Else.Compile(mod, builder, param);

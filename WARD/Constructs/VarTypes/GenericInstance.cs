@@ -44,14 +44,14 @@ namespace WARD.Constructs {
             return InstancedStruct.CanCastTo(other);
         }
 
-        public override ReturnValue CastTo(ReturnValue srcVal, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder) {
+        public override LLVMValueRef CastTo(LLVMValueRef srcVal, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder) {
             return InstancedStruct.CastTo(srcVal, destType, mod, builder);
         }
 
         public override bool Equals(object obj) {
             return InstancedStruct.Equals(obj);
         }
-        
+
         public override int GetHashCode() {
             return InstancedStruct.GetHashCode();
         }

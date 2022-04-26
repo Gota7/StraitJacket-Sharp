@@ -56,7 +56,7 @@ namespace WARD.Constructs {
             }
             return false;
         }
-        
+
         public override int GetHashCode() {
             HashCode hash = new HashCode();
             hash.Add(Type);
@@ -85,6 +85,26 @@ namespace WARD.Constructs {
                 exps.Add(m.DefaultValue());
             }
             return new ExpressionComma(exps);
+        }
+
+        public LLVMValueRef Pack(LLVMValueRef[] items) {
+            if (IsVector) {
+                throw new System.NotImplementedException();
+            } else {
+                return LLVMValueRef.CreateConstStruct(items, true);
+            }
+        }
+
+        public LLVMValueRef[] Unpack(LLVMValueRef packed, LLVMBuilderRef builder) {
+            if (IsVector) {
+                throw new System.NotImplementedException();
+            } else {
+                LLVMValueRef[] ret = new LLVMValueRef[Members.Count];
+                for (uint i = 0; i < Members.Count; i++) {
+                    ret[i] = builder.BuildLoad(builder.BuildStructGEP(packed, i));
+                }
+                return ret;
+            }
         }
 
     }

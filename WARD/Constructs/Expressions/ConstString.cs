@@ -21,20 +21,8 @@ namespace WARD.Constructs {
             return new VarTypeSimplePrimitive(SimplePrimitives.ConstString);
         }
 
-        public override bool IsPlural() {
-            return false;
-        }
-
-        public override void StoreSingle(ReturnValue src, ReturnValue dest, VarType srcType, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            throw new System.Exception("??????");
-        }
-
-        public override void StorePlural(ReturnValue src, ReturnValue dest, VarType srcType, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            throw new System.Exception("??????");
-        }
-
-        public override ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            return new ReturnValue(builder.BuildGlobalStringPtr(Str, "SJ_ConstStr_" + Str));
+        public override LLVMValueRef Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
+            return builder.BuildGlobalStringPtr(Str, "SJ_ConstStr_" + Str);
         }
 
         public override string ToString() {

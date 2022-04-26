@@ -50,14 +50,14 @@ namespace WARD.Constructs {
             }
         }
 
-        public override ReturnValue CastTo(ReturnValue srcVal, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder) {
+        public override LLVMValueRef CastTo(LLVMValueRef srcVal, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder) {
             if (destType.Type == VarTypeEnum.PrimitiveFloating) {
                 var src = this;
                 var dest = destType as VarTypeFloating;
                 if (src.BitWidth < dest.BitWidth) {
-                    return new ReturnValue(builder.BuildFPExt(srcVal.Val, dest.GetLLVMType(), "SJ_CastFloat_Ext"));
+                    return builder.BuildFPExt(srcVal, dest.GetLLVMType(), "SJ_CastFloat_Ext");
                 } else if (src.BitWidth > dest.BitWidth) {
-                    return new ReturnValue(builder.BuildFPTrunc(srcVal.Val, dest.GetLLVMType(), "SJ_CastFloat_Trunc"));
+                    return builder.BuildFPTrunc(srcVal, dest.GetLLVMType(), "SJ_CastFloat_Trunc");
                 } else {
                     return srcVal;
                 }
@@ -65,19 +65,19 @@ namespace WARD.Constructs {
                 var src = this;
                 var dest = destType as VarTypeInteger;
                 if (dest.Signed) {
-                    return new ReturnValue(builder.BuildFPToSI(srcVal.Val, dest.GetLLVMType(), "SJ_CastFloat_Int"));
+                    return builder.BuildFPToSI(srcVal, dest.GetLLVMType(), "SJ_CastFloat_Int");
                 } else {
-                    return new ReturnValue(builder.BuildFPToUI(srcVal.Val, dest.GetLLVMType(), "SJ_CastFloat_UInt"));
+                    return builder.BuildFPToUI(srcVal, dest.GetLLVMType(), "SJ_CastFloat_UInt");
                 }
             } else if (destType.Type == VarTypeEnum.PrimitiveFixed) {
                 var src = this;
                 var dest = destType as VarTypeFixed;
                 Expression tmpVal = new ExpressionConstInt(false, (long)(1 << (int)dest.FractionWidth));
-                LLVMValueRef tmp = tmpVal.Compile(mod, builder, null).Val;
+                LLVMValueRef tmp = tmpVal.Compile(mod, builder, null);
                 tmp = builder.BuildUIToFP(tmp, src.GetLLVMType());
-                tmp = builder.BuildFMul(srcVal.Val, tmp);
+                tmp = builder.BuildFMul(srcVal, tmp);
                 tmp = builder.BuildFAdd(tmp, LLVMValueRef.CreateConstReal(src.GetLLVMType(), 0.5f));
-                return new ReturnValue(builder.BuildFPToSI(tmp, dest.GetLLVMType(), "SJ_CastFloat_Fixed"));
+                return builder.BuildFPToSI(tmp, dest.GetLLVMType(), "SJ_CastFloat_Fixed");
             }
             return base.CastTo(srcVal, destType, mod, builder);
         }

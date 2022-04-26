@@ -37,7 +37,6 @@ namespace WARD.Constructs {
         public CodeStatements Definition;
         public List<Function> CalledFunctions = new List<Function>();
         public string ModulePath;
-        
         public bool Compiled;
         public LLVMValueRef LLVMVal;
         public Dictionary<string, LLVMValueRef> ExternedLLVMVals = new Dictionary<string, LLVMValueRef>();
@@ -68,7 +67,7 @@ namespace WARD.Constructs {
         public void CompileDeclarations(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {}
 
         // TODO: NAME MANGLING AND MORE!!! Ok, so the problem is you need to extern any functions that are not in this module...
-        public ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
+        public LLVMValueRef Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
 
             // Don't do work that doesn't need to be done.
             if (Inline) Compiled = true;

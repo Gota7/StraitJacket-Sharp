@@ -23,34 +23,28 @@ namespace WARD.Constructs {
 
         public void CompileDeclarations(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {}
 
-        public ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
+        public LLVMValueRef Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
 
             // Only compile if not dead.
             if (CodeStatements.BlockTerminated) return null;
 
             // Return a value.
             if (ReturnValue == null) {
-                builder.BuildRetVoid();
                 CodeStatements.BlockTerminated = true;
-                CodeStatements.ReturnedValue = new ReturnValue();
+                CodeStatements.ReturnedValue = builder.BuildRetVoid();
                 return CodeStatements.ReturnedValue;
-            }
-            ReturnValue comp = ReturnValue.Compile(mod, builder, param);
-            if (comp.ReturnType == ReturnValueType.Void) {
-                builder.BuildRetVoid();
+            } else if (ReturnValue.ReturnType().Equals(new VarTypeSimplePrimitive(SimplePrimitives.Void))) {
                 CodeStatements.BlockTerminated = true;
-                CodeStatements.ReturnedValue = new ReturnValue();
+                CodeStatements.ReturnedValue = builder.BuildRetVoid();
                 return CodeStatements.ReturnedValue;
-            } else if (comp.ReturnType == ReturnValueType.Value) {
-                LLVMValueRef ret = comp.Val;
+            } else {
+                LLVMValueRef ret = ReturnValue.Compile(mod, builder, param);
                 if (ReturnValue.LValue) ret = builder.BuildLoad(ret, "SJ_LoadRet");
+                CodeStatements.BlockTerminated = true;
+                CodeStatements.ReturnedValue = ret;
                 builder.BuildRet(ret);
-            } else if (comp.ReturnType == ReturnValueType.NestedValues) {
-                throw new System.NotImplementedException();
+                return ret;
             }
-            CodeStatements.BlockTerminated = true;
-            CodeStatements.ReturnedValue = comp;
-            return comp;
 
         }
 

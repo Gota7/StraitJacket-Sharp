@@ -5,6 +5,7 @@ using LLVMSharp.Interop;
 namespace WARD.Constructs {
 
     // Operator that can take in a varying number of arguments. By default every operator is overloadable. If an operator function doesn't exist, then the default implementation is used.
+    // TODO: SOME KIND OF TYPE COERCION? As it may be possible for a type that the operator can't operate on to turn into one it can.
     public abstract class OperatorBase : Expression {
         public Expression[] Args;
         public string Op;
@@ -35,25 +36,13 @@ namespace WARD.Constructs {
             return null; // TODO!!!
         }
 
-        public override ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
+        public override LLVMValueRef Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
             return null; // TODO!!!
-        }
-
-        public override bool IsPlural() {
-            return false;
-        }
-
-        public override void StoreSingle(ReturnValue src, ReturnValue dest, VarType srcType, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            Args[0].StoreSingle(src, dest, srcType, destType, mod, builder, param);
-        }
-
-        public override void StorePlural(ReturnValue src, ReturnValue dest, VarType srcType, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            Args[0].StorePlural(src, dest, srcType, destType, mod, builder, param);
         }
 
         protected abstract void ResolveTypesDefault(); // No overload found, so resolve types.
         protected abstract VarType GetReturnTypeDefault(); // No overload found, so get proper return type.
-        protected abstract ReturnValue CompileDefault(LLVMModuleRef mod, LLVMBuilderRef builder, object param); // No overload found, so compile properly.
+        protected abstract LLVMValueRef CompileDefault(LLVMModuleRef mod, LLVMBuilderRef builder, object param); // No overload found, so compile properly.
 
     }
 

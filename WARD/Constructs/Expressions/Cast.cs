@@ -33,24 +33,9 @@ namespace WARD.Constructs {
             return DestType;
         }
 
-        public override bool IsPlural() {
-            return false;
-        }
-
-        // This should NEVER happen, you can't store into a cast!
-        public override void StoreSingle(ReturnValue src, ReturnValue dest, VarType srcType, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            throw new System.Exception("??????");
-        }
-
-        // This should NEVER happen, you can't store into a cast!
-        public override void StorePlural(ReturnValue src, ReturnValue dest, VarType srcType, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            throw new System.Exception("??????");
-        }
-
         // Compile the cast.
-        public override ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            ReturnValue toCast = ToCast.Compile(mod, builder, param);
-            if (ToCast.LValue) toCast = new ReturnValue(builder.BuildLoad(toCast.Val, "SJ_Load"));
+        public override LLVMValueRef Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
+            LLVMValueRef toCast = ToCast.CompileRValue(mod, builder, param);
             return SrcType.CastTo(toCast, DestType, mod, builder);
         }
 

@@ -41,7 +41,7 @@ namespace WARD.Constructs {
         }
 
         // Compile the loop.
-        public ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
+        public LLVMValueRef Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
 
             // Only compile if not dead.
             if (CodeStatements.BlockTerminated) return null;

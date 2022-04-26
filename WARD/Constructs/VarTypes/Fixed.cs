@@ -37,44 +37,44 @@ namespace WARD.Constructs {
             }
         }
 
-        public override ReturnValue CastTo(ReturnValue srcVal, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder) {
+        public override LLVMValueRef CastTo(LLVMValueRef srcVal, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder) {
             if (destType.Type == VarTypeEnum.PrimitiveFixed) {
                 var src = this;
                 var dest = destType as VarTypeFixed;
-                LLVMValueRef tmp = srcVal.Val;
+                LLVMValueRef tmp = srcVal;
                 if (dest.WholeWidth + dest.FractionWidth > src.WholeWidth + src.FractionWidth) {
                     tmp = builder.BuildSExt(tmp, dest.GetLLVMType());
                 }
                 if (dest.FractionWidth > src.FractionWidth) {
-                    tmp = builder.BuildShl(tmp, new ExpressionConstInt(false, dest.FractionWidth - src.FractionWidth).Compile(mod, builder, null).Val);
+                    tmp = builder.BuildShl(tmp, new ExpressionConstInt(false, dest.FractionWidth - src.FractionWidth).Compile(mod, builder, null));
                 } else if (dest.FractionWidth < src.FractionWidth) {
-                    tmp = builder.BuildLShr(tmp, new ExpressionConstInt(false, src.FractionWidth - dest.FractionWidth).Compile(mod, builder, null).Val);
+                    tmp = builder.BuildLShr(tmp, new ExpressionConstInt(false, src.FractionWidth - dest.FractionWidth).Compile(mod, builder, null));
                     // TODO: ADD .5!!!
                 }
                 if (dest.WholeWidth + dest.FractionWidth < src.WholeWidth + src.FractionWidth) {
                     tmp = builder.BuildTrunc(tmp, dest.GetLLVMType());
                 }
-                return new ReturnValue(tmp);
+                return tmp;
             } else if (destType.Type == VarTypeEnum.PrimitiveFloating) {
                 var src = this;
                 var dest = destType as VarTypeFloating;
                 Expression tmpVal = new ExpressionConstInt(false, (long)(1 << (int)src.FractionWidth));
-                LLVMValueRef tmp = tmpVal.Compile(mod, builder, null).Val;
+                LLVMValueRef tmp = tmpVal.Compile(mod, builder, null);
                 tmp = builder.BuildUIToFP(tmp, dest.GetLLVMType());
-                LLVMValueRef tmp2 = builder.BuildSIToFP(srcVal.Val, dest.GetLLVMType());
-                return new ReturnValue(builder.BuildFDiv(tmp2, tmp, "SJ_CastFixed_Float"));
+                LLVMValueRef tmp2 = builder.BuildSIToFP(srcVal, dest.GetLLVMType());
+                return builder.BuildFDiv(tmp2, tmp, "SJ_CastFixed_Float");
             } else if (destType.Type == VarTypeEnum.PrimitiveInteger) {
                 var src = this;
                 var dest = destType as VarTypeInteger;
-                LLVMValueRef tmp = builder.BuildLShr(srcVal.Val,
-                    LLVMValueRef.CreateConstInt(srcVal.Val.TypeOf, src.FractionWidth, false)
+                LLVMValueRef tmp = builder.BuildLShr(srcVal,
+                    LLVMValueRef.CreateConstInt(srcVal.TypeOf, src.FractionWidth, false)
                 );
                 if (src.WholeWidth + src.FractionWidth > dest.BitWidth) {
-                    return new ReturnValue(builder.BuildTrunc(tmp, dest.GetLLVMType(), "SJ_CastFixed_Int"));
+                    return builder.BuildTrunc(tmp, dest.GetLLVMType(), "SJ_CastFixed_Int");
                 } else if (src.WholeWidth + src.FractionWidth < dest.BitWidth) {
-                    return new ReturnValue(builder.BuildSExt(tmp, dest.GetLLVMType(), "SJ_CastFixed_Int"));
+                    return builder.BuildSExt(tmp, dest.GetLLVMType(), "SJ_CastFixed_Int");
                 } else {
-                    return new ReturnValue(tmp);
+                    return tmp;
                 }
             }
             return base.CastTo(srcVal, destType, mod, builder);
@@ -91,7 +91,7 @@ namespace WARD.Constructs {
             }
             return false;
         }
-        
+
         public override int GetHashCode() {
             HashCode hash = new HashCode();
             hash.Add(Type);

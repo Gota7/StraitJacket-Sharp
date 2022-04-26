@@ -141,7 +141,7 @@ namespace WARD.Constructs {
         }
 
         // Cast to another type. TODO!!!
-        public virtual ReturnValue CastTo(ReturnValue srcVal, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder) {
+        public virtual LLVMValueRef CastTo(LLVMValueRef srcVal, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder) {
             if (destType.Equals(this)) return srcVal;
             if (destType.Type == VarTypeEnum.Custom) return CastTo(srcVal, (destType as VarTypeCustom).Resolved, mod, builder);
             if (destType.Equals(new VarTypeSimplePrimitive(SimplePrimitives.Object)) || Equals(new VarTypeSimplePrimitive(SimplePrimitives.Object))) {

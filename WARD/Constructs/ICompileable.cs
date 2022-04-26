@@ -12,38 +12,6 @@ namespace WARD.Constructs {
         Void
     }
 
-    // Return value.
-    public class ReturnValue {
-        public static bool DEBUG_OUT = false;
-        public ReturnValueType ReturnType { get; private set; }
-        public bool IsSingular { get; private set; }
-        public LLVMValueRef Val { get; private set; }
-        public List<ReturnValue> Rets { get; private set; } = new List<ReturnValue>();
-
-        public ReturnValue() {
-            ReturnType = ReturnValueType.Void;
-        }
-
-        public ReturnValue(LLVMValueRef val) {
-            if (DEBUG_OUT) Console.WriteLine(val);
-            ReturnType = ReturnValueType.Value;
-            IsSingular = true;
-            Val = val;
-        }
-
-        public ReturnValue(ReturnValue ret) {
-            ReturnType = ReturnValueType.NestedValues;
-            IsSingular = true;
-            Rets.Add(ret);
-        }
-
-        public ReturnValue(List<ReturnValue> rets) {
-            ReturnType = ReturnValueType.NestedValues;
-            Rets = rets;
-        }
-
-    }
-
     // Any construct that can be compiled.
     public interface ICompileable {
 
@@ -60,7 +28,7 @@ namespace WARD.Constructs {
         void CompileDeclarations(LLVMModuleRef mod, LLVMBuilderRef builder, object param);
 
         // Compile the item.
-        ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param);
+        LLVMValueRef Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param);
 
     }
 

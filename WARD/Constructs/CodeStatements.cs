@@ -8,7 +8,7 @@ namespace WARD.Constructs {
     // Code statements.
     public class CodeStatements : ICompileable {
         public static bool BlockTerminated = false;
-        public static ReturnValue ReturnedValue = null;
+        public static LLVMValueRef ReturnedValue = null;
         public List<ICompileable> Statements = new List<ICompileable>();
         public FileContext FileContext;
 
@@ -33,7 +33,7 @@ namespace WARD.Constructs {
             }
         }
 
-        public ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
+        public LLVMValueRef Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
             foreach (var s in Statements) {
                 if (!BlockTerminated) s.Compile(mod, builder, param);
             }

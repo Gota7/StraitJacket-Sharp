@@ -157,7 +157,6 @@ namespace WARD.Constructs {
         public Expression Parent; // Parent expression.
         public List<Expression> Neighbors = new List<Expression>(); // Expressions next to the current one.
         public VarType PreferredType; // Default desired type by the parent expression.
-        
     }
 
     // Expression. TODO: Improve how context is shared throughout expressions.
@@ -173,10 +172,7 @@ namespace WARD.Constructs {
         public virtual void ResolveVariables() {} // Resolve variable and function call references to a list of possibilities.
         public virtual void ResolveTypes(VarType preferredReturnType, List<VarType> parameterTypes) {} // Resolve types, type check, add casts, and solidify all function references. The parameters are so calls can have expressions resolve the correct function.
         public abstract VarType GetReturnType(); // Get the return type of an expression. YOU PROBABLY WANT RETURNTYPE INSTEAD!
-        public abstract bool IsPlural(); // If this expression type returns or stores multiple values.
-        public abstract void StoreSingle(ReturnValue src, ReturnValue dest, VarType srcType, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder, object param); // Store a single value into the expression.
-        public abstract void StorePlural(ReturnValue src, ReturnValue dest, VarType srcType, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder, object param); // Store a plural value into the expression.
-        public abstract ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param); // Compile the expression.
+        public abstract LLVMValueRef Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param); // Compile the expression.
         public void CompileDeclarations(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {}
 
         // Resolve types.
@@ -184,6 +180,19 @@ namespace WARD.Constructs {
 
         // Get the return type. Use this instead of GetReturnType.
         public VarType ReturnType() => GetReturnType().TrueType();
+
+        // Compile to an L-value is null if not a valid L-value.
+        public LLVMValueRef CompileLValue(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
+            if (!LValue) return null;
+            else return Compile(mod, builder, param);
+        }
+
+        // Compile an expression into an R-value by loading from an L-value if needed.
+        public LLVMValueRef CompileRValue(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
+            LLVMValueRef ret = Compile(mod, builder, param);
+            if (LValue) return builder.BuildLoad(ret, "LToRValue");
+            else return ret;
+        }
 
     }
 

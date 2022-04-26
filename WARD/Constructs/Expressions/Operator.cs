@@ -153,23 +153,11 @@ namespace WARD.Constructs {
             return null;
         }
 
-        public override bool IsPlural() {
-            return false;
-        }
-
         public override VarType GetReturnType() {
             return RetType;
         }
 
-        public override void StoreSingle(ReturnValue src, ReturnValue dest, VarType srcType, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            Inputs[0].StoreSingle(src, dest, srcType, destType, mod, builder, param);
-        }
-
-        public override void StorePlural(ReturnValue src, ReturnValue dest, VarType srcType, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            Inputs[0].StorePlural(src, dest, srcType, destType, mod, builder, param);
-        }
-
-        public override ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
+        public override LLVMValueRef Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
             LLVMValueRef v1, v2;
             Expression tmp;
             if (Assignment) {
@@ -188,34 +176,34 @@ namespace WARD.Constructs {
             }
             switch (Operator) {
                 case Operator.Lt:
-                    v1 = Inputs[0].Compile(mod, builder, param).Val;
+                    v1 = Inputs[0].Compile(mod, builder, param);
                     if (Inputs[0].LValue) v1 = builder.BuildLoad(v1, "SJ_Load");
-                    v2 = Inputs[1].Compile(mod, builder, param).Val;
+                    v2 = Inputs[1].Compile(mod, builder, param);
                     if (Inputs[1].LValue) v2 = builder.BuildLoad(v1, "SJ_Load");
                     if (InputTypes.IsFloatingPoint()) {
-                        return new ReturnValue(
-                            builder.BuildFCmp(LLVMRealPredicate.LLVMRealOLT,
+                        return builder.BuildFCmp(
+                            LLVMRealPredicate.LLVMRealOLT,
                             v1,
                             v2,
-                            "SJ_FCompare_LT")
+                            "SJ_FCompare_LT"
                         );
                     } else {
-                        return new ReturnValue(
-                            builder.BuildICmp(InputTypes.IsUnsigned() ? LLVMIntPredicate.LLVMIntULT : LLVMIntPredicate.LLVMIntSLT,
+                        return builder.BuildICmp(
+                            InputTypes.IsUnsigned() ? LLVMIntPredicate.LLVMIntULT : LLVMIntPredicate.LLVMIntSLT,
                             v1,
                             v2,
-                            "SJ_ICompare_LT")
+                            "SJ_ICompare_LT"
                         );
                     }
                 case Operator.AddressOf:
                     return Inputs[0].Compile(mod, builder, param);
                 case Operator.Dereference:
-                    return new ReturnValue(builder.BuildLoad(
-                        Inputs[0].Compile(mod, builder, param).Val,
+                    return builder.BuildLoad(
+                        Inputs[0].Compile(mod, builder, param),
                         "SJ_Dereference"
-                    ));
+                    );
                 case Operator.Member:
-                    v1 = Inputs[0].Compile(mod, builder, param).Val;
+                    v1 = Inputs[0].Compile(mod, builder, param);
                     string member = (Inputs[1] as ExpressionConstStringPtr).Str;
                     if (IsImplFunction) {
                         var func = (Inputs[0].ReturnType() as VarTypeStruct).GetImplFunction(member);
@@ -231,21 +219,21 @@ namespace WARD.Constructs {
                                 funcToCall = func.ExternedLLVMVals[currFunc.ModulePath];
                             }
                         }
-                        return new ReturnValue(funcToCall);
+                        return funcToCall;
                     }
-                    return new ReturnValue(builder.BuildStructGEP(
+                    return builder.BuildStructGEP(
                         v1,
                         (Inputs[0].ReturnType() as VarTypeStruct).CalcIdx(member),
                         "SJ_Member_" + member
-                    ));
+                    );
                 case Operator.ArrayAccess:
-                    v1 = Inputs[0].Compile(mod, builder, param).Val;
+                    v1 = Inputs[0].Compile(mod, builder, param);
                     v1 = builder.BuildLoad(v1, "SJ_LoadArr");
-                    v2 = Inputs[1].Compile(mod, builder, param).Val;
+                    v2 = Inputs[1].Compile(mod, builder, param);
                     if (Inputs[1].LValue) v2 = builder.BuildLoad(v1, "SJ_Load");
-                    return new ReturnValue(builder.BuildGEP(v1, new LLVMValueRef[] {
+                    return builder.BuildGEP(v1, new LLVMValueRef[] {
                         v2
-                    }, "SJ_ArrayIndex"));
+                    }, "SJ_ArrayIndex");
             }
             throw new System.NotImplementedException("Operator has not been implemented yet!");
         }

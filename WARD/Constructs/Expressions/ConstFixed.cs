@@ -27,21 +27,9 @@ namespace WARD.Constructs {
             uint wholeWidth = Val.MinBits;
             return new VarTypeFixed(wholeWidth - (uint)Val.ValueDecimal, (uint)Val.ValueDecimal);
         }
-        
-        public override bool IsPlural() {
-            return false;
-        }
 
-        public override void StoreSingle(ReturnValue src, ReturnValue dest, VarType srcType, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            throw new System.Exception("??????");
-        }
-
-        public override void StorePlural(ReturnValue src, ReturnValue dest, VarType srcType, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            throw new System.Exception("??????");
-        }
-
-        public override ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            return new ReturnValue(LLVMValueRef.CreateConstInt(ReturnType().GetLLVMType(), (ulong)Val.ValueWhole, true));
+        public override LLVMValueRef Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
+            return LLVMValueRef.CreateConstInt(ReturnType().GetLLVMType(), (ulong)Val.ValueWhole, true);
         }
 
         public override string ToString() {

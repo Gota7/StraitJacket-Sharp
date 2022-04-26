@@ -55,7 +55,7 @@ namespace WARD.Constructs {
             }
         }
 
-        public ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
+        public LLVMValueRef Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
 
             // Only compile if not dead.
             if (CodeStatements.BlockTerminated) return null;
@@ -64,8 +64,8 @@ namespace WARD.Constructs {
             foreach (var e in GeneratedExpressions) {
                 e.Compile(mod, builder, param);
             }
-            return new ReturnValue();
-            
+            return null;
+
         }
 
         public override string ToString() {

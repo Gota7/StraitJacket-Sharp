@@ -40,12 +40,12 @@ namespace WARD.Constructs {
                 } else if (possibleVars.Count > 1) {
                     throw new System.Exception("Can't resolve variable!!!");
                 }
-            
+
                 // This is a function call, find the proper item.
                 LValue = false;
                 Resolved = ToResolve.ResolveFunctionVariable(parameterTypes, preferredReturnType);
                 (Resolved.Type as VarTypeFunction).FoundFunc = (Function)Resolved; // Hack for call expressions.
-                
+
             } else {
 
                 // The resolved variable should just be the only possible one.
@@ -71,39 +71,8 @@ namespace WARD.Constructs {
             return Resolved.Type;
         }
 
-        public override bool IsPlural() {
-            return false;
-        }
-
-        public override void StoreSingle(ReturnValue src, ReturnValue dest, VarType srcType, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            
-            // Ex: u32 a = 7;
-            // Ex: (u8, (u32, f32)) b = (3, (5, 7));
-
-            // Case 1: Raw value.
-            if (src.ReturnType == ReturnValueType.Value) {
-                builder.BuildStore(src.Val, dest.Val);
-            }
-
-            // Case 2: Recursive multiple values (tuple). We are storing withing a tuple.
-            else if (src.ReturnType == ReturnValueType.NestedValues) {
-                // TODO!!!
-                throw new System.NotImplementedException();
-            }
-
-            // How did we get here?
-            else {
-                throw new System.Exception("??????");
-            }
-
-        }
-
-        public override void StorePlural(ReturnValue src, ReturnValue dest, VarType srcType, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            throw new System.NotImplementedException();
-        }
-
-        public override ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            return new ReturnValue(Resolved.LLVMValue);
+        public override LLVMValueRef Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
+            return Resolved.LLVMValue;
         }
 
         public override string ToString() {

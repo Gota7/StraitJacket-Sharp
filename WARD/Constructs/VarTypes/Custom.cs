@@ -26,7 +26,7 @@ namespace WARD.Constructs {
         protected override LLVMTypeRef LLVMType() {
             return Resolved.GetLLVMType();
         }
-        
+
         protected override string Mangled() => Mangler.MangleType(Resolved);
 
         public override bool CanImplicitlyCastTo(VarType other) {
@@ -37,7 +37,7 @@ namespace WARD.Constructs {
             return Resolved.CanCastTo(other);
         }
 
-        public override ReturnValue CastTo(ReturnValue srcVal, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder) {
+        public override LLVMValueRef CastTo(LLVMValueRef srcVal, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder) {
             return Resolved.CastTo(srcVal, destType, mod, builder);
         }
 
@@ -56,7 +56,7 @@ namespace WARD.Constructs {
         public override Expression DefaultValue() {
             return Resolved.DefaultValue();
         }
-        
+
     }
 
 }

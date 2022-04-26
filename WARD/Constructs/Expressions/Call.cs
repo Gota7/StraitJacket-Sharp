@@ -42,20 +42,8 @@ namespace WARD.Constructs {
             return (ToCall.ReturnType() as VarTypeFunction).ReturnType.TrueType();
         }
 
-        public override bool IsPlural() {
-            return false;
-        }
-
-        public override void StoreSingle(ReturnValue src, ReturnValue dest, VarType srcType, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            throw new System.Exception("??????");
-        }
-
-        public override void StorePlural(ReturnValue src, ReturnValue dest, VarType srcType, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            throw new System.Exception("??????");
-        }
-
         // TODO: TUPLE PARAMETERS!!!
-        public override ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
+        public override LLVMValueRef Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
 
             // Get function to call.
             Function FunctionToCall = (ToCall.ReturnType() as VarTypeFunction).FoundFunc;
@@ -66,16 +54,17 @@ namespace WARD.Constructs {
             }
 
             // Compile values.
-            ReturnValue toCall = ToCall.Compile(mod, builder, param);
-            if (ToCall.LValue) toCall = new ReturnValue(builder.BuildLoad(toCall.Val));
+            LLVMValueRef toCall = ToCall.CompileRValue(mod, builder, param);
 
             // Compile parameters.
-            ReturnValue parameters = Parameters.Compile(mod, builder, param);
-            LLVMValueRef[] args = parameters.Rets.Select(x => x.Val).ToArray(); // TODO: TUPLE PARAMETERS!!!
+            LLVMValueRef parameters = Parameters.Compile(mod, builder, param);
+            throw new System.NotImplementedException();
+            LLVMValueRef[] args;
+            //LLVMValueRef[] args = parameters.Rets.Select(x => x.Val).ToArray(); // TODO: TUPLE PARAMETERS!!!
 
             // Function pointer.
             if (FunctionToCall == null) {
-                return new ReturnValue(builder.BuildCall(toCall.Val, args));
+                return builder.BuildCall(toCall, args);
             }
 
             // Make sure function is compiled.
@@ -121,7 +110,7 @@ namespace WARD.Constructs {
                         funcToCall = FunctionToCall.ExternedLLVMVals[currFunc.ModulePath];
                     }
                 }
-                return new ReturnValue(builder.BuildCall(funcToCall, args));
+                return builder.BuildCall(funcToCall, args);
             }
 
         }

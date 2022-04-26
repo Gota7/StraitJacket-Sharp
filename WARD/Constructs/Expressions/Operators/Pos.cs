@@ -8,12 +8,11 @@ namespace WARD.Constructs {
         // Make a new positive operator.
         public OperatorPos(Expression expr) : base(expr, "Pos", false) {}
 
-        protected override ReturnValue CompileDefault(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
+        protected override LLVMValueRef CompileDefault(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
 
             // Get arguments.
-            LLVMValueRef expr = Args[0].Compile(mod, builder, param).Val;
-            if (Args[0].LValue) expr = builder.BuildLoad(expr, "tmpLoad");
-            return new ReturnValue(expr); // Nothing fancy, just return the value for Pos.
+            LLVMValueRef expr = Args[0].CompileRValue(mod, builder, param);
+            return expr; // Nothing fancy, just return the value for Pos.
 
         }
 

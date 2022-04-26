@@ -42,18 +42,18 @@ namespace WARD.Constructs {
             }
         }
 
-        public override ReturnValue CastTo(ReturnValue srcVal, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder) {
+        public override LLVMValueRef CastTo(LLVMValueRef srcVal, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder) {
             if (destType.Type == VarTypeEnum.PrimitiveInteger) {
                 var src = this;
                 var dest = destType as VarTypeInteger;
                 if (src.BitWidth < dest.BitWidth) {
                     if (src.Signed) {
-                        return new ReturnValue(builder.BuildSExt(srcVal.Val, destType.GetLLVMType(), "SJ_CastInt_SExt"));
+                        return builder.BuildSExt(srcVal, destType.GetLLVMType(), "SJ_CastInt_SExt");
                     } else {
-                        return new ReturnValue(builder.BuildZExt(srcVal.Val, destType.GetLLVMType(), "SJ_CastInt_ZExt"));
+                        return builder.BuildZExt(srcVal, destType.GetLLVMType(), "SJ_CastInt_ZExt");
                     }
                 } else if (src.BitWidth > dest.BitWidth) {
-                    return new ReturnValue(builder.BuildTrunc(srcVal.Val, dest.GetLLVMType(), "SJ_CastInt_Trunc"));
+                    return builder.BuildTrunc(srcVal, dest.GetLLVMType(), "SJ_CastInt_Trunc");
                 } else {
                     return srcVal;
                 }
@@ -61,14 +61,14 @@ namespace WARD.Constructs {
                 var src = this;
                 var dest = destType as VarTypeFloating;
                 if (src.Signed) {
-                    return new ReturnValue(builder.BuildSIToFP(srcVal.Val, destType.GetLLVMType(), "SJ_CastInt_Float"));
+                    return builder.BuildSIToFP(srcVal, destType.GetLLVMType(), "SJ_CastInt_Float");
                 } else {
-                    return new ReturnValue(builder.BuildUIToFP(srcVal.Val, destType.GetLLVMType(), "SJ_CastUInt_Float"));
+                    return builder.BuildUIToFP(srcVal, destType.GetLLVMType(), "SJ_CastUInt_Float");
                 }
             } else if (destType.Type == VarTypeEnum.PrimitiveFixed) {
                 var src = this;
                 var dest = destType as VarTypeFixed;
-                LLVMValueRef tmp = srcVal.Val;
+                LLVMValueRef tmp = srcVal;
                 if (dest.WholeWidth + dest.FractionWidth > BitWidth) {
                     if (src.Signed) {
                         tmp = builder.BuildSExt(tmp, dest.GetLLVMType());
@@ -78,9 +78,9 @@ namespace WARD.Constructs {
                 } else if (dest.WholeWidth + dest.FractionWidth < BitWidth) {
                     tmp = builder.BuildTrunc(tmp, dest.GetLLVMType());
                 }
-                return new ReturnValue(builder.BuildShl(tmp,
+                return builder.BuildShl(tmp,
                     LLVMValueRef.CreateConstInt(tmp.TypeOf, dest.FractionWidth, false), "SJ_CastInt_Fixed"
-                ));
+                );
             }
             return base.CastTo(srcVal, destType, mod, builder);
         }
@@ -96,7 +96,7 @@ namespace WARD.Constructs {
             }
             return false;
         }
-        
+
         public override int GetHashCode() {
             HashCode hash = new HashCode();
             hash.Add(Type);

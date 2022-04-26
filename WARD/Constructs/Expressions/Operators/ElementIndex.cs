@@ -27,7 +27,7 @@ namespace WARD.Constructs {
             throw new System.NotImplementedException();
         }
 
-        protected override ReturnValue CompileDefault(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
+        protected override LLVMValueRef CompileDefault(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
             throw new System.NotImplementedException();
         }
 

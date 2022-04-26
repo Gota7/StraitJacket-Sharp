@@ -34,27 +34,14 @@ namespace WARD.Constructs {
             return new VarTypeArray(EmbeddedType, lens);
         }
 
-        public override bool IsPlural() {
-            return false;
-        }
-
-        public override void StoreSingle(ReturnValue src, ReturnValue dest, VarType srcType, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            throw new System.Exception("??????");
-        }
-
-        public override void StorePlural(ReturnValue src, ReturnValue dest, VarType srcType, VarType destType, LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            throw new System.Exception("??????");
-        }
-
-        public override ReturnValue Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            LLVMValueRef totalSize = TotalSize.Compile(mod, builder, param).Val;
+        public override LLVMValueRef Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
+            LLVMValueRef totalSize = TotalSize.Compile(mod, builder, param);
             if (TotalSize.LValue) totalSize = builder.BuildLoad(totalSize, "SJ_Load");
-            return new ReturnValue(
-                builder.BuildArrayAlloca(
-                    EmbeddedType.GetLLVMType(),
-                    totalSize,
-                    "SJ_BuildArrayAlloca"
-                )
+            return builder.BuildArrayAlloca
+            (
+                EmbeddedType.GetLLVMType(),
+                totalSize,
+                "SJ_BuildArrayAlloca"
             );
         }
 
