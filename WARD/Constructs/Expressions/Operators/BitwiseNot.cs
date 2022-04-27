@@ -2,11 +2,11 @@ using LLVMSharp.Interop;
 
 namespace WARD.Constructs {
 
-    // Take the opposite of a boolean.
-    public class OperatorLogicalNot : BooleanMath {
+    // Take the opposite of an item.
+    public class OperatorBitwiseNot : BitwiseMath {
 
         // Take the opposite of a boolean.
-        public OperatorLogicalNot(Expression expr) : base("LogicalNot", expr) {}
+        public OperatorBitwiseNot(Expression expr) : base("BitwiseNot", expr) {}
 
         protected override LLVMValueRef CompileDefault(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
             return builder.BuildNot(Args[0].CompileRValue(mod, builder, param));

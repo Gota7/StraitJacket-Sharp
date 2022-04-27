@@ -23,6 +23,7 @@ namespace WARD.Constructs {
                     }
                 }
             }
+            LValue = false;
 
         }
 

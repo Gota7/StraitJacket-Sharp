@@ -2,11 +2,11 @@ using LLVMSharp.Interop;
 
 namespace WARD.Constructs {
 
-    // Logically xor two booleans.
-    public class OperatorLogicalXor : BooleanMath {
+    // Bitwise xor.
+    public class OperatorBitwiseXor : BitwiseMath {
 
-        // Only true if both operands are different.
-        public OperatorLogicalXor(Expression left, Expression right) : base("LogicalXor", left, right) {}
+        // Bitwise xor operation.
+        public OperatorBitwiseXor(Expression left, Expression right) : base("BitwiseXor", left, right) {}
 
         protected override LLVMValueRef CompileDefault(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
             return builder.BuildXor(Args[0].CompileRValue(mod, builder, param), Args[1].CompileRValue(mod, builder, param));
