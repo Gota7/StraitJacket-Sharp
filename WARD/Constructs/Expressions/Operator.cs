@@ -76,7 +76,7 @@ namespace WARD.Constructs {
                 case Operator.Ge:
                     LValue = false;
                     GenerateCastsIfNeeded2();
-                    RetType = new VarTypeSimplePrimitive(SimplePrimitives.Bool);
+                    RetType = VarType.TypeBool;
                     break;
                 case Operator.AddressOf:
                     if (!Inputs[0].LValue) throw new System.Exception("Can't take the address of a non-lvalue!");

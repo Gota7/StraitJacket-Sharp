@@ -18,17 +18,17 @@ namespace WARD.Constructs {
             Variadic = true,
             Attributes = new List<Attribute>(),
             Parameters = new List<VarParameter>() {
-                new VarParameter() { Value = new Variable() { Name = "instruction", Type = new VarTypeSimplePrimitive(SimplePrimitives.ConstString) { Constant = true } } },
+                new VarParameter() { Value = new Variable() { Name = "instruction", Type = VarType.TypeConstString } },
                 new VarParameter() { Value = new Variable() { Name = "args", Type = new VarTypeSimplePrimitive(SimplePrimitives.Object) { Variadic = true } } }
             },
             Type = new VarTypeFunction(
-                new VarTypeSimplePrimitive(SimplePrimitives.Object),
+                VarType.TypeObject,
                 new List<VarType>() {
-                    new VarTypeSimplePrimitive(SimplePrimitives.ConstString) { Constant = true },
+                    VarType.TypeConstString,
                     new VarTypeSimplePrimitive(SimplePrimitives.Object) { Variadic = true }
                 }
             ),
-            ReturnType = new VarTypeSimplePrimitive(SimplePrimitives.Object)
+            ReturnType = VarType.TypeObject
         };
 
         // Since LLVM assembly calls are inline, they have to be defined for every call. Here we just translate the instructions.

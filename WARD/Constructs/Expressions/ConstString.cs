@@ -18,7 +18,7 @@ namespace WARD.Constructs {
         }
 
         public override VarType GetReturnType() {
-            return new VarTypeSimplePrimitive(SimplePrimitives.ConstString);
+            return VarType.TypeConstString;
         }
 
         public override LLVMValueRef Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {

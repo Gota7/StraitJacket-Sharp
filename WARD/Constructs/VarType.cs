@@ -65,7 +65,7 @@ namespace WARD.Constructs {
     }
 
     // Variable type.
-    public abstract class VarType : IEqualityComparer<VarType> {
+    public abstract partial class VarType : IEqualityComparer<VarType> {
         public VarTypeEnum Type;
         public bool Constant;
         public bool Static;

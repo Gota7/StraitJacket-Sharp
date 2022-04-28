@@ -30,7 +30,7 @@ namespace WARD.Constructs {
             ConditionCheck.ResolveTypes();
             Then.ResolveTypes();
             if (Else != null) Else.ResolveTypes();
-            if (!ConditionCheck.ReturnType().Equals(new VarTypeSimplePrimitive(SimplePrimitives.Bool))) {
+            if (!ConditionCheck.ReturnType().Equals(VarType.TypeBool)) {
                 throw new System.Exception("Condition expression does not result in a bool! How did this happen?");
             }
         }

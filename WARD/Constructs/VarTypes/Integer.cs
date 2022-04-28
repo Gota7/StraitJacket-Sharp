@@ -7,7 +7,7 @@ namespace WARD.Constructs {
     public class VarTypeInteger : VarType {
         public bool Signed;
         public uint BitWidth;
-        
+
         public VarTypeInteger(bool signed, uint bitWidth) {
             Type = VarTypeEnum.PrimitiveInteger;
             Signed = signed;

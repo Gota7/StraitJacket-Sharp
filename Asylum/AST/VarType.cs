@@ -80,14 +80,14 @@ namespace Asylum.AST {
         public AsylumVisitResult VisitPrimitiveBool([NotNull] AsylumParser.PrimitiveBoolContext context)
         {
             return new AsylumVisitResult() {
-                VariableType = new VarTypeSimplePrimitive(SimplePrimitives.Bool)
+                VariableType = VarType.TypeBool
             };
         }
 
         public AsylumVisitResult VisitPrimitiveChar([NotNull] AsylumParser.PrimitiveCharContext context)
         {
             return new AsylumVisitResult() {
-                VariableType = new VarTypeSimplePrimitive(SimplePrimitives.Char)
+                VariableType = VarType.TypeChar
             };
         }
 
@@ -95,7 +95,7 @@ namespace Asylum.AST {
         {
             // TEMPORARY!!!
             return new AsylumVisitResult() {
-                VariableType = new VarTypeSimplePrimitive(SimplePrimitives.ConstString)
+                VariableType = VarType.TypeConstString
             };
         }
 

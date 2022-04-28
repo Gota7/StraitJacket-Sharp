@@ -24,10 +24,6 @@ namespace WARD.Constructs {
         }
 
         public override LLVMValueRef Compile(LLVMModuleRef mod, LLVMBuilderRef builder, object param) {
-            switch (Primitive) {
-                case SimplePrimitives.Bool:
-                    return LLVMValueRef.CreateConstInt(LLVMTypeRef.Int1, (ulong)(((bool)Val) ? 1 : 0), false);
-            }
             throw new System.NotImplementedException("No defined constant value for simple primitive type: " + Primitive + "!");
         }
 

@@ -13,7 +13,7 @@ namespace WARD.Constructs {
             // Make sure all arguments are booleans.
             for (int i = 0; i < Args.Length; i++) {
                 VarType retType = Args[i].ReturnType();
-                VarType boolType = new VarTypeSimplePrimitive(SimplePrimitives.Bool);
+                VarType boolType = VarType.TypeBool;
                 if (!retType.Type.Equals(boolType)) {
                     if (retType.CanImplicitlyCastTo(boolType)) {
                         Args[i] = new ExpressionCast(Args[i], boolType);
@@ -28,7 +28,7 @@ namespace WARD.Constructs {
         }
 
         protected override VarType GetReturnTypeDefault() {
-            return new VarTypeSimplePrimitive(SimplePrimitives.Bool); // Can only return booleans.
+            return VarType.TypeBool; // Can only return booleans.
         }
 
     }
