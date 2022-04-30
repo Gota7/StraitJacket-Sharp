@@ -100,7 +100,7 @@ namespace WARD.Constructs {
                         throw new System.Exception("Can't take the member of an expression that doesn't result in a tuple or struct!");
                     }
                     if (Inputs[1] as ExpressionConstStringPtr == null) throw new System.Exception("Can only take the member of using a constant string pointer!");
-                    RetType = (Inputs[0].ReturnType() as VarTypeStruct).GetMemberType((Inputs[1] as ExpressionConstStringPtr).Str);
+                    RetType = (Inputs[0].ReturnType() as VarTypeStructOLD).GetMemberType((Inputs[1] as ExpressionConstStringPtr).Str);
                     IsImplFunction = RetType.Type == VarTypeEnum.PrimitiveFunction;
                     break;
                 case Operator.ArrayAccess:
@@ -206,7 +206,7 @@ namespace WARD.Constructs {
                     v1 = Inputs[0].Compile(mod, builder, param);
                     string member = (Inputs[1] as ExpressionConstStringPtr).Str;
                     if (IsImplFunction) {
-                        var func = (Inputs[0].ReturnType() as VarTypeStruct).GetImplFunction(member);
+                        var func = (Inputs[0].ReturnType() as VarTypeStructOLD).GetImplFunction(member);
                         LLVMValueRef funcToCall = null;
                         Function currFunc = Scope.PeekCurrentFunction;
                         if (func.Extern || func.ModulePath.Equals(currFunc.ModulePath)) {
@@ -223,7 +223,7 @@ namespace WARD.Constructs {
                     }
                     return builder.BuildStructGEP(
                         v1,
-                        (Inputs[0].ReturnType() as VarTypeStruct).CalcIdx(member),
+                        (Inputs[0].ReturnType() as VarTypeStructOLD).CalcIdx(member),
                         "SJ_Member_" + member
                     );
                 case Operator.ArrayAccess:

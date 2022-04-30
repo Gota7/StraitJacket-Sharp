@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using LLVMSharp.Interop;
 
 namespace WARD.Constructs {
 
@@ -11,108 +9,51 @@ namespace WARD.Constructs {
         public Variable Var;
     }
 
-    // A custom structure.
-    public class VarTypeStruct : VarType {
+    // TODO: IMPLEMENTED STUCTS SHOULD BE SEPARATE VARIABLES!!! THIS WILL CHANGE HOW IDX IS CALCULATED!!!
+    // THIS_CALL ALSO HAS TO BE IMPLEMENTED!!!
+    public class VarTypeStruct : VarTypeTuple {
         public Scope Scope;
         public Modifier Modifier;
         public string Name;
-        public List<VarTypeStruct> TypeImplements = new List<VarTypeStruct>();
         public List<StructEntry> Entries = new List<StructEntry>();
+        public List<VarTypeStruct> TypeImplements = new List<VarTypeStruct>();
+        public new List<VarType> Members => GetMemberList(Entries, TypeImplements);
 
-        public VarTypeStruct(Scope scope, Modifier modifier, string name, List<StructEntry> entries, List<VarTypeStruct> implements) {
+        // Create a new struct type.
+        public VarTypeStruct(Scope scope, Modifier modifier, string name, List<StructEntry> entries, List<VarTypeStruct> implements) : base(GetMemberList(entries, implements)) {
             Scope = scope;
             Modifier = modifier;
             Name = name;
             Entries = entries;
             TypeImplements = implements;
-            Type = VarTypeEnum.Tuple;
+            scope.AddType(name, this);
         }
 
-        // Get the type of a member. TODO: BASE TYPES!!!
-        public VarType GetMemberType(string varName, string currBase = null) {
-            string[] parts = varName.Split('.');
-            if (parts[0].Equals("this")) parts[0] = parts[1];
-            foreach (var e in Entries) {
-                if (parts[0].Equals(e.Var.Name)) {
-                    return e.Var.Type;
-                }
+        public static List<VarType> GetMemberList(List<StructEntry> entries, List<VarTypeStruct> implements) {
+            List<VarType> ret = new List<VarType>();
+            foreach (var i in implements) {
+                ret.AddRange(GetMemberList(i.Entries, i.TypeImplements)); // Add base struct members.
             }
-            var func = GetImplFunction(varName);
-            if (func != null) return func.Type;
-            throw new Exception("Member " + varName + " is not contained in this struct!");
-        }
-
-        public Function GetImplFunction(string name) {
-            Scope root = Scope.Root;
-            string mangled = Mangler.MangleType(this);
-            if (root.Children.ContainsKey(mangled)) {
-                Scope typeScope = root.Children[mangled];
-                return typeScope.ResolveFunction(new VariableOrFunction() { Scope = typeScope, Path = name });
+            foreach (var e in entries) {
+                ret.Add(e.Var.Type); // Add current struct members.
             }
-            return null;
+            return ret;
         }
 
-        // Calculate an Idx to a name. TODO: BASE TYPES!!!
-        public uint CalcIdx(string varName, string currBase = null) {
-            uint idx = 0;
-            string[] parts = varName.Split('.');
-            if (parts[0].Equals("this")) parts[0] = parts[1];
-            for (int i = 0; i < TypeImplements.Count; i++) {
-                //if (parts[0].) TODO!!!
-                idx += TypeImplements[i].NumIdxs();
-            }
-            foreach (var e in Entries) {
-                if (parts[0].Equals(e.Var.Name)) {
-                    return idx;
-                }
-                idx++;
-            }
-            throw new Exception("Member " + varName + " is not contained in this struct!");
+        // Get a member's idx. If the name starts with # then the idx of an implemented struct is returned.
+        public uint GetMemberIdx(string name) {
+            return uint.MaxValue;
         }
 
-        // Get the total number of Idxs.
-        public uint NumIdxs() {
-            uint idx = 0;
-            for (int i = 0; i < TypeImplements.Count; i++) {
-                idx += TypeImplements[i].NumIdxs();
-            }
-            foreach (var e in Entries) {
-                idx++;
-            }
-            return idx;
+        // Get the member from a name. If the name starts with # then return the implemented struct.
+        public Variable GetMember(string name) {
+            return null; // TODO!!!
         }
 
-        protected override LLVMTypeRef LLVMType() {
-            List<LLVMTypeRef> members = new List<LLVMTypeRef>();
-            foreach (var i in TypeImplements) {
-                foreach (var e in i.Entries) {
-                    members.Add(e.Var.Type.GetLLVMType());
-                }
-            }
-            foreach (var m in Entries) {
-                members.Add(m.Var.Type.GetLLVMType());
-            }
-            return LLVMTypeRef.CreateStruct(members.ToArray(), false);
-        }
+        // Get the idx of a member from a name.
 
-        protected override string Mangled() => Mangler.MangleScope(Scope) + Name.Length + Name + "E";
-
-        public override bool Equals(object obj) {
-            return obj == this;
-        }
-
-        public override int GetHashCode() {
-            // TODO!!!
-            throw new System.NotImplementedException();
-        }
-
-        public override string ToString() {
-            return Name;
-        }
-
-        public override Expression DefaultValue() {
-            throw new NotImplementedException();
-        }
+        // This is a struct and not a true tuple.
+        public override bool IsStruct => true;
 
     }
 

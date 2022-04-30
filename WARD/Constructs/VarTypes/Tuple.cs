@@ -10,6 +10,7 @@ namespace WARD.Constructs {
         public List<VarType> Members;
         public bool IsVector { get; private set; }
 
+        // Create a new tuple of types.
         public VarTypeTuple(List<VarType> members) {
             Type = VarTypeEnum.Tuple;
             Members = members;
@@ -87,6 +88,7 @@ namespace WARD.Constructs {
             return new ExpressionComma(exps);
         }
 
+        // Pack separate values of this type to a proper type.
         public LLVMValueRef Pack(LLVMValueRef[] items) {
             if (IsVector) {
                 throw new System.NotImplementedException();
@@ -95,6 +97,7 @@ namespace WARD.Constructs {
             }
         }
 
+        // Unpack items of this type to individual items.
         public LLVMValueRef[] Unpack(LLVMValueRef packed, LLVMBuilderRef builder) {
             if (IsVector) {
                 throw new System.NotImplementedException();
@@ -106,6 +109,9 @@ namespace WARD.Constructs {
                 return ret;
             }
         }
+
+        // If this is a struct instead of a true tuple.
+        public virtual bool IsStruct => false;
 
     }
 
