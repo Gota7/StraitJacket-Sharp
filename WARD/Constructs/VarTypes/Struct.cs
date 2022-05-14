@@ -50,8 +50,6 @@ namespace WARD.Constructs {
             return null; // TODO!!!
         }
 
-        // Get the idx of a member from a name.
-
         // This is a struct and not a true tuple.
         public override bool IsStruct => true;
 
